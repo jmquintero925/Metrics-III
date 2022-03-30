@@ -40,6 +40,12 @@
   \addtocounter{footnote}{-1}%
 }
 
+% Problem formatting [Alex]
+
+\newenvironment{problem}[2][Problem]
+    { \begin{mdframed}[backgroundcolor=gray!20] \textbf{#1 #2} \\}
+    {  \end{mdframed}}
+
 %%%%%%%%%%%%%%%%%%%%%%
 % Set up fancy header/footer
 \pagestyle{fancy}
