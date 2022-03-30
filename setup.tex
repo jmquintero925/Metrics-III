@@ -1,0 +1,53 @@
+%\documentclass[12pt]{article} % Put this in the actual tex file or overleaf throws a hissy fit
+\usepackage[margin=1in]{geometry} 
+\usepackage{amsmath,amsthm,amssymb,amsfonts, fancyhdr, color, comment, graphicx, environ}
+\usepackage{xcolor}
+\usepackage{subcaption}
+\usepackage{mdframed}
+\usepackage[shortlabels]{enumitem}
+\usepackage{indentfirst}
+\usepackage{hyperref}
+\usepackage{placeins}
+\usepackage{comment} %Comment large blocks
+\usepackage{xfrac}
+\usepackage{parskip} %No indents for paragraphs
+\usepackage[shortlabels]{enumitem} % To enumerate with letters
+\hypersetup{
+ colorlinks=true,
+ linkcolor=blue,
+ filecolor=magenta, 
+ urlcolor=blue,
+}
+\pagestyle{fancy}
+\usepackage{todonotes}
+
+\newcommand{\E}{\mathbb{E}}
+\renewcommand{\H}{\mathcal{H}}
+\renewcommand{\L}{\mathcal{L}}
+\newcommand{\dU}[1]{\ensuremath\frac{\partial u}{\partial #1}}
+\newcommand{\dV}[1]{\ensuremath\frac{\partial v}{\partial #1}}
+\newcommand{\ppx}[2]{\ensuremath\frac{\partial #1}{\partial #2}}
+\newcommand{\ddx}[2]{\ensuremath\frac{d #1}{d #2}}
+
+%\usepackage{mathpazo} %Dylan's fancy math bullshit that I don't want
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{setspace}
+
+%Footnote without a number
+\newcommand\blfootnote[1]{%
+  \renewcommand\thefootnote{}\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%
+% Set up fancy header/footer
+\pagestyle{fancy}
+\fancyhead[LO,L]{Isaac Norwich}
+\fancyhead[CO,C]{Theory of Income I - Problem Set #}
+\fancyhead[RO,R]{\today}
+\fancyfoot[LO,L]{}
+\fancyfoot[CO,C]{\thepage}
+\fancyfoot[RO,R]{}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
