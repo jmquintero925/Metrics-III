@@ -12,6 +12,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% QUESTION 1 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Problem 1}
+\textbf{Consider an i.i.d. sample $\left\{Y_{i}, D_{i}\right\}_{i=1}^{n}$, where $Y_{i}$ is future earnings and $D_{i} \in\{0,1\}$ indicates whether an individual received a scholarship to attend college. Let $Y_{i 0}$ and $Y_{i 1}$ represent the potential outcomes corresponding to the events $D_{i}=0$ and $D_{i}=1$, respectively.}
 
 IID sample. $Y_{i}$ is future earnings. $D_{i}\in\left\{ 0,1\right\} $
 is a binary treatment - recieving scholarship. 
@@ -137,27 +138,91 @@ equality comes from the linearity of expectations.
 
 
 \begin{enumerate}[(a), wide, labelwidth=!, labelindent=0pt]
-    \item \textbf{}
+    \item \textbf{Compute $\left(\beta_{0}, \beta_{1, i}, U_{i}\right)$ so that $Y_{i}=\beta_{0}+\beta_{1, i} D_{i}+U_{i}$, where $E\left(U_{i}\right)=0$. How would you interpret the random coefficient $\beta_{1, i}$ ? Is it identified for any individual $i$ ? Explain.}
+    
+    \item \textbf{Is $\kappa=E\left(Y_{i} \mid D_{i}=1\right)-E\left(Y_{i} \mid D_{i}=0\right)$ identified? When is $\kappa$ equal to ATT, ATUT, or ATE?}
+    
+    \item \textbf{Suppose the scholarship is only given to high-achieving students, who are already more likely to have higher earnings. Will $\kappa$ overstate or understate the ATT and the ATUT?}
+    
+    \item \textbf{Suppose the scholarship is given based on financial need, so that its recipients are more positively affected by $D_{i}$ than other students are. How do you expect the ATT, ATUT, and ATE will compare in magnitude? Provide intuition behind your comparisons.}
+    
+    \item \textbf{For this part only, suppose $Y_{i 1}-Y_{i 0}$ equals a constant $c$. Is the slope estimator from an OLS regression of $Y_{i}$ on $\left(1, D_{i}\right)$ consistent for $c$ ? Make sure to derive the limit of this estimator, and then argue whether this limit equals $c$. Offer some intuition behind your results.}
+    
+    \item \textbf{Suppose that treatment $D_{i}$ is randomized so that $P\left(D_{i}=1\right)=0.5$. Show that $\kappa=$ ATE.}    
+    
 \end{enumerate}
+
+
+
+
+
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% QUESTION 3 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Problem 2}
 
-\textbf{}
+Consider the following Roy Model setup
+\textbf{\begin{align*}
+\begin{aligned}
+    Y_{1} &=U_{1} \\
+    Y_{0} &=U_{0} \\
+    \left(\begin{array}{c}
+    U_{1} \\
+    U_{0}
+    \end{array}\right) & \sim \mathcal{N}\left(\left(\begin{array}{l}
+    0 \\
+    0
+    \end{array}\right),\left(\begin{array}{cc}
+    \sigma^{2} & \rho \sigma \\
+    \rho \sigma & 1
+    \end{array}\right)\right) \\
+    D &=\mathbbm{1}\left[U_{1}>U_{0}\right] \\
+    Y &=D Y_{1}+(1-D) Y_{0}=\underbrace{\left(Y_{1}-Y_{0}\right)}_{\beta} D+Y_{0}
+\end{aligned}
+\end{align*}}
+
 \begin{enumerate}[(a), wide, labelwidth=!, labelindent=0pt]
-    \item \textbf{}
+    \item \textbf{Derive the expression for $\beta_{O L S}$. What treatment effect does it correspond to when $D \perp\left(Y_{1}, Y_{0}\right)$ ?}
+    
+    \item \textbf{Derive expressions for ATT and ATUT. Comment on their relative magnitudes and signs.}
+    
+    \item \textbf{What is ATE in this case?}
+    
+    \item \textbf{Derive expressions for $\frac{\partial A T T}{\partial \rho}, \frac{\partial A T U T}{\partial \rho}$, and $\frac{\partial \beta_{O L S}}{\partial \rho}$. Do the same for $\frac{\partial A T T}{\partial \sigma}, \frac{\partial A T U T}{\partial \sigma}$, and $\frac{\partial \beta_{O L S}}{\partial \sigma}$. Make sure to provide a simple intuitive explanation behind each of your results.}
+    
+    \item \textbf{Set $\sigma=2$ and $\rho=0.5$. Draw $N=10,000$ pairs of $\left(U_{0}, U_{1}\right)$. Compute ATE, ATT, ATUT and $\beta_{O L S}$. (Note: you have all the counterfactuals in this set up-take advantage of this fact). Compute $\mathbb{E}[Y \mid D=1]-\mathbb{E}[Y \mid D=0]$. What parameter does it correspond to? Repeat this for $(\sigma, \rho) \in\{(2,0),(2,-0.5)\}$. Fix $\rho=0.5$ and vary $\sigma$ to verify your findings in (d).}
+    \item \textbf{Claim: in this setup, $D \perp\left(Y_{1}, Y_{0}\right)$ if and only if $\rho=0$. Argue whether this claim is true or not. Justify using the results from (e).}
+
 \end{enumerate}
 
-\end{document}
+
+
+
+
 
 \newpage
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% QUESTION 3 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{Problem 2}
-
-\textbf{}
+\section*{Problem 3}
+The purpose of this exercise is to introduce you to the bootstrapping procedure. In previous classes, you learned that, given i.i.d. data, the OLS estimator $\hat{\beta}$ will satisfy:
+\begin{align*}
+\hat{\beta} \stackrel{p}{\rightarrow} \beta=\mathbb{E}\left[X_{i} X_{i}^{\prime}\right]^{-1} \mathbb{E}\left[X_{i} Y_{i}\right] \quad \text { and } \quad \sqrt{N}(\hat{\beta}-\beta) \stackrel{d}{\rightarrow} \mathcal{N}(0, V),
+\end{align*}
+for some matrix $V$. Define $\hat{V}$ and $\operatorname{se}\left(\hat{\beta}_{k}\right)$ so that $\hat{V} \stackrel{p}{\rightarrow} V$ and $\operatorname{se}\left(\hat{\beta}_{k}\right)=\sqrt{\frac{1}{N} \operatorname{diag}(\hat{V})_{k}}$.
+Monte Carlo Simulations
+Consider the model $Y_{i}=X_{i}^{\prime} \beta+U_{i}$, where $U_{i} \mid X_{i} \stackrel{i . i . d}{\sim} \mathcal{N}\left(0, \sigma^{2}\right)$.
 \begin{enumerate}[(a), wide, labelwidth=!, labelindent=0pt]
-    \item \textbf{}
+    \item \textbf{Set $\beta=(2,3)^{\prime}$ and $\sigma^{2}=4$. Generate $N=10,000$ values for $X \in \mathbb{R}^{2}$ (one constant and one covariate). Given your value of $\sigma^{2}$, draw $U$ 's (they may be independent of $X$ ). Finally, compute $Y$ 's. Estimate $\hat{\beta}$ and its standard errors from your data using OLS.}
+    \item \textbf{Using $X, \beta$ and $\sigma^{2}$ from part (a), draw $S=10,000$ of $U^{(s)}$ (an $N \times 1$ vector for each $s$ ) and the corresponding $Y^{(s)}$. For each $Y^{(s)}$, compute the OLS estimator $\hat{\beta}^{(s)}$. Then, compute:
+    \begin{align*}
+        \sqrt{\widehat{\operatorname{Var}}\left[\hat{\beta}_{k}^{(s)} \mid X_{1}, \ldots, X_{N}\right]}=\sqrt{\frac{1}{S} \sum_{s=1}^{S}\left(\hat{\beta}_{k}^{(s)}\right)^{2}-\left(\frac{1}{S} \sum_{s=1}^{S} \hat{\beta}_{k}^{(s)}\right)^{2}} \stackrel{p}{\rightarrow} \operatorname{se}\left(\hat{\beta}_{k} \mid X_{1}, \ldots, X_{N}\right)
+    \end{align*}
+    Justify the $" \stackrel{p}{\rightarrow}$ " in the line above. Plot a histogram for the first component of $\beta^{(s)}$.}
 \end{enumerate}
-
+\textbf{Nonparametric Bootstrap}
+The rough idea behind bootstrapping is that we expect a large sample of observed data to behave like the wider population. Rather than drawing independent samples, which may be too costly or time-consuming, we can make inferences about our estimators by re-sampling from the original data. The rationale behind this idea is that the empirical distribution is close to the population distribution as the sample size becomes large. Through the bootstrap procedure, we can conduct inference about our estimates without specifying the data generating process. Consider the RCT setup: $Y=D Y_{1}+(1-D) Y_{0}$, where $D \perp\left(Y_{1}, Y_{0}\right)$.
+\begin{enumerate}[(a), wide, labelwidth=!, labelindent=0pt]
+\item \textbf{Define constant values for $Y_{1}=5+U_{1}$ and $Y_{0}=2+U_{2}$, where $U_{1}, U_{2} \stackrel{i . i . d}{\sim} N(0,1)$. Assign treatment $D \in\{0,1\}$ randomly (setting $P(D=1)=0.5$ is a good choice) to $N=10,000$ individuals. Estimate $E\left(Y_{1}-Y_{0}\right)$ using OLS and compute the standard errors. Then, argue that OLS gives consistent coefficient estimates. Why is $D \perp\left(Y_{1}, Y_{0}\right)$ important here?}
+\item \textbf{From the initial data that you generated, draw $N=10,000$ pairs of $\left(Y_{i}, D_{i}\right)$, choosing each of the original data pairs with probability $\frac{1}{N}$ (with replacement). Repeat this procedure a total of $S=10,000$ times. You should have $S$ samples of $N=$ observations, each generated from the original sample. Repeat the computations from the Monte Carlo Simulations part, making sure to compute $\left(\widehat{\operatorname{Var}}\left[\hat{\beta}^{(s)}\right]\right)^{1 / 2}$ and to plot a histogram for $\hat{\beta}^{(s)}$. What would happen if you drew $Y$ and $D$ independently from the original sample, instead of as a pair?}
+\end{enumerate}
 \end{document}
