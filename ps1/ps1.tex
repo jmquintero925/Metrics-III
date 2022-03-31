@@ -265,21 +265,26 @@ Note that the point estimates are almost identical to the true value.
 \begin{problem}{b}
 Using $X, \beta$ and $\sigma^{2}$ from part (a), draw $S=10,000$ of $U^{(s)}$ (an $N \times 1$ vector for each $s$ ) and the corresponding $Y^{(s)}$. For each $Y^{(s)}$, compute the OLS estimator $\hat{\beta}^{(s)}$. Then, compute:
     \begin{align*}
-        \sqrt{\widehat{\operatorname{Var}}\left[\hat{\beta}_{k}^{(s)} \mid X_{1}, \ldots, X_{N}\right]}=\sqrt{\frac{1}{S} \sum_{s=1}^{S}\left(\hat{\beta}_{k}^{(s)}\right)^{2}-\left(\frac{1}{S} \sum_{s=1}^{S} \hat{\beta}_{k}^{(s)}\right)^{2}} \stackrel{p}{\rightarrow} \operatorname{se}\left(\hat{\beta}_{k} \mid X_{1}, \ldots, X_{N}\right)
+        \sqrt{\widehat{\operatorname{Var}}\left[\hat{\beta}_{k}^{(s)} \mid X_{1}, \ldots, X_{N}\right]}=\sqrt{\frac{1}{S} \sum_{s=1}^{S}\left(\hat{\beta}_{k}^{(s)}\right)^{2}-\left(\frac{1}{S} \sum_{s=1}^{S} \hat{\beta}_{k}^{(s)}\right)^{2}} \stackrel{p}{\longrightarrow} \operatorname{se}\left(\hat{\beta}_{k} \mid X_{1}, \ldots, X_{N}\right)
     \end{align*}
-    Justify the $" \stackrel{p}{\rightarrow}$ " in the line above. Plot a histogram for the first component of $\beta^{(s)}$.
+    Justify the $" \stackrel{p}{\longrightarrow}$ " in the line above. Plot a histogram for the first component of $\beta^{(s)}$.
 \end{problem}
 \begin{solution}
 For this problem it is important to highlight that $X$ is simulated from a standard normal distribution. The Montecarlo estimation results are presented in Table \ref{table:ea3:ps1:q3a:tab2}. 
 \input{Tables/q3a_tab2}
-The Montecarlo simulation cleans up some of the error induced by $U_i$ as our estimates are even closer to the true underlying value and the standard error is still the same. The convergence in probability of the estimated standard error to the theoretical is an application of both the Law of Large Numbers and the continuous mapping theorem. 
+The Montecarlo simulation cleans up some of the error induced by $U_i$ as our estimates are even closer to the true underlying value and the standard error is still the same. The convergence in probability of the estimated standard error to the theoretical is an application of both the Law of Large Numbers and the continuous mapping theorem. Each Montecarlo estimated parameter $\hat{\beta}_k^{(s)}$ can be interpreted as a draw from the distribution of $\hat{\beta}_k$. Since $\hat{\beta}_k$ has a normal distribution then it has a second moment and 
+\begin{align*}
+    \frac{1}{S} \sum_{s=1}^{S}\left(\hat{\beta}_{k}^{(s)}\right)^{2}&\stackrel{p}{\longrightarrow}  \E[\hat{\beta}_k^2] & 
+    \left(\frac{1}{S} \sum_{s=1}^{S} \hat{\beta}_{k}^{(s)}\right)^{2}&\stackrel{p}{\longrightarrow} \E[\hat{\beta}_k]^2
+\end{align*}
+by both the LLN and the continuous mapping theorem. To justify the claim that each $\hat{\beta}_k^{(s)}$ consider Figure \ref{ea3:ps1:q3a:fig1}. Note that over the 10,000 observations the implied histogram matches the pdf of the theoretical distribution. 
 \begin{figure}[htb]
     \centering
     \caption{OLS Estimate Distribution from Montecarlo}
     \label{ea3:ps1:q3a:fig1}
     \includegraphics[width=0.45\textwidth]{Figures/p3qa.pdf}
 \end{figure}
-\textcolor{red}{If it gives me time I will derivate the numbers of the theoretical distribution }
+\textcolor{red}{If it gives me time I will derivate the numbers of the theoretical distribution and plot it side by side with the estimated}
 \end{solution}
 \FloatBarrier
 \underline{\hspace{\textwidth}}
@@ -289,6 +294,22 @@ The rough idea behind bootstrapping is that we expect a large sample of observed
 Define constant values for $Y_{1}=5+U_{1}$ and $Y_{0}=2+U_{2}$, where $U_{1}, U_{2} \stackrel{i . i . d}{\sim} N(0,1)$. Assign treatment $D \in\{0,1\}$ randomly (setting $P(D=1)=0.5$ is a good choice) to $N=10,000$ individuals. Estimate $E\left(Y_{1}-Y_{0}\right)$ using OLS and compute the standard errors. Then, argue that OLS gives consistent coefficient estimates. Why is $D \perp\left(Y_{1}, Y_{0}\right)$ important here?
 \end{problem}
 \begin{solution}
+Begin by defining $Y$ to estimate the OLS regression as 
+\begin{align*}
+    Y   &= Y_1D + (1-D)Y_0 \\ 
+        &= (Y_1-Y_0)D + Y_0
+\end{align*}
+By taking expectations it yields that 
+\begin{equation*}
+    \E[Y\vert D] = \E[Y_1-Y_0\vert D] + \E[Y_0\vert D]
+\end{equation*}
+which implies that $\hat{\beta}_0=\E[Y_0\vert D] = \E[Y_0]$ using the independence assumption. Similarly, 
+\begin{align*}
+\hat{\beta}_1 & =\E[Y_1-Y_0\vert D] \\
+&= \E[Y_1\vert D=1] - \E[Y_0\vert D=0] \\ 
+&= \E[Y_1]-\E[Y_0] = \E[Y_1-Y_0] 
+\end{align*}
+But note that the independence assumption is key for the identification of the unconditional effect of the RCT. 
 \input{Tables/q3b_tab1}
 \end{solution}
 \begin{problem}{b}
