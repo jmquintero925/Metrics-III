@@ -1,7 +1,7 @@
 
 \usepackage[margin=1in]{geometry} 
 \usepackage{amsmath,amsthm,amssymb,amsfonts, fancyhdr, color, comment, graphicx, environ,bbm}
-\usepackage{xcolor}
+\usepackage[dvipsnames]{xcolor}
 \usepackage{subcaption}
 \usepackage{mdframed}
 \usepackage[shortlabels]{enumitem}
@@ -29,6 +29,7 @@
 \newcommand{\ppx}[2]{\ensuremath\frac{\partial #1}{\partial #2}}
 \newcommand{\ddx}[2]{\ensuremath\frac{d #1}{d #2}}
 
+
 %\usepackage{mathpazo} %Dylan's fancy math bullshit that I don't want
 \usepackage{microtype}
 \usepackage{graphicx}
@@ -42,10 +43,12 @@
 
 % Problem formatting [Alex]
 
-\newenvironment{problem}[2][Problem]
-    { \begin{mdframed}[backgroundcolor=gray!20] \textbf{#1 #2} \\}
+\newenvironment{problem}[1]
+    { \begin{mdframed}[backgroundcolor=Periwinkle!20] \textbf{(#1)} }
     {  \end{mdframed}}
-
+% Define solution environment
+\newenvironment{solution}{\textbf{Solution}}
+    
 %%%%%%%%%%%%%%%%%%%%%%
 % Set up fancy header/footer
 %\pagestyle{fancy}
