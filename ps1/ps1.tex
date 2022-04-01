@@ -32,7 +32,7 @@ So then I can define
 U_{i} & =Y_{0,i}-E\left[Y_{0,i}\right]
 \end{align*}
 
-note that $E\left[U_{i}\right]=0$ by defintion. Finally stack.
+note that $E\left[U_{i}\right]=0$ by definition. Finally stack.
 
 \[
 \ensuremath{Y_{i}=\beta_{0}+\beta_{1,i}D_{i}+U_{i}}
@@ -208,8 +208,15 @@ Consider the following Roy Model setup
 Derive the expression for $\beta_{O L S}$. What treatment effect does it correspond to when $D \perp\left(Y_{1}, Y_{0}\right)$ ?
 \end{problem}
 \begin{solution}
-
+The expression for $\beta_\text{OLS}$ can be derived as:
+\begin{align}
+\begin{split}
+    \beta
+\end{split}
+\end{align}
 \end{solution}
+
+
 \begin{problem}{b}
 Derive expressions for ATT and ATUT. Comment on their relative magnitudes and signs.
 \end{problem}
@@ -232,7 +239,7 @@ Derive expressions for $\frac{\partial A T T}{\partial \rho}, \frac{\partial A T
 Set $\sigma=2$ and $\rho=0.5$. Draw $N=10,000$ pairs of $\left(U_{0}, U_{1}\right)$. Compute ATE, ATT, ATUT and $\beta_{O L S}$. (Note: you have all the counterfactuals in this set up-take advantage of this fact). Compute $\mathbb{E}[Y \mid D=1]-\mathbb{E}[Y \mid D=0]$. What parameter does it correspond to? Repeat this for $(\sigma, \rho) \in\{(2,0),(2,-0.5)\}$. Fix $\rho=0.5$ and vary $\sigma$ to verify your findings in (d).
 \end{problem}
 \begin{solution}
-
+    See Topic 2 PDF slide 5: the expectation diff thing is basically ATT plus selection bias or ATU plus selection bias.
 \end{solution}
 \begin{problem}{f}
 Claim: in this setup, $D \perp\left(Y_{1}, Y_{0}\right)$ if and only if $\rho=0$. Argue whether this claim is true or not. Justify using the results from (e).
@@ -271,20 +278,36 @@ Using $X, \beta$ and $\sigma^{2}$ from part (a), draw $S=10,000$ of $U^{(s)}$ (a
 \end{problem}
 \begin{solution}
 For this problem it is important to highlight that $X$ is simulated from a standard normal distribution. The Montecarlo estimation results are presented in Table \ref{table:ea3:ps1:q3a:tab2}. 
-\input{Tables/q3a_tab2}
+\input{Tables/q3a_tab2} \\ 
 The Montecarlo simulation cleans up some of the error induced by $U_i$ as our estimates are even closer to the true underlying value and the standard error is still the same. The convergence in probability of the estimated standard error to the theoretical is an application of both the Law of Large Numbers and the continuous mapping theorem. Each Montecarlo estimated parameter $\hat{\beta}_k^{(s)}$ can be interpreted as a draw from the distribution of $\hat{\beta}_k$. Since $\hat{\beta}_k$ has a normal distribution then it has a second moment and 
 \begin{align*}
     \frac{1}{S} \sum_{s=1}^{S}\left(\hat{\beta}_{k}^{(s)}\right)^{2}&\stackrel{p}{\longrightarrow}  \E[\hat{\beta}_k^2] & 
     \left(\frac{1}{S} \sum_{s=1}^{S} \hat{\beta}_{k}^{(s)}\right)^{2}&\stackrel{p}{\longrightarrow} \E[\hat{\beta}_k]^2
 \end{align*}
-by both the LLN and the continuous mapping theorem. To justify the claim that each $\hat{\beta}_k^{(s)}$ consider Figure \ref{ea3:ps1:q3a:fig1}. Note that over the 10,000 observations the implied histogram matches the pdf of the theoretical distribution. 
+by both the LLN and the continuous mapping theorem. To justify the claim that each $\hat{\beta}_k^{(s)}$ consider Figure \ref{ea3:ps1:q3a:fig1}. Note that over the 10,000 observations the implied histogram matches the pdf of the theoretical distribution. The theoretical distribution can be easily calculated as we selected $X_1\sim\mathcal{N}(0,1)$. Thus, the theoretical matrix $V$ is 
+\begin{equation*}
+    V = \E[X'X]\sigma^2 = \E\begin{bmatrix}
+    1 & X_1 \\ X_1 & X_1^2
+    \end{bmatrix}\sigma^2 = 
+    \begin{bmatrix}
+    4 & 0 \\ 0 & 4
+    \end{bmatrix} 
+\end{equation*}
+Then for $N$ sufficiently large, the distribution of $\hat{\beta}$ is 
+\begin{equation*}
+    \hat{\beta}\sim\mathcal{N}\left(\begin{bmatrix}
+    2 \\ 3
+    \end{bmatrix},\begin{bmatrix}
+    \sfrac{4}{N} & 0 \\ 0 & \sfrac{4}{N}
+    \end{bmatrix}\right)
+\end{equation*}
 \begin{figure}[htb]
     \centering
     \caption{OLS Estimate Distribution from Montecarlo}
     \label{ea3:ps1:q3a:fig1}
     \includegraphics[width=0.45\textwidth]{Figures/p3qa.pdf}
 \end{figure}
-\textcolor{red}{If it gives me time I will derivate the numbers of the theoretical distribution and plot it side by side with the estimated}
+
 \end{solution}
 \FloatBarrier
 \underline{\hspace{\textwidth}}
@@ -301,7 +324,7 @@ Begin by defining $Y$ to estimate the OLS regression as
 \end{align*}
 By taking expectations it yields that 
 \begin{equation*}
-    \E[Y\vert D] = \E[Y_1-Y_0\vert D] + \E[Y_0\vert D]
+    \E[Y\vert D] = D\E[Y_1-Y_0\vert D] + \E[Y_0\vert D]
 \end{equation*}
 which implies that $\hat{\beta}_0=\E[Y_0\vert D] = \E[Y_0]$ using the independence assumption. Similarly, 
 \begin{align*}
@@ -309,18 +332,21 @@ which implies that $\hat{\beta}_0=\E[Y_0\vert D] = \E[Y_0]$ using the independen
 &= \E[Y_1\vert D=1] - \E[Y_0\vert D=0] \\ 
 &= \E[Y_1]-\E[Y_0] = \E[Y_1-Y_0] 
 \end{align*}
-But note that the independence assumption is key for the identification of the unconditional effect of the RCT. 
-\input{Tables/q3b_tab1}
+But note that the independence assumption is key for the identification of the unconditional effect of the RCT. If $D\not\perp (Y_1,Y_0)$ then $\E[Y_1\vert D=1] - \E[Y_0\vert D=0]\neq \E[Y_1-Y_0]$. The results of the OLS regression are presented in Table \ref{table:ea3:ps1:q3b:tab1}.
+\input{Tables/q3b_tab1} 
+Once again, the OLS results are close to the population value. 
 \end{solution}
 \begin{problem}{b}
 From the initial data that you generated, draw $N=10,000$ pairs of $\left(Y_{i}, D_{i}\right)$, choosing each of the original data pairs with probability $\frac{1}{N}$ (with replacement). Repeat this procedure a total of $S=10,000$ times. You should have $S$ samples of $N=$ observations, each generated from the original sample. Repeat the computations from the Monte Carlo Simulations part, making sure to compute $\left(\widehat{\operatorname{Var}}\left[\hat{\beta}^{(s)}\right]\right)^{1 / 2}$ and to plot a histogram for $\hat{\beta}^{(s)}$. What would happen if you drew $Y$ and $D$ independently from the original sample, instead of as a pair?
 \end{problem}
 \begin{solution}
+The results of the Bootstrap are presented in Table \ref{table:ea3:ps1:q3b:tab1}. One key feature of the Bootstrap exercise is that the distribution generated by Bootstrapping is not the theoretical one but in reality the distribution around the OLS estimates. 
 \input{Tables/q3b_tab2}
+To see this clearly, refer to Figure \ref{ea3:ps1:q3b:fig1}. The Empirical distribution is constructed using a normal distribution center around the OLS estimate and the variance is the square of the estimated standard error calculated by OLS. 
 \begin{figure}[htb]
     \centering
     \caption{OLS Estimate Distribution from Bootstrapping}
-    \label{ea3:ps1:q3a:fig1}
+    \label{ea3:ps1:q3b:fig1}
     \includegraphics[width=0.45\textwidth]{Figures/p3qb.pdf}
 \end{figure}
 \end{solution}
