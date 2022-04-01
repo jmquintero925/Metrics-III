@@ -28,7 +28,7 @@ Y = X*beta + U;
 betaE   = (X'*X)\X'*Y;
 
 % Calculate the estandar errors for beta
-VE      = N*inv(X'*X)*var(Y-X*betaE);
+VE      = inv((X'*X)/N)*var(Y-X*betaE);
 betaSE  = sqrt(diag(VE)/N);
 
 % Sanity check: compare to Matlab OLS function
@@ -68,7 +68,7 @@ betaE2      = mean(betaM,2);
 betaSE2     = sqrt(mean(betaM.^2,2)-mean(betaM,2).^2);
 
 % Export results
-latex.data = [mean(betaM,2),betaSE2];
+latex.data = [betaE2,betaSE2];
 latex.tableCaption = 'Montecarlo Estimates';
 latex.tableLabel = 'ea3:ps1:q3a:tab2';
 latex.tablePositioning = 'htb';
@@ -84,16 +84,17 @@ dlmcell(strcat('Tables/q3a_tab2.tex'),latex)
 figure;
 hold on
 % Histogram
-H = histogram(betaM(1,:),'Normalization','probability');
+H = histogram(betaM(1,:),'Normalization','pdf');
 H.FaceColor = c.brBlue;
 H.FaceAlpha = 1;
-% Estimated mean
-plot(betaE2(1)*[1,1],ylim(),'Color',c.maroon)
+% Theoretical distribution
+plot(sort(betaM(1,:)),normpdf(sort(betaM(1,:)),2,sqrt(sigma2/N)),'Color',c.maroon)
+plot(beta(1)*[1,1],ylim(),'Color','k')
 % Plot make-up
 xlabel('$\hat{\beta}_0$')
-ylabel('Probability')
+ylabel('PDF')
 xlim([1.9,2.1])
-legend('Montecarlo Simulation','Estimated Mean','Location','northeast','box','off')
+legend('Montecarlo Simulation','Theoretical Distribution','Location','northeast','box','off')
 % Save figure
 export_fig('Figures/p3qa','-pdf','-transparent')
 
@@ -160,16 +161,18 @@ dlmcell(strcat('Tables/q3b_tab2.tex'),latex)
 figure;
 hold on
 % Histogram
-H = histogram(betaM(2,:),'Normalization','probability');
+H = histogram(betaM(2,:),'Normalization','pdf');
 H.FaceColor = c.brBlue;
 H.FaceAlpha = 1;
 % Estimated mean
-plot(betaE2(2)*[1,1],ylim(),'Color',c.maroon)
+plot(sort(betaM(2,:)),normpdf(sort(betaM(2,:)),lm1.Coefficients.Estimate(2),...
+    lm1.Coefficients.SE(2)),'Color',c.maroon)
+plot(betaE2(2)*[1,1],ylim(),'Color','k')
 % Plot make-up
 xlabel('$\hat{\beta}_1$')
-ylabel('Probability')
+ylabel('PDF')
 xlim([2.9,3.1])
-legend('Bootstrap Simulation','Estimated Mean','Location','northeast','box','off')
+legend('Bootstrap Simulation','Empirical Distribution','Location','northeast','box','off')
 % Save figure
 export_fig('Figures/p3qb','-pdf','-transparent')
 
