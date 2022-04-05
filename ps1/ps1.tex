@@ -332,26 +332,21 @@ Set $\sigma=2$ and $\rho=0.5$. Draw $N=10,000$ pairs of $\left(U_{0}, U_{1}\righ
 \end{problem}
 \begin{solution}
     
-Below is 
-\include{ps1/Tables/q2d_tab1.tex}
+Below is a table with the results from the attached R code. The parameter corresponds to $\beta_\text{OLS}$, as is obvious in the table below.
+\input{Tables/q2d_tab1}
 
-\begin{table}[H]
-\centering
-\begin{tabular}{lrrr}
-\toprule
-\multicolumn{1}{c}{Parameter} & \multicolumn{3}{c}{Estimate} \\
-\cmidrule(l{3pt}r{3pt}){1-1} \cmidrule(l{3pt}r{3pt}){2-4}
-($\sigma$,$\rho$) & (2,-0.5) & (2,0) & (2,0.5)\\
-\midrule
-\beta_\text{OLS} & 1.383 & 1.364 & 1.380\\
-ATE & 0.015 & -0.022 & -0.011\\
-ATT & 1.387 & 1.367 & 1.361\\
-ATU & -1.382 & -1.396 & -1.379\\
-E[Y|D=1]-E[Y|D=0] & 1.383 & 1.364 & 1.380\\
-\bottomrule
-\end{tabular}
-\end{table}
+I plot the results of the parameters of interest when fixing $\rho$ at 0.5 and varying $\sigma$ from 0 to 5 in increments of 0.01. The figures confirm the results from part D.
 
+\begin{figure}[htb]
+    \centering
+    %\caption{OLS Estimate Distribution from Montecarlo}
+    %\label{ea3:ps1:q3a:fig1}
+    \includegraphics[width=0.43\textwidth]{ps1/Figures/p2_qe_beta.pdf}
+    \includegraphics[width=0.43\textwidth]{ps1/Figures/p2_qe_ATE.pdf}
+    \includegraphics[width=0.43\textwidth]{ps1/Figures/p2_qe_ATT.pdf}
+    \includegraphics[width=0.43\textwidth]{ps1/Figures/p2_qe_ATU.pdf}
+    \includegraphics[width=0.43\textwidth]{ps1/Figures/p2_qe_param.pdf}
+\end{figure}
 
 \end{solution}
 \begin{problem}{f}
