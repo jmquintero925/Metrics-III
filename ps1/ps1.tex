@@ -32,7 +32,7 @@ So then I can define
 U_{i} & =Y_{0,i}-E\left[Y_{0,i}\right]
 \end{align*}
 
-note that $E\left[U_{i}\right]=0$ by definition. Finally stack.
+note that $E\left[U_{i}\right]=0$ by definition. Finally add the above defined elements to form a regression equation.
 
 \[
 \ensuremath{Y_{i}=\beta_{0}+\beta_{1,i}D_{i}+U_{i}}
@@ -209,37 +209,150 @@ Derive the expression for $\beta_{O L S}$. What treatment effect does it corresp
 \end{problem}
 \begin{solution}
 The expression for $\beta_\text{OLS}$ can be derived as:
-\begin{align}
-\begin{split}
-    \beta
-\end{split}
-\end{align}
-\end{solution}
+\begin{align*}
+    \beta_\text{OLS} &= \frac{\text{Cov}(Y,D)}{\text{Var}(D)} \\
+    &= \frac{E[YD]-E[Y]E[D]}{E[D](1-E[D])} \tag{$D^2 = D$ since $D\in\{0,1\}$} \\
+    &= \frac{E[(DY_1+(1-D)Y_0)D]-E[DY_1+(1-D)Y_0]E[D]}{E[D](1-E[D])} \\
+    &= \frac{E[D Y_1]+\underbrace{E[(1-D)D  Y_0]}_{=0}-E[DY_1+(1-D)Y_0]E[D]}{E[D](1-E[D])} \\
+    &= \frac{E[Y_1|D=1]P(D=1)-E[D](E[Y_1+(1-D)Y_0])}{E[D](1-E[D])} \\
+    &= \frac{E[Y_1|D=1]E[D]-E[D](E[Y_1|D=1]P(D=1)-E[Y_0|D=0]P(D=0)}{E[D](1-E[D])} \\
+    &= \frac{E[Y_1|D=1]-E[Y_1|D=1]E[D]-E[Y_0|D=0](1-E[D])}{1-E[D]} \\
+    &= \frac{(1-E[D])(E[Y_1|D=1]-E[Y_0|D=0])}{1-E[D]} \\
+    &= E[Y_1|D=1]-E[Y_0|D=0]
+\end{align*}
 
+This is our classic formula. But we can go further, since we are given that $Y_1=U_1$, $Y_0=U_0$, the decision rule for $D$, and the joint distribution. 
+\begin{align*}
+    \beta_\text{OLS} &= E[Y_1|D=1]-E[Y_0|D=0] \\
+    &= E[U_1|U_1>U_0]-E[U_0|U_1\leq U_0]
+\end{align*}
+
+We know that we can write $U_0=\alpha_0+\alpha_1 (U_1-U_0) + \varepsilon$ with $\varepsilon \perp U_1-U_0$ and $\varepsilon ~ N(0,1)$.\footnote{See slide 23 of \url{https://www.ssc.wisc.edu/~ctaber/751/roy.pdf}} This is essentially a regression of $U_0$ on $U_1-U_0$. We can solve for the $\alpha$'s as:
+\begin{align*}
+    \alpha_1 &= \frac{\text{Cov}(U_0,U_1-U_0)}{\text{Var}(U_1-U_0)} \\
+    &= \frac{\text{Cov}(U_0,U_1)-\text{Var}(U_0)}{\text{Var}(U_1-U_0)} \\
+    &= \frac{\rho \sigma - 1}{\sigma^2-2\rho\sigma+1} \\
+    \alpha_0 &= \alpha_1 E[U_1-U_0] = 0
+\end{align*}
+Similarly, we have $\nu \sim N(0,1)$, $\nu \perp U_1-U_0$ such that:
+\begin{align*}
+    U_1&=\gamma_0+\gamma_1 (U_1-U_0) + \nu \\
+    \gamma_0 &= 0 \\
+    \gamma_1 &= \frac{\sigma^2-\rho\sigma}{1+\sigma^2-2\rho\sigma}
+\end{align*}
+
+So applying these to the formula for $\beta_\text{OLS}$ and defining $Z \equiv U_1-U_0 \sim N(0,\sigma^2+1-2\rho\sigma)$ gives:
+\begin{align*}
+    \beta_\text{OLS} &= E[U_1|U_1>U_0]-E[U_0|U_1\leq U_0] \\
+    &= E[\alpha_1(U_1-U_0)+\nu |U_1-U_0>0]-E[\gamma_1(U_1-U_0)+\varepsilon | U_1 - U_0 \leq 0] \\
+    &= E[\alpha_1 Z | Z >0]-E[\gamma_1 Z | U_1 - U_0 \leq 0] \tag{$\nu,\varepsilon \perp U_1-U_0$} \\
+    &= \alpha_1 E[Z|Z>0]-\gamma_1 E[ Z | Z \leq 0] \\
+    &= \alpha_1 \sqrt{\sigma^2+1-2\rho\sigma} \frac{\phi(0)}{1-\Phi(0)} + \gamma_1  \sqrt{\sigma^2+1-2\rho\sigma} \frac{\phi(0)}{\Phi(0)} \\
+    &=  (\alpha_1  + \gamma_1)\sqrt{\sigma^2+1-2\rho\sigma} \frac{\phi(0)}{\Phi(0)} \tag{$\Phi(0)=1-\Phi(0)$} \\ 
+    &=  \frac{\sigma^2-1}{\sqrt{\sigma^2+1-2\rho\sigma}} \frac{\phi(0)}{\Phi(0)} \\
+\end{align*}
+
+Lastly, taking our result for $\beta_\text{OLS}$ from the first set of equations and adding in the condition that $D \perp (Y_1,Y_0)$, we have:
+\begin{align*}
+    \beta_\text{OLS} &= E[Y_1|D=1] - E[Y_0 | D=0] \\
+    &= E[Y_1] - E[Y_0] \\
+    &= E[Y_1-Y_0] \tag{ATE} \\
+    &= E[U_1] - E[U_0] \\
+    &= 0
+\end{align*}
+That is, $\beta_\text{OLS}$ corresponds to the ATE when treatment is independent of potential outcomes, which in this case is 0.
+
+\end{solution}
 
 \begin{problem}{b}
 Derive expressions for ATT and ATUT. Comment on their relative magnitudes and signs.
 \end{problem}
 \begin{solution}
+The ATT is:
+\begin{align*}
+    \text{ATT} &= E[Y_1-Y_0 | D=1] \\
+    &= E[U_1 - U_0 | U_1>U_0] \\
+    &= E[U_1 - U_0 | U_1 - U_0 > 0] \\
+    &= \sqrt{\sigma^2 + 1 - 2\rho\sigma} \frac{\phi(0)}{1-\Phi(0)}
+\end{align*}
 
+Similarly, the ATUT is:
+\begin{align*}
+    \text{ATUT} &= E[Y_1-Y_0 | D=0] \\
+    &= E[U_1 - U_0 | U_1\leq U_0] \\
+    &= E[U_1 - U_0 | U_1 - U_0 \leq 0] \\
+    &= - \sqrt{\sigma^2 + 1 - 2\rho\sigma} \frac{\phi(0)}{\Phi(0)}
+\end{align*}
+
+As is obvious, we have that ATT $= -$ATUT, since $\Phi(0)=1-\Phi(0)$. ATE will be positive since the term inside the square root is positive and so is the Inverse Mills Ratio. The ATUT will be negative due to the negative sign in front. The magnitudes are the same.
 \end{solution}
+
 \begin{problem}{c}
 What is ATE in this case?
 \end{problem}
 \begin{solution}
-
+As described above, the ATE will be 0. See the block of equations labeled (ATE) in part A. To recap:
+\begin{align*}
+    \text{ATE} &= E[Y_1 - Y_0] = E[U_1] - E[U_0] = 0
+\end{align*}
 \end{solution}
+
+
 \begin{problem}{d}
-Derive expressions for $\frac{\partial A T T}{\partial \rho}, \frac{\partial A T U T}{\partial \rho}$, and $\frac{\partial \beta_{O L S}}{\partial \rho}$. Do the same for $\frac{\partial A T T}{\partial \sigma}, \frac{\partial A T U T}{\partial \sigma}$, and $\frac{\partial \beta_{O L S}}{\partial \sigma}$. Make sure to provide a simple intuitive explanation behind each of your results.
+Derive expressions for $\frac{\partial \text{ATT}}{\partial \rho}, \frac{\partial \text{ATUT}}{\partial \rho}$, and $\frac{\partial \beta_\text{OLS}}{\partial \rho}$. Do the same for $\frac{\partial \text{ATT}}{\partial \sigma}, \frac{\partial \text{ATUT}}{\partial \sigma}$, and $\frac{\partial \beta_\text{OLS}}{\partial \sigma}$. Make sure to provide a simple intuitive explanation behind each of your results.
 \end{problem}
 \begin{solution}
+Using our expressions from above and simplifying $1-\Phi(0)$ to $\Phi(0)$, we have partial derivatives with respect to $\rho$ of:
+\begin{align*}
+    \beta_\text{OLS} =  \frac{\sigma^2-1}{\sqrt{\sigma^2+1-2\rho\sigma}} \frac{\phi(0)}{\Phi(0)} &\implies \frac{\partial \beta_\text{OLS}}{\partial \rho} = \frac{\sigma(\sigma^2-1)}{\sqrt{(\sigma^2+1-2\rho\sigma)^3}} \frac{\phi(0)}{\Phi(0)} 
+    \\
+    \text{ATT} = \sqrt{\sigma^2 + 1 - 2\rho\sigma} \frac{\phi(0)}{\Phi(0)} &\implies \frac{\partial \text{ATT}}{\partial \rho} = \frac{-\sigma}{\sqrt{\sigma^2 + 1 - 2\rho\sigma}} \frac{\phi(0)}{\Phi(0)} \\
+    \text{ATUT} = -\text{ATT} &\implies \frac{\partial \text{ATUT}}{\partial \rho} = \frac{\sigma}{\sqrt{\sigma^2 + 1 - 2\rho\sigma}} \frac{\phi(0)}{\Phi(0)}
+    \\
+    \implies \frac{\partial{\beta_\text{OLS}}}{\partial \rho}= \frac{-(\sigma^2-1)}{\sigma^2 + 1 - 2\rho\sigma} & \frac{\partial \text{ATT}}{\partial \rho} = \frac{(\sigma^2-1)}{\sigma^2 + 1 - 2\rho\sigma} \frac{\partial \text{ATUT}}{\partial \rho}
+\end{align*}
+So we see that an increase in $\rho$, the correlation between $Y_1$ and $Y_0$, will lead to an increase in $\beta_\text{OLS}$ if $sigma^2>1$. For $\sigma \in (0,1]$, $\beta_\text{OLS}$ decreases with an increase in $\rho$. This is the case because $\sigma^2$ is the variance of $U_1$, so if the variance of $U_1$ is greater than the variance of $U_0$, which is 1, then $\beta_\text{OLS}$ will be larger when the correlation is higher. If the variance of $U_1$ is less than that of $U_0$, $\beta_\text{OLS}$ will be lower when the correlation between the potential outcomes is higher. 
+
+An increase in $\rho$ leads to a decrease in ATT since $\rho$ only shows up negatively in the denominator. For $\sigma\neq1$, we have that the partial of ATT with respect to $\rho$ is negative, but recall that ATT is positive. So as the correlation between the potential outcomes goes up, the magnitude of ATT decreases. A similar, but reverse, story is true for ATUT: it is increasing in $\rho$ and is negative, with a magnitude equal to that of ATT. 
+
+\begin{align*}
+    \beta_\text{OLS} =  \frac{\sigma^2-1}{\sqrt{\sigma^2+1-2\rho\sigma}} \frac{\phi(0)}{\Phi(0)} &\implies \frac{\partial \beta_\text{OLS}}{\partial \sigma} = \frac{\sigma^3-3\sigma\rho+3\sigma-\rho}{\sqrt{(\sigma^2+1-2\rho\sigma)^3}} \frac{\phi(0)}{\Phi(0)} 
+    \\
+    \text{ATT} = \sqrt{\sigma^2 + 1 - 2\rho\sigma} \frac{\phi(0)}{\Phi(0)} &\implies \frac{\partial \text{ATT}}{\partial \sigma} = \frac{\sigma-\rho}{\sqrt{\sigma^2 + 1 - 2\rho\sigma}} \frac{\phi(0)}{\Phi(0)} \\
+    \text{ATUT} = -\text{ATT} &\implies \frac{\partial \text{ATUT}}{\partial \sigma} = \frac{-\sigma+\rho}{\sqrt{\sigma^2 + 1 - 2\rho\sigma}} \frac{\phi(0)}{\Phi(0)}
+\end{align*}
+To interpret the change in $\beta_\text{OLS}$ to a change in $\sigma$ is not straightforward and depends on the value of $\rho$ and $\sigma$. The denominator is positive and so too are the PDF and CDFs of the standard normal distribution when evaluated at 0, so it depends on $\sigma^3-3\sigma\rho+3\sigma-\rho$.
+
+If $\sigma$ increases, then ATT increases if $\sigma>\rho$ (the numerator of the partial is positive) and ATUT decreases if $\sigma>\rho$. If $\sigma<\rho$, then an increase in $\sigma$ leads to a decrease in ATT and an increase in ATUT.
+
 
 \end{solution}
 \begin{problem}{e}
 Set $\sigma=2$ and $\rho=0.5$. Draw $N=10,000$ pairs of $\left(U_{0}, U_{1}\right)$. Compute ATE, ATT, ATUT and $\beta_{O L S}$. (Note: you have all the counterfactuals in this set up-take advantage of this fact). Compute $\mathbb{E}[Y \mid D=1]-\mathbb{E}[Y \mid D=0]$. What parameter does it correspond to? Repeat this for $(\sigma, \rho) \in\{(2,0),(2,-0.5)\}$. Fix $\rho=0.5$ and vary $\sigma$ to verify your findings in (d).
 \end{problem}
 \begin{solution}
-    See Topic 2 PDF slide 5: the expectation diff thing is basically ATT plus selection bias or ATU plus selection bias.
+    
+Below is 
+\include{ps1/Tables/q2d_tab1.tex}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lrrr}
+\toprule
+\multicolumn{1}{c}{Parameter} & \multicolumn{3}{c}{Estimate} \\
+\cmidrule(l{3pt}r{3pt}){1-1} \cmidrule(l{3pt}r{3pt}){2-4}
+($\sigma$,$\rho$) & (2,-0.5) & (2,0) & (2,0.5)\\
+\midrule
+\beta_\text{OLS} & 1.383 & 1.364 & 1.380\\
+ATE & 0.015 & -0.022 & -0.011\\
+ATT & 1.387 & 1.367 & 1.361\\
+ATU & -1.382 & -1.396 & -1.379\\
+E[Y|D=1]-E[Y|D=0] & 1.383 & 1.364 & 1.380\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
 \end{solution}
 \begin{problem}{f}
 Claim: in this setup, $D \perp\left(Y_{1}, Y_{0}\right)$ if and only if $\rho=0$. Argue whether this claim is true or not. Justify using the results from (e).
@@ -277,9 +390,9 @@ Using $X, \beta$ and $\sigma^{2}$ from part (a), draw $S=10,000$ of $U^{(s)}$ (a
     Justify the $" \stackrel{p}{\longrightarrow}$ " in the line above. Plot a histogram for the first component of $\beta^{(s)}$.
 \end{problem}
 \begin{solution}
-For this problem it is important to highlight that $X$ is simulated from a standard normal distribution. The Montecarlo estimation results are presented in Table \ref{table:ea3:ps1:q3a:tab2}. 
+For this problem it is important to highlight that $X$ is simulated from a standard normal distribution. The Monte Carlo estimation results are presented in Table \ref{table:ea3:ps1:q3a:tab2}. 
 \input{Tables/q3a_tab2} \\ 
-The Montecarlo simulation cleans up some of the error induced by $U_i$ as our estimates are even closer to the true underlying value and the standard error is still the same. The convergence in probability of the estimated standard error to the theoretical is an application of both the Law of Large Numbers and the continuous mapping theorem. Each Montecarlo estimated parameter $\hat{\beta}_k^{(s)}$ can be interpreted as a draw from the distribution of $\hat{\beta}_k$. Since $\hat{\beta}_k$ has a normal distribution then it has a second moment and 
+The Monte Carlo simulation cleans up some of the error induced by $U_i$ as our estimates are even closer to the true underlying value and the standard error is still the same. The convergence in probability of the estimated standard error to the theoretical is an application of both the Law of Large Numbers and the continuous mapping theorem. Each Monte Carlo estimated parameter $\hat{\beta}_k^{(s)}$ can be interpreted as a draw from the distribution of $\hat{\beta}_k$. Since $\hat{\beta}_k$ has a normal distribution then it has a second moment and 
 \begin{align*}
     \frac{1}{S} \sum_{s=1}^{S}\left(\hat{\beta}_{k}^{(s)}\right)^{2}&\stackrel{p}{\longrightarrow}  \E[\hat{\beta}_k^2] & 
     \left(\frac{1}{S} \sum_{s=1}^{S} \hat{\beta}_{k}^{(s)}\right)^{2}&\stackrel{p}{\longrightarrow} \E[\hat{\beta}_k]^2
@@ -305,7 +418,7 @@ Then for $N$ sufficiently large, the distribution of $\hat{\beta}$ is
     \centering
     \caption{OLS Estimate Distribution from Montecarlo}
     \label{ea3:ps1:q3a:fig1}
-    \includegraphics[width=0.45\textwidth]{Figures/p3qa.pdf}
+    \includegraphics[width=0.43\textwidth]{Figures/p3qa.pdf}
 \end{figure}
 
 \end{solution}
@@ -347,7 +460,7 @@ To see this clearly, refer to Figure \ref{ea3:ps1:q3b:fig1}. The Empirical distr
     \centering
     \caption{OLS Estimate Distribution from Bootstrapping}
     \label{ea3:ps1:q3b:fig1}
-    \includegraphics[width=0.45\textwidth]{Figures/p3qb.pdf}
+    \includegraphics[width=0.43\textwidth]{Figures/p3qb.pdf}
 \end{figure}
 \end{solution}
 \end{document}
