@@ -11,6 +11,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 \maketitle
+
+Our code can be found in this GitHub respository: \url{https://github.com/jmquintero925/Metrics-III/tree/main/ps1}
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% QUESTION 1 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Problem 1}
 Consider an i.i.d. sample $\left\{Y_{i}, D_{i}\right\}_{i=1}^{n}$, where $Y_{i}$ is future earnings and $D_{i} \in\{0,1\}$ indicates whether an individual received a scholarship to attend college. Let $Y_{i 0}$ and $Y_{i 1}$ represent the potential outcomes corresponding to the events $D_{i}=0$ and $D_{i}=1$, respectively.
@@ -335,17 +339,17 @@ Set $\sigma=2$ and $\rho=0.5$. Draw $N=10,000$ pairs of $\left(U_{0}, U_{1}\righ
 Below is a table with the results from the attached R code. The parameter corresponds to $\beta_\text{OLS}$, as is obvious in the table below.
 \input{Tables/q2d_tab1}
 
-I plot the results of the parameters of interest when fixing $\rho$ at 0.5 and varying $\sigma$ from 0 to 5 in increments of 0.01. The figures confirm the results from part D.
+I plot the results of the parameters of interest when fixing $\rho$ at 0.5 and varying $\sigma$ from 0 to 5 in increments of 0.01. The figures confirm the results from part D. Note that ATU should be zero, but as $\sigma$ increases, the error in the estimated parameter increases.
 
-\begin{figure}[htb]
+\begin{figure}[!htb]
     \centering
-    %\caption{OLS Estimate Distribution from Montecarlo}
-    %\label{ea3:ps1:q3a:fig1}
-    \includegraphics[width=0.43\textwidth]{ps1/Figures/p2_qe_beta.pdf}
-    \includegraphics[width=0.43\textwidth]{ps1/Figures/p2_qe_ATE.pdf}
-    \includegraphics[width=0.43\textwidth]{ps1/Figures/p2_qe_ATT.pdf}
-    \includegraphics[width=0.43\textwidth]{ps1/Figures/p2_qe_ATU.pdf}
-    \includegraphics[width=0.43\textwidth]{ps1/Figures/p2_qe_param.pdf}
+    \includegraphics[width=0.25\textwidth]{ps1/Figures/p2_qe_beta.pdf}
+    \includegraphics[width=0.25\textwidth]{ps1/Figures/p2_qe_ATT.pdf}
+    \includegraphics[width=0.25\textwidth]{ps1/Figures/p2_qe_ATU.pdf}
+\end{figure}
+\begin{figure}[!htb]
+    \centering    
+    \includegraphics[width=0.25\textwidth]{ps1/Figures/p2_qe_ATE.pdf}
 \end{figure}
 
 \end{solution}
@@ -353,7 +357,9 @@ I plot the results of the parameters of interest when fixing $\rho$ at 0.5 and v
 Claim: in this setup, $D \perp\left(Y_{1}, Y_{0}\right)$ if and only if $\rho=0$. Argue whether this claim is true or not. Justify using the results from (e).
 \end{problem}
 \begin{solution}
-
+    This claim is not true. Even if $U_1$ and $U_0$ are uncorrelated ($\rho=0$), the decision rule $D$ depends on both potential outcomes by definition. If $D$ depends on the potential outcomes, then the fact that $\rho=0$ does not guarantee that $D$ is independent of the potential outcomes.
+    
+    When $D \perp (Y_{1}, Y_{0})$, we should have ATE, ATT, and ATUT all equal. To see that this is not the case when $\rho=0$, look at the middle column of the table in part E, where $(\sigma,\rho)=(2,0)$. When $\rho=0$, we have different values for all three.
 \end{solution}
 
 
