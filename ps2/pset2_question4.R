@@ -1,13 +1,40 @@
 rm(list=ls())
-setwd("~/Dropbox/Grad School/Research/3_TestOptional/2_Code/src")
+setwd("~/Dropbox/Grad School/Courses/Metrics III - Magne,Jim/Metrics-III/ps2")
 
 library(data.table)
 library(ggplot2)
 library(stargazer)
 
 ## LOAD DATA -----------------------
-load(file='./clean_scorecard.Rdata')
-load(file='../output/test_optional_policy.Rdata')
+dt <- fread(file='./IncomeData.csv')
+
+# Exploration
+dim(dt) # 1mil rows, 1 column
+summary(dt$Y) # median/mean income = 39k and 41k
+# max income 142k, min = 2
+
+
+## PART A: PLOT HISTOGRAM ---------------
+ggplot() +
+  geom_histogram(data=dt, aes(x=Y)) +
+  scale_y_continuous(limits=c(0,150000), 
+                     breaks = scales::breaks_width(50000), 
+                     labels = scales::comma) +
+  scale_x_continuous(labels=scales::dollar) +
+  theme_minimal() + 
+  labs(x="Income", y="Count", title="Distribution of Income") 
+
+
+
+ggplot(data=CT19, aes(age, fill=race)) + 
+  geom_histogram(breaks=seq(15, 80, by = 1)) +
+  theme_minimal()+ theme(text=element_text(family="Palatino"))+
+  scale_fill_manual(name="Race", values = cbPalette) +  
+  theme(plot.title = element_text(hjust = 0))+
+  labs(x="Age", y="Number of Pretrial Inmates", caption="This graphs covers only the 3,230 inmates present in DOC facilities on 7/28/19.")+
+  scale_y_continuous(limits=c(0,126), breaks=seq(0,126,25))+
+  scale_x_continuous(limits=c(15,81), breaks=seq(15,80,5))+ 
+  ggtitle("Age and Race of Connecticut Pretrial Inmates (7/28/2019)", subtitle = "Data Available via Connecticut Open Data")
 
 
 ## Merge Scorecard and Test Optional DATA -----------------------
