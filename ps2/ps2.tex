@@ -17,69 +17,136 @@ Our code can be found in this GitHub respository: \url{https://github.com/jmquin
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% QUESTION 1 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Problem 1}
-Setup text here
+Let $Y_{i}(1)$ and $Y_{i}(0)$ be potential outcomes of individual $i$ if treated or not treated, respectively. Let $Y_{i}$ be the actual outcome and let $D_{i}$ be the treatment indicator. We assume:
+\begin{align*}
+\begin{gathered}
+D_{i} \indp \left(Y_{i}(1), Y_{i}(0)\right) \mid X_{i} \\
+0<P\left[D_{i}=1 \mid X_{i}=x\right]<1 \quad \forall x \in \operatorname{supp}\left(X_{i}\right)
+\end{gathered}
+\end{align*}
 
 \begin{problem}{a}
+Propose an estimator of $\E\left[Y_{i}(1)-Y_{i}(0)\right]$
 \end{problem}
 \begin{solution}
+Begin by using the Law of iterated expectations note that the moment of interest can be rewritten as
+\begin{align*}
+    \E\left[Y_{i}(1)-Y_{i}(0)\right] &= \E\left[\E\left[Y_{i}(1)-Y_{i}(0)\big\vert X = x\right]\right] \\ 
+    &= \E\left[\E\left[Y_{i}(1)\big\vert X_i = x\right]-\E\left[Y_{i}(0)\big\vert X_i = x\right]\right] \\ 
+    &= \E\left[\E\left[Y_{i}(1)\big\vert X_i = x,D_i=1\right]-\E\left[Y_{i}(0)\big\vert X_i = x, D_i=0\right]\right] \\ 
+    &= \E\left[\E\left[Y_{i}\big\vert X_i = x,D_i=1\right]-\E\left[Y_{i}\big\vert X_i = x, D_i=0\right]\right] \tag{ATE}\label{ps2:q1a:eq1}
+\end{align*}
+where the equality line uses the hypothesis $D_{i} \indp \left(Y_{i}(1), Y_{i}(0)\right) \mid X_{i}$ and the last equality uses the fact that $Y_i(1) = \left(Y_i\vert D_i=1\right)$. Next, conditional on $X_i=x$, the inside terms are averages that can be calculated straight from the data. Define the set 
+\begin{equation*}
+    I(d,x)=\{i\vert D_i=d\land X_i=x\}
+\end{equation*}  as the set of individuals with treatment variable $d$ and observable $x$. Then $\E\left[Y_{i}\big\vert X = x,D_i=d\right]$ can be identified by 
+\begin{equation*}
+    \hat{\mu}(d,x) = \frac{1}{\vert I(d,x)\vert} \sum_{i\in I(d,x)} Y_i
+\end{equation*} where $\vert\cdot\vert$ denotes the cardinality of the set. Thus a natural estimator for \eqref{ps2:q1a:eq1} is 
+\begin{equation*}
+    \widehat{\text{ATE}} = \int (\hat{\mu}(1,x)-\hat{\mu}(0,x))\mathrm{d}F(x)
+\end{equation*}
+Note that since $X_i$ is potentially a vector, the distribution is the joint density of each of the components of $X_i$. However, in practice, researchers only observe a finite set of values of $X_i$. Thus, one potential way of estimating the integral is 
+\begin{equation*}
+    \widehat{\text{ATE}} = \frac{1}{N}\sum_{x} (\hat{\mu}(1,x)-\hat{\mu}(0,x))(\vert I(1,x)\vert+\vert I(0,x)\vert)
+\end{equation*}
 \end{solution}
 
 \begin{problem}{b}
+Show that the assumptions stated imply that $D_{i}$ is conditionally independent of $\left(Y_{i}(1), Y_{i}(0)\right)$ given $P\left[D_{i}=1 \mid X_{i}\right]: D_{i} \indp\left(Y_{i}(1), Y_{i}(0)\right) \mid P\left[D_{i}=1 \mid X_{i}\right]$. Why is this result important?
 \end{problem}
 \begin{solution}
+To show that $D_{i} \indp\left(Y_{i}(1), Y_{i}(0)\right) \mid P\left(D_{i}=1 \mid X_{i}\right)$ first define the propensity score $p(x)$ as 
+\begin{equation*}
+    p(x) = P(D_i=1\vert X_i=x).
+\end{equation*}
+Next, by Bayes rule
+\begin{equation}\label{ps2:q1b:eq1}
+    P\left(D_i=1\vert Y_i(1),Y_i(0),p(X_i)\right) = \frac{P\left(D_i=1, Y_i(1),Y_i(0)\vert p(X_i)\right)}{P\left(Y_i(1),Y_i(0)\vert p(X_i)\right)}
+\end{equation}
+By definition of independence, $D_{i} \indp\left(Y_{i}(1), Y_{i}(0)\right) \mid P\left(D_{i}=1 \mid X_{i}\right)$ if and only if 
+\begin{equation}\label{ps2:q1b:eq2}
+   P\left(D_i=1, Y_i(1),Y_i(0)\vert p(X_i)\right) =P\left(D_i=1\vert p(X_i)\right)P\left( Y_i(1),Y_i(0)\vert p(X_i)\right).
+\end{equation}
+Thus, by combining \eqref{ps2:q1b:eq1} and \eqref{ps2:q1b:eq2}, we I can conclude that $D_i$ is independent from $(Y_i(1),Y_i(0))$ is and only if the following condition holds:  
+\begin{align*}
+    P\left(D_i=1\vert Y_i(1),Y_i(0),p(X_i)\right) &= P\left(D_i=1\vert p(X_i)\right) \\ 
+    &= p(X_i).
+\end{align*}
+Use the fact that $D_i$ is a binary variable and can be written in terms of expectations
+\begin{align*}
+    P\left(D_i=1\vert Y_i(1),Y_i(0),p(X_i)\right) &= \E\left[D_i\vert Y_i(1),Y_i(0),p(X_i) \right] \\ 
+    &= \E\left[\E\left[D_i\vert Y_i(1),Y_i(0),X_i\right]\big\vert p(X_i) \right] \tag{LIE} \\ 
+    &= \E\left[\E\left[D_i\vert X_i\right]\big\vert p(X_i) \right] \tag{CIA} \\ 
+    &= \E\left[p(X_i) \big\vert p(X_i) \right] \\ 
+    &= p(X_i)
+\end{align*}
+which is what we wanted to show. \textcolor{red}{Where am I using the common support hypothesis? }. This result is very relevant because as shown in question (a) the dimension of $X_i$ can make the problem more imprecise. 
 \end{solution}
 
 \begin{problem}{c}
+Define the propensity score $P\left[D_{i}=1 \mid X_{i}\right]$ as the probability of receiving the treatment given the observables variables $X_{i}$. Propose an estimator of $\E\left[Y_{i}(1)-Y_{i}(0)\right]$ based on the propensity score.
 \end{problem}
 \begin{solution}
-\end{solution}
-
-\begin{problem}{d}
-\end{problem}
-\begin{solution}
-\end{solution}
-
-\begin{problem}{e}
-\end{problem}
-\begin{solution}
-\end{solution}
-
-\begin{problem}{f}
-\end{problem}
-\begin{solution}
+We can emulate the estimator constructed in question (a) but now conditioning on $p(X_i)$: 
+\begin{align*}
+    \E\left[Y_{i}(1)-Y_{i}(0)\right] &= \E\left[\E\left[Y_{i}(1)-Y_{i}(0)\big\vert p(X_i) = p\right]\right] \\ 
+    &= \E\left[\E\left[Y_{i}(1)\big\vert p(X_i) = p\right]-\E\left[Y_{i}(0)\big\vert p(X_i) = p\right]\right] \\ 
+    &= \E\left[\E\left[Y_{i}(1)\big\vert p(X_i) = p,D_i=1\right]-\E\left[Y_{i}(0)\big\vert p(X_i) = p, D_i=0\right]\right] \\ 
+    &= \E\left[\E\left[Y_{i}\big\vert p(X_i) = p,D_i=1\right]-\E\left[Y_{i}\big\vert p(X_i) = p, D_i=0\right]\right]
+\end{align*}
+Thus, as before we can create the mean of the outcome conditional on the propensity score
+\begin{equation*}
+     \hat{\mu}(d,p) = \frac{1}{\vert I(d,p)\vert} \sum_{i\in I(d,p)} Y_i
+\end{equation*}
+where the set $I$ is defined similarly to the one in question (a) but instead of conditioning on the observable variables is conditioning on the propensity score. Then an estimator for the ATE
+\begin{align*}
+\widehat{\text{ATE}} = \int \left(\mu(1,p)-\mu(0,p)\right)\mathrm{d}F(p)
+\end{align*}
+Empirically, Since the 
 \end{solution}
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% QUESTION 2 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Problem 2}
-Setup text here
-
+LaLonde (AER, 1986) investigated whether non-experimental methods could reproduce the experimental estimate based on the National Supported Work (NSW) Demonstration. The following dataset from Smith and Todd (J Ectrics, 2005):
+\begin{center}
+    \hyperlink{https://www.dropbox.com/s/dl/aw4yi13mz9z03yf/lalonde2.dta}{https://www.dropbox.com/s/dl/aw4yi13mz9z03yf/lalonde2.dta}
+\end{center}
+includes the NSW sample, as well as two non-experimental samples: one based on the Current Population Survey (CPS) and one on the Michigan Panel of Income Dynamics (PSID). The variable -sample- identifies the relevant observations. The variable -treated- identifies the observations that were treated (participate in a subsidized work experience program) in the NSW (from April 1975 to August 1977). You are interested in the average effect on Real Earnings in 1978 of the treatment for the treated. Start with the NSW sample:
 \begin{problem}{a}
+Investigate whether the data is consistent with randomization of the treatment.
 \end{problem}
 \begin{solution}
 \end{solution}
 
 \begin{problem}{b}
+Estimate the effect using the experimental sample. Now use the sample consisting in the treated from the NSW sample and the comparison individuals from the CPS sample.
 \end{problem}
 \begin{solution}
 \end{solution}
 
 \begin{problem}{c}
+Estimate the effect using OLS.
 \end{problem}
 \begin{solution}
 \end{solution}
 
 \begin{problem}{d}
+Investigate covariate balancing and support between the treated and the CPS sample.
 \end{problem}
 \begin{solution}
 \end{solution}
 
 \begin{problem}{e}
+Estimate the effect using 1 nearest neighbor propensity score matching. (Use -psmatch2- which can be installed using: ssc install psmatch2, if you use Stata. Other languages have
+similar programs.).
 \end{problem}
 \begin{solution}
 \end{solution}
 
 \begin{problem}{f}
+Estimate the effect using the propensity score and local linear regression.
 \end{problem}
 \begin{solution}
 \end{solution}
@@ -87,37 +154,85 @@ Setup text here
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% QUESTION 3 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Problem 3}
-Setup text here
+You are interested in estimating the effect of doing mathematics homework (yes/no) on mathematics test scores. You have data on all 10th graders in Oslo for the school year 2010/2011. The dataset contains the following variables:
+\begin{itemize}
+    \item students: end year test scores, homework, of missed classes, gender, age, test scores in 2009/2010
+    \item parents: education
+    \item teacher: gender, age, education
+\end{itemize}
+About half of the students do their homework.
 
 \begin{problem}{a}
+If you want to abolish homework, what effect would you want to estimate?
 \end{problem}
 \begin{solution}
+If you want to abolish homework, you want to show that the outcomes of students who do and do not do their homework is the same. Thus we would like to know the ATE of homework on students. Our issue is that students who do their homework may not be identical to students who don't, so we can attempt to control for this difference using the observables we have.
+
+We would want to estimate the ATE and see if its 0.
+
+Our outcome variable will be end of year test scores
+Control variables will be everything else??
 \end{solution}
 
 \begin{problem}{b}
+If you want to make homework mandatory, what effect would you want to estimate?
 \end{problem}
 \begin{solution}
+If you want to make homework mandatory, you would want to know the effect of treatment on the untreated, where treatment is homework.
+
+Same regression but different thing we care about??
 \end{solution}
 
 \begin{problem}{c}
+You want to compare the effect of doing homework as compared to an extra hour of math teaching. What effect of homework would you like to know?
 \end{problem}
 \begin{solution}
+The effect of homework is the ATE
+The effect of an extra hour of math teaching can be estimated by comparing outcomes for people who go to 1 more hour of class than people who go to 1 less, controlling for observables. But this feels like matching and I dont think this is a matching question??
 \end{solution}
 
+You want to estimate how well students that are currently not doing their homework would do, if they did their homework. You decide to use matching, and will therefore rely on a conditional independence assumption (CIA).
+
 \begin{problem}{d}
+Explain your CIA. Be explicit about the counterfactual outcomes and the variables that you want to control for. Why might your CIA not hold? Can you think of examples where you get upward biased estimates? And downward biased estimates?
 \end{problem}
 \begin{solution}
+
 \end{solution}
 
 \begin{problem}{e}
+Explain how you use the CIA to estimate the counterfactual outcome, how you take into account that students that do their homework have different characteristics, and what support condition you need
 \end{problem}
 \begin{solution}
 \end{solution}
 
 \begin{problem}{f}
+How would you estimate your effect using OLS?
 \end{problem}
 \begin{solution}
 \end{solution}
+
+
+\begin{problem}{g}
+You see in your data that boys never do their homework. What implications does this have for your research?
+\end{problem}
+\begin{solution}
+\end{solution}
+
+You discover that not all teachers assign homework, and you get a new variable from Oslo municipality with information $(0 / 1)$ on whether the teacher assigned homework or not. They tell you that teachers were assigned to give homework (or not) in a randomized experiment.
+\begin{problem}{h}
+First you add this new information to your matching variables. What will happen to your estimates and standard errors?
+\end{problem}
+\begin{solution}
+\end{solution}
+
+
+\begin{problem}{i}
+How will you use this new data and what effects can you estimate?
+\end{problem}
+\begin{solution}
+\end{solution}
+
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% QUESTION 4 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
