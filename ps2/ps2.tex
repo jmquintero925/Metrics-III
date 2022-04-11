@@ -206,20 +206,29 @@ The counterfactual outcome we would want to estimate is the effect of doing home
 
 To do so, start with the counterfactual outcome we want to find:
 \begin{align}
-    &E[Y_1|D=0] \tag{Counterfactual outcome} \\
-    &E[ E[Y_1| X=x, D=0] | D=0] \tag{Expand inside using LIE} \\
-    &E[ E[Y_1| X=x, D=1] | D=0] \tag{Use CIA} \\
-    & \sum_{x} E[Y_1 | X=x, D=1] P(X=x,D=0) \tag{Outer E[] as weighted sum}
+    E[Y_1|D=0] & \tag{Counterfactual outcome} \\
+    &=E[ E[Y_1| X=x, D=0] | D=0] \tag{Expand inside using LIE} \\
+    &=E[ E[Y_1| X=x, D=1] | D=0] \tag{Use CIA} \\
+    &= \sum_{x} E[Y_1 | X=x, D=1] P(X=x|D=0) \tag{Outer E[$\cdot$] as weighted sum}
 \end{align}
 
-The last line shows the importance of the support condition that we need. In order to properly match individuals, we need both treated and control observations for every combination of covariate values possible. For any $x^\star$ in the data, can't have $P(X=x^\star,D=0)$ be equal to either 1 or 0, otherwise that means that for all individuals with $X=x^\star$, they are either all treated or all not treated only have either all treated or all control, which means we have no one to match them to. If this is the case, then our counterfectual that we are estimating will not apply to individuals with this specific $X=x^\star$.
+The last line shows the importance of the support condition. In order to properly match individuals, we need both treated and control observations for every combination of covariate values possible. For any $x^\star$ in the data, can't have $P(X=x^\star|D=0)$ be equal to either 1 or 0, otherwise that means that for all individuals with $X=x^\star$, they are either all treated or all not treated, which means we have no one to match them to. If this is the case, then the counterfactual that we are estimating will not include information from people with $X=x^\star$ and thus is not relevant to our sample, just a portion of it.
 
+\todo[inline]{Is this good enough on ``how do you take into account that students that do their homework have different characteristics''??}
 \end{solution}
 
 \begin{problem}{f}
 How would you estimate your effect using OLS?
 \end{problem}
 \begin{solution}
+Using OLS, we would run a saturated-in-$X$ regression with a dummy for treatment versus control:\footnote{See MHE Eq 3.3.4}
+\begin{align*}
+    Y = \sum_x \alpha_x \mathbf{1}[X=x] + \delta_R D + \varepsilon
+\end{align*}
+where $\mathbf{1}[X=x]$ is an indicator for each combination of observables and $\alpha_x$ is the regression coefficient for a specific value $X=x$. Our coefficient of interest is $\delta_R$, which is the regression estimand. Note that this model is not fully saturated as there is a single additive effect for $D$ and no $D\cdot X$ interactions.
+
+\todo[inline]{This gets us the reg coefficient but i dont think that's right for what they're asking aka the ATUT}
+
 \end{solution}
 
 
@@ -253,6 +262,11 @@ Setup text here
 Plot a histogram of the data
 \end{problem}
 \begin{solution}
+\begin{figure}[!htb]
+    \centering    
+    \includegraphics[width=0.75\textwidth]{ps2/4a.png}
+\end{figure}
+
 \end{solution}
 
 \begin{problem}{b}
@@ -379,7 +393,10 @@ Recall that we approximate
 
 So then I can compute $P_{K}$ for all three specifications. 
 
-\todo{Insert graph} 
+\begin{figure}[!htb]
+    \centering    
+    \includegraphics[width=0.75\textwidth]{ps2/4c.png}
+\end{figure}
 
 \begin{table}
 \centering
@@ -422,6 +439,19 @@ $\phi\left(\eta\right)$ that spits out our chosen $\beta$.
 Compute bounds on the taxable income elasticity under the assumption of increasing pref- erences density
 \end{problem}
 \begin{solution}
+Blomquist et. al. 2021 show that since we assume monotonic density, $\sigma=1$. Our non-parametric estimators
+
+$$
+D^{-}(\beta)=f^{-}\left(y_{1}\right)\left[y_{2}\left(\frac{\rho_{1}}{\rho_{2}}\right)^{\beta}-y_{1}\right], D^{+}(\beta)=f^{+}\left(y_{2}\right)\left[y_{2}-y_{1}\left(\frac{\rho_{2}}{\rho_{1}}\right)^{\beta}\right] .
+$$
+
+So we can estimate the bounds on $\beta$ as follows
+
+\begin{aligned}
+&\bar{\sigma} \max \left\{\hat{D}^{-}\left(\hat{\beta}_{\ell}\right), \hat{D}^{+}\left(\hat{\beta}_{\ell}\right)\right\}=\widehat{\operatorname{Pr}}\left(y_{1} \leq Y \leq y_{2}\right) = \widehat{P}_K, \\
+&\sigma \min \left\{\hat{D}^{-}\left(\hat{\beta}_{u}\right), \hat{D}^{+}\left(\hat{\beta}_{u}\right)\right\}=\widehat{\operatorname{Pr}}\left(y_{1} \leq Y \leq y_{2}\right) = \widehat{P}_K .
+\end{aligned}
+
 \end{solution}
 
 \begin{problem}{f}
