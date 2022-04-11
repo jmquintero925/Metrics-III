@@ -116,10 +116,47 @@ ggsave(filename = './4c.png')
 
 
 ## PART D: Compute BOUNDS ---------------
+Dminus <- function(beta, param=PARAM){
+  # unpack parameters
+  fminus <- param[1]
+  fplus <- param[2]
+  rho1 <- param[3]
+  rho2 <- param[4]
+  ans =fminus * (y2 * (rho1/rho2)^beta -y1) 
+  return(ans)
+}
+
+Dplus <- function(beta, param=PARAM){
+  # unpack parameters
+  fminus <- param[1]
+  fplus <- param[2]
+  rho1 <- param[3]
+  rho2 <- param[4]
+  ans = fplus * (y2 - y1*(rho2/rho1)^beta)
+  return(ans)
+}
+
+dt_bounds <- data.table(
+  beta = betagrid, 
+  dminus = Dminus(betagrid),
+  dplus = Dplus(betagrid)
+)
+
+dt_bounds[, `:=` (minD = pmin(dminus, dplus), maxD = pmax(dminus, dplus))]
+dt_bounds[, c('dminus', 'dplus') := NULL] # drop cols
+dt_bounds <- melt(dt_bounds, id.vars='beta') # reshape long
 
 
+ggplot(dt_bounds) +
+  geom_point(aes(x=beta, y=value, color=variable)) +
+  geom_hline(yintercept = Pk) +
+  scale_color_manual(values = c("red", "blue"), labels = c("Min", "Max"), name="Bounds")+
+  theme_minimal(base_size = 15) +
+  labs(x="Beta", y="PK", title="Bounds on estimated beta") +
+  theme(plot.title.position = "plot", 
+        legend.position = "bottom")
 
-
+ggsave(filename = './4e.png')
 
 
 
