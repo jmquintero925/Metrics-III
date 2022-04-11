@@ -32,6 +32,8 @@ ggplot() +
   theme_minimal() + 
   labs(x="Income", y="Count", title="Distribution of Income") 
 
+ggsave(filename = './4a.png')
+
 ## PART B: Bunching Probability ---------------
 y1 <- K - delta # low bound of excluded range
 y2 <- K + delta # upper bound of excluded range
@@ -110,7 +112,10 @@ ggplot(dt_plot) +
   theme(plot.title.position = "plot", 
         legend.position = "bottom")
 
+ggsave(filename = './4c.png')
 
+
+## PART D: Compute BOUNDS ---------------
 
 
 
