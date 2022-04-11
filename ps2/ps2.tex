@@ -212,7 +212,7 @@ To do so, start with the counterfactual outcome we want to find:
     & \sum_{x} E[Y_1 | X=x, D=1] P(X=x,D=0) \tag{Outer E[] as weighted sum}
 \end{align}
 
-The last line shows the importance of the support condition that we need. In order to properly match individuals, we need both treated and control observations for every combination of covariate values possible. For any $x^\star$ in the data, can't have $P(X=x^\star,D=0)$ be equal to either 1 or 0, otherwise that means that for all individuals with $X=x^\star$, we only have either all treated or all control, which means we have no one to match them to. If this is the case, then our counterfectual that we are estimating will not apply to individuals with this specific $X=x^\star$.
+The last line shows the importance of the support condition that we need. In order to properly match individuals, we need both treated and control observations for every combination of covariate values possible. For any $x^\star$ in the data, can't have $P(X=x^\star,D=0)$ be equal to either 1 or 0, otherwise that means that for all individuals with $X=x^\star$, they are either all treated or all not treated only have either all treated or all control, which means we have no one to match them to. If this is the case, then our counterfectual that we are estimating will not apply to individuals with this specific $X=x^\star$.
 
 \end{solution}
 
