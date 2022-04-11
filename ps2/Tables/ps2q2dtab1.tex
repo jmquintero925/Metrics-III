@@ -1,0 +1,22 @@
+{
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\begin{tabular}{l*{3}{cccc}}
+\hline\hline
+                    &\multicolumn{2}{c}{(1)}  &\multicolumn{2}{c}{(2)}  &\multicolumn{2}{c}{(3)}           \\
+                    &\multicolumn{2}{c}{Treated}&\multicolumn{2}{c}{Untreated}&\multicolumn{2}{c}{Mean Difference}\\
+                    &        mean&          sd&        mean&          sd&           b         &           t\\
+\hline
+age of individual   &      24.626&       6.686&      33.225&      11.045&       8.599\sym{***}&    (13.371)\\
+years of schooling  &      10.380&       1.818&      12.028&       2.871&       1.647\sym{***}&     (9.850)\\
+1 if Black, 0 otherwise&       0.801&       0.400&       0.074&       0.261&      -0.728\sym{***}&   (-47.041)\\
+1 if married, 0 otherwise&       0.168&       0.375&       0.712&       0.453&       0.543\sym{***}&    (20.543)\\
+1 if High School dropout, 0 otherwise&       0.731&       0.444&       0.296&       0.456&      -0.435\sym{***}&   (-16.274)\\
+1 if Hispanic, 0 otherwise&       0.094&       0.293&       0.072&       0.259&      -0.022         &    (-1.465)\\
+# kids younger than 18&       0.343&       0.844&       1.834&       1.695&       1.491\sym{***}&    (15.122)\\
+kidmiss             &       0.101&       0.302&       0.004&       0.064&      -0.097\sym{***}&   (-21.929)\\
+Real Earnings 1974  &    3570.999&    5773.134&   14016.801&    9569.796&   10445.802\sym{***}&    (18.748)\\
+\hline
+Observations        &         297&            &       15992&            &       16289         &            \\
+\hline\hline
+\end{tabular}
+}
