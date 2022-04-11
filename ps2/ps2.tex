@@ -5,7 +5,7 @@
 %Fill in the appropriate information below
 \lhead{Problem Set 1}
 \rhead{Empirical Analysis} 
-\title{Problem Set 1}
+\title{Problem Set 2}
 \author{Alex Weinberg \and Isaac Norwich \and Jose M. Quintero}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -166,44 +166,54 @@ About half of the students do their homework.
 If you want to abolish homework, what effect would you want to estimate?
 \end{problem}
 \begin{solution}
-If you want to abolish homework, you want to show that the outcomes of students who do and do not do their homework is the same. Thus we would like to know the ATE of homework on students. Our issue is that students who do their homework may not be identical to students who don't, so we can attempt to control for this difference using the observables we have.
-
-We would want to estimate the ATE and see if its 0.
-
-Our outcome variable will be end of year test scores
-Control variables will be everything else??
+If you want to abolish homework, the policy you want to impose is $D=0$ for all students. You would want to show that doing so would not harm the outcome of students who currently are doing their homework when you no longer give them homework to do. That is, we want to estimate the average treatment effect on the treated (ATT) and see if it is 0. The ATT is the amount by which students who currently do their homework benefit, so it will be that amount by which their end of year test scores go down if homework is abolished. The ATT formula is $E[Y_1-Y_0|D=1]$.
 \end{solution}
 
 \begin{problem}{b}
 If you want to make homework mandatory, what effect would you want to estimate?
 \end{problem}
 \begin{solution}
-If you want to make homework mandatory, you would want to know the effect of treatment on the untreated, where treatment is homework.
-
-Same regression but different thing we care about??
+If you want to make homework mandatory, you would want to know the effect of treatment (homework) on the untreated, ATUT. That is, we want to know what would the impact of making homework mandatory be on the outcomes for the subset of people who currently do not do their homework. The ATUT is $E[Y_1-Y_0|D=0]$. 
 \end{solution}
 
 \begin{problem}{c}
 You want to compare the effect of doing homework as compared to an extra hour of math teaching. What effect of homework would you like to know?
 \end{problem}
 \begin{solution}
-The effect of homework is the ATE
-The effect of an extra hour of math teaching can be estimated by comparing outcomes for people who go to 1 more hour of class than people who go to 1 less, controlling for observables. But this feels like matching and I dont think this is a matching question??
+To compare the effect of doing homework as compared to an extra hour of math teaching, we would want to know the ATE. The ATE is the average effect of doing homework for all 10th graders in Oslo, regardless of whether they are currently doing homework or not. The ATE is $E[Y_1-Y_0]$. We would then compare this effect to the effect of an extra hour of math teaching.\todo[inline]{Uhhh how do we get the effect of an hour of math teaching effect?? Or is that irrelevant to the answer?}
 \end{solution}
 
-You want to estimate how well students that are currently not doing their homework would do, if they did their homework. You decide to use matching, and will therefore rely on a conditional independence assumption (CIA).
-
+\textbf{You want to estimate how well students that are currently not doing their homework would do, if they did their homework. You decide to use matching, and will therefore rely on a conditional independence assumption (CIA).}
 \begin{problem}{d}
 Explain your CIA. Be explicit about the counterfactual outcomes and the variables that you want to control for. Why might your CIA not hold? Can you think of examples where you get upward biased estimates? And downward biased estimates?
 \end{problem}
 \begin{solution}
+\todo[inline]{Need to add that we're trying to estimate ATUT}
+The conditional independence assumption is that the potential outcomes are independent of treatment, conditional on covariates: $(Y_0,Y_1)\perp D | X$. In this case, our potential outcomes are the end of year test scores for a student who does ($Y_1$) and does not do ($Y_0$) their homework ($D$). 
 
+The variables we want to control for, $X$, are those that will impact selection into treatment, so that conditioning on them allows us to view the treatment of doing homework as random across individuals. To do so, we must only control for observables that are determined before treatment.  Given the rich data, we would want to include all covariates except for our outcome (``end year test scores'') and the number of missed classes, since this is clearly not a predetermined variable. Everything else will be useful for our CIA.
+    
+The CIA might not hold if there are other variables that impact selection into doing or not doing homework. Since we are estimating the impact of math homework on end of year test scores, we could be omitting a measure of taste for mathematics. Certain students, even though they are good at math, may dislike math and therefore not do their math homework. If two students are perfectly matched on $X$'s except for this omitted `taste' measure, then treatment of doing homework will not be random since the one who likes math will be more likely to select into treatment. This would break our CIA.
+
+We would get upward biased estimates if the covariance between the omitted variable and the included variables (in the short regression) is positive. Specifically, if treatment (doing homework, $D$), is positively correlated with taste for mathematics, then the estimate from a regression without this variable would be upwardly biased. If the correlation is negative, then we would get downward biased estimated. This could happen if students who do not like math think that doing the homework will help them do better on the end of year tests and thus, and thus the correlation between $D$ and taste for math is negative.
 \end{solution}
 
 \begin{problem}{e}
 Explain how you use the CIA to estimate the counterfactual outcome, how you take into account that students that do their homework have different characteristics, and what support condition you need
 \end{problem}
 \begin{solution}
+The counterfactual outcome we would want to estimate is the effect of doing homework ($Y_1$) for students who do not currently do their homework ($D=0$): $E[Y_1|D=0]$. To estimate this counterfactual outcome we must condition on covariates so that we can use the actual outcome of students with the same covariate values. To do so, we use the CIA which tells us that expected outcomes for individuals with covariates $X$ are the same whether they received treatment or not: $E[Y_1|X,D=0]=E[Y_1|X,D=1]$.
+
+To do so, start with the counterfactual outcome we want to find:
+\begin{align}
+    &E[Y_1|D=0] \tag{Counterfactual outcome} \\
+    &E[ E[Y_1| X=x, D=0] | D=0] \tag{Expand inside using LIE} \\
+    &E[ E[Y_1| X=x, D=1] | D=0] \tag{Use CIA} \\
+    & \sum_{x} E[Y_1 | X=x, D=1] P(X=x,D=0) \tag{Outer E[] as weighted sum}
+\end{align}
+
+The last line shows the importance of the support condition that we need. In order to properly match individuals, we need both treated and control observations for every combination of covariate values possible. For any $x^\star$ in the data, can't have $P(X=x^\star,D=0)$ be equal to either 1 or 0, otherwise that means that for all individuals with $X=x^\star$, we only have either all treated or all control, which means we have no one to match them to. If this is the case, then our counterfectual that we are estimating will not apply to individuals with this specific $X=x^\star$.
+
 \end{solution}
 
 \begin{problem}{f}
@@ -219,7 +229,7 @@ You see in your data that boys never do their homework. What implications does t
 \begin{solution}
 \end{solution}
 
-You discover that not all teachers assign homework, and you get a new variable from Oslo municipality with information $(0 / 1)$ on whether the teacher assigned homework or not. They tell you that teachers were assigned to give homework (or not) in a randomized experiment.
+\textbf{You discover that not all teachers assign homework, and you get a new variable from Oslo municipality with information $(0 / 1)$ on whether the teacher assigned homework or not. They tell you that teachers were assigned to give homework (or not) in a randomized experiment.}
 \begin{problem}{h}
 First you add this new information to your matching variables. What will happen to your estimates and standard errors?
 \end{problem}
@@ -240,33 +250,204 @@ How will you use this new data and what effects can you estimate?
 Setup text here
 
 \begin{problem}{a}
+Plot a histogram of the data
 \end{problem}
 \begin{solution}
 \end{solution}
 
 \begin{problem}{b}
+Compute estimates for f-(18000) and f+(22000) and bunching probability PK.
 \end{problem}
 \begin{solution}
+I use a non-parametric estimator. Recall that the excluded range is given by the bounds
+\begin{align*}
+    y_1 &= K - \delta = 18000 \\
+    y_2 &= K + \delta = 22000
+\end{align*}
+
+Count the number of data points in a band near the exluded range bounds. 
+\begin{align*}
+    N_1 &= \sum 1_{y\in [y_1-\delta, y_1]} \\
+    N_2 &= \sum 1_{y\in [y_2, y_2+\delta]}
+\end{align*}
+
+I simply estimate non-parametrically 
+\begin{align*}
+    f^-(18000) &= \frac{N_1}{N} \\
+    f^+(22000) &= \frac{N_2}{N}
+\end{align*}
+
+The implied data PK is of course
+
+$$
+\widehat{P}_K = \frac{\sum 1_{y\in [y_1, y_2]}}{N} - \delta * [f^-(18000) + f^+(22000)]
+$$
 \end{solution}
 
 \begin{problem}{c}
+Given density, compute elasticity.
 \end{problem}
 \begin{solution}
+
+From equation 6 of the Blomquist et. al. paper we know that 
+\[
+P_{K}=\int_{\eta_{\ell}}^{\eta_{u}}\phi(\eta)d\eta
+\]
+
+Now our task is to identify $\beta$, the elasticity. To do so, we
+will write $P_{K}$ as a function of both our density $\phi$ and
+our elasticity $\beta$. Since $P_{K}$ is pinned down by the data
+and $\phi$ is pinned down by our assumption, we will recover $\beta$. 
+
+\paragraph{First specification.
+\[
+\ensuremath{\phi(\eta)=\phi\left(\eta_{1}\right)+\frac{\eta-\eta_{1}}{\eta_{2}-\eta_{1}}\left(\phi\left(\eta_{2}\right)-\phi\left(\eta_{1}\right)\right),\eta\in\left[\eta_{1},\eta_{2}\right]}
+\]
+}
+
+\begin{align*}
+P_{K} & =\int_{\eta_{\ell}}^{\eta_{u}}\phi(\eta)d\eta\\
+ & =\int_{\eta_{\ell}}^{\eta_{u}}\phi\left(\eta_{1}\right)+\frac{\eta-\eta_{1}}{\eta_{2}-\eta_{1}}\left(\phi\left(\eta_{2}\right)-\phi\left(\eta_{1}\right)\right)d\eta\\
+ & =\int_{\eta_{\ell}}^{\eta_{u}}\phi\left(\eta_{1}\right)-\frac{\eta_{1}}{\eta_{2}-\eta_{1}}\left(\phi\left(\eta_{2}\right)-\phi\left(\eta_{1}\right)\right)d\eta+\frac{\left(\phi\left(\eta_{2}\right)-\phi\left(\eta_{1}\right)\right)}{\eta_{2}-\eta_{1}}\int_{\eta_{\ell}}^{\eta_{u}}\eta d\eta\\
+ & =\left[\phi\left(\eta_{1}\right)-\frac{\eta_{1}}{\eta_{2}-\eta_{1}}\left(\phi\left(\eta_{2}\right)-\phi\left(\eta_{1}\right)\right)\right]\left(\eta_{2}-\eta_{1}\right)+\frac{\left(\phi\left(\eta_{2}\right)-\phi\left(\eta_{1}\right)\right)}{\eta_{2}-\eta_{1}}\frac{\eta_{2}^{2}-\eta_{1}^{2}}{2}\\
+ & =\left[\eta_{2}\phi\left(\eta_{1}\right)-\eta_{1}\phi\left(\eta_{2}\right)\right]+\frac{\left(\phi\left(\eta_{2}\right)-\phi\left(\eta_{1}\right)\right)}{\eta_{2}-\eta_{1}}\frac{\eta_{2}^{2}-\eta_{1}^{2}}{2}\\
+ & =\left[\eta_{2}\phi\left(\eta_{1}\right)-\eta_{1}\phi\left(\eta_{2}\right)\right]+\frac{\phi\left(\eta_{2}\right)-\phi\left(\eta_{1}\right)}{\eta_{2}-\eta_{1}}\frac{\left(\eta_{2}-\eta_{1}\right)\left(\eta_{2}+\eta_{1}\right)}{2}\\
+ & =\left[\eta_{2}\phi\left(\eta_{1}\right)-\eta_{1}\phi\left(\eta_{2}\right)\right]+\frac{\left(\phi\left(\eta_{2}\right)-\phi\left(\eta_{1}\right)\right)\left(\eta_{2}+\eta_{1}\right)}{2}\\
+ & =\eta_{2}\phi\left(\eta_{1}\right)-\eta_{1}\phi\left(\eta_{2}\right)+\frac{\eta_{2}\phi\left(\eta_{2}\right)-\eta_{2}\phi\left(\eta_{1}\right)+\eta_{1}\phi\left(\eta_{2}\right)-\eta_{1}\phi\left(\eta_{1}\right)}{2}\\
+ & =\frac{1}{2}\eta_{2}\phi\left(\eta_{1}\right)-\frac{1}{2}\eta_{1}\phi\left(\eta_{2}\right)+\frac{1}{2}\eta_{2}\phi\left(\eta_{2}\right)-\frac{1}{2}\eta_{1}\phi\left(\eta_{1}\right)\\
+ & =\frac{1}{2}\left(\eta_{2}-\eta_{1}\right)\phi\left(\eta_{1}\right)+\frac{1}{2}\left(\eta_{2}-\eta_{1}\right)\phi\left(\eta_{2}\right)\\
+ & =\frac{1}{2}\left(\eta_{2}-\eta_{1}\right)\left[\phi\left(\eta_{1}\right)+\phi\left(\eta_{2}\right)\right]
+\end{align*}
+
+
+\paragraph{Second specification}
+
+\[
+\ensuremath{\phi(\eta)=\begin{cases}
+\phi\left(\eta_{1}\right) & ,\eta\in\left[\eta_{1},\frac{1}{4}\eta_{1}+\frac{3}{4}\eta_{2}\right]\\
+\phi\left(\eta_{1}\right)+\frac{\eta-\left(\frac{1}{4}\eta_{1}+\frac{3}{4}\eta_{2}\right)}{\eta_{2}-\left(\frac{1}{4}\eta_{1}+\frac{3}{4}\eta_{2}\right)}\left(\phi\left(\eta_{2}\right)-\phi\left(\eta_{1}\right)\right) & ,\eta\in\left(\frac{1}{4}\eta_{1}+\frac{3}{4}\eta_{2},\eta_{2}\right]
+\end{cases}}
+\]
+
+So then the integral is (I omit the algebra)
+
+\[
+\begin{aligned}P_{K} & =\int_{\eta_{1}}^{\frac{1}{4}\eta_{1}+\frac{3}{4}\eta_{2}}\phi\left(\eta_{1}\right)\mathrm{d}\eta+\int_{\frac{1}{4}\eta_{1}+\frac{3}{4}\eta_{2}}^{\eta_{2}}\left\{ \phi\left(\eta_{1}\right)+\frac{\eta-\left(\frac{1}{4}\eta_{1}+\frac{3}{4}\eta_{2}\right)}{\eta_{2}-\left(\frac{1}{4}\eta_{1}+\frac{3}{4}\eta_{2}\right)}\right\} \mathrm{d}\eta\\
+ & =\phi\left(\eta_{1}\right)\left(\eta_{2}-\eta_{1}\right)+\frac{1}{2}\frac{\eta_{2}^{2}-\left(\frac{1}{4}\eta_{1}+\frac{3}{4}\eta_{2}\right)^{2}}{\eta_{2}-\left(\frac{1}{4}\eta_{1}+\frac{3}{4}\eta_{2}\right)}-\frac{\left(\frac{1}{4}\eta_{1}+\frac{3}{4}\eta_{2}\right)\left(\frac{1}{4}\eta_{1}+\frac{3}{4}\eta_{2}\right)}{\eta_{2}-\left(\frac{1}{4}\eta_{1}+\frac{3}{4}\eta_{2}\right)}\\
+ & =\left[\frac{7}{8}\phi\left(\eta_{1}\right)+\frac{1}{8}\phi\left(\eta_{2}\right)\right]\left(\eta_{2}-\eta_{1}\right).
+\end{aligned}
+\]
+
+
+\paragraph{Third specification 
+\[
+\ensuremath{\phi(\eta)=\protect\begin{cases}
+\phi\left(\eta_{1}\right)+\frac{\eta-\eta_{1}}{\frac{3}{4}\eta_{1}+\frac{1}{4}\eta_{2}-\eta_{1}}\left(\phi\left(\eta_{2}\right)-\phi\left(\eta_{1}\right)\right) & ,\eta\in\left[\eta_{1},\frac{3}{4}\eta_{1}+\frac{1}{4}\eta_{2}\right]\protect\\
+\phi\left(\eta_{2}\right) & ,\eta\in\left(\frac{3}{4}\eta_{1}+\frac{1}{4}\eta_{2},\eta_{2}\right]
+\protect\end{cases}}
+\]
+}
+
+\[
+\begin{aligned}P_{K}= & \int_{\eta_{1}}^{\frac{3}{4}\eta_{1}+\frac{1}{4}\eta_{2}}\left\{ \phi\left(\eta_{1}\right)+\frac{\left(\eta-\eta_{1}\right)\left[\phi\left(\eta_{2}\right)-\phi\left(\eta_{1}\right)\right]}{\frac{3}{4}\eta_{1}+\frac{1}{4}\eta_{2}-\eta_{1}}\right\} \mathrm{d}\eta+\int_{\frac{3}{4}\eta_{1}+\frac{1}{4}\eta_{2}}^{\eta_{2}}\phi\left(\eta_{2}\right)\mathrm{d}\eta\\
+= & \frac{1}{4}\left(\eta_{2}-\eta_{1}\right)\phi\left(\eta_{1}\right)+\frac{3}{4}\left(\eta_{2}-\eta_{1}\right)\phi\left(\eta_{2}\right)\\
+ & +\frac{1}{2}\left(\frac{3}{4}\eta_{1}+\frac{1}{4}\eta_{2}+\eta_{1}\right)\left[\phi\left(\eta_{2}\right)-\phi\left(\eta_{1}\right)\right]-\eta_{1}\left[\phi\left(\eta_{2}\right)-\phi\left(\eta_{1}\right)\right]\\
+= & {\left[\frac{1}{8}\phi\left(\eta_{1}\right)+\frac{7}{8}\phi\left(\eta_{2}\right)\right]\left(\eta_{2}-\eta_{1}\right)}
+\end{aligned}
+\]
+
+
+\paragraph{Plot.}
+
+Recall from Blomquist et al. 2021 that 
+\begin{align*}
+\begin{bmatrix}\eta_{1} & \eta_{2}\end{bmatrix} & =\begin{bmatrix}K\rho_{1}^{-\beta} & K\rho_{2}^{-\beta}\end{bmatrix}\\
+\end{align*}
+
+Our parametrization is 
+\begin{align*}
+K & =20000\\
+\rho_{1} & =1\\
+\rho_{2} & =0.8
+\end{align*}
+
+Recall that we approximate
+\begin{align*}
+\phi\left(\eta_{1}\right) & =f^{-}\left(K\right)\rho_{1}^{\beta}\\
+\phi\left(\eta_{2}\right) & =f^{+}\left(K\right)\rho_{2}^{\beta}
+\end{align*}
+
+So then I can compute $P_{K}$ for all three specifications. 
+
+\todo{Insert graph} 
+
+\begin{table}
+\centering
+\begin{tabular}{|c|c|}
+\hline 
+Specification & $\beta$\tabularnewline
+\hline 
+\hline 
+1 & 0.270\tabularnewline
+\hline 
+2 & 0.430\tabularnewline
+\hline 
+3 & 0.122\tabularnewline
+\hline 
+\end{tabular}
+
+\caption{Estimated elasticities}
+\end{table}
+
+
 \end{solution}
 
-\begin{problem}{d}
+\pagebreak
+\begin{problem}
+Compare the magnitudes of these elasticities. How to explain the relationship between them? What can you say about identification of taxable income elasticity based on these results?
 \end{problem}
 \begin{solution}
+
+As we assume more density towards $\eta_{1}$ we get a higher value
+of $\beta$. As we assume more density towards $\eta_{2}$ we get
+a lower value of $\beta$. Clearly our estimate of the elasticity
+is highly sensitive to our assumptions about the density. 
+
+We can see that $\beta$ is not identified even though $\rho_{2}$
+is close to $\rho_{1}$. When $P_{K}$ > 0, we can always find a density
+$\phi\left(\eta\right)$ that spits out our chosen $\beta$.
 \end{solution}
 
 \begin{problem}{e}
+Compute bounds on the taxable income elasticity under the assumption of increasing pref- erences density
 \end{problem}
 \begin{solution}
 \end{solution}
 
 \begin{problem}{f}
+What formal condition on the value of $\beta$ would justify the linearity assumption for the preference density on $\eta_1, \eta_2$. Does the elasticity you computed in c.1 satisfy this condition?
 \end{problem}
 \begin{solution}
+
+We know from Blomquist (2021) that it is okay to assume that $\phi$
+is linear if the kink region is small. In other words, if people only
+adjust in a small range then we can approximate the density in that
+small range with a linear density. 
+
+However, this is still tricky when it comes to inentification. Why?
+Because the kink region depends on $\beta$. In the iso-elastic case
+we had
+\begin{align*}
+\begin{bmatrix}\eta_{1} & \eta_{2}\end{bmatrix} & =\begin{bmatrix}K\rho_{1}^{-\beta} & K\rho_{2}^{-\beta}\end{bmatrix}\\
+\end{align*}
+
+Clearly the kink region depends on $\beta$. So when Saez (2010) assumes
+linear density - justified by the fact that it is within a small kink
+region he is assuming that the kink region is small. However we cannot
+know if the kink region is small without knowing $\beta$. So assuming
+the kink region is small already imposes a restriction on $\beta$.Fundamentally
+we have one moment condition and are trying to estimate two things
+it is hard. 
 \end{solution}
 
 \end{document}
