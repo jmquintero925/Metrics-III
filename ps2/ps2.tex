@@ -12,8 +12,7 @@
 \begin{document}
 \maketitle
 
-Our code can be found in this GitHub respository: \url{https://github.com/jmquintero925/Metrics-III/tree/main/ps###}
-
+Our code can be found in this GitHub respository: \url{https://github.com/jmquintero925/Metrics-III/tree/main/ps2}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% QUESTION 1 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Problem 1}
@@ -81,7 +80,7 @@ Use the fact that $D_i$ is a binary variable and can be written in terms of expe
     &= \E\left[p(X_i) \big\vert p(X_i) \right] \\ 
     &= p(X_i)
 \end{align*}
-which is what we wanted to show. \textcolor{red}{Where am I using the common support hypothesis? }. This result is very relevant because as shown in question (a) the dimension of $X_i$ can make the problem more imprecise. 
+which is what we wanted to show. This result is very relevant because as shown in question (a) the dimension of $X_i$ can make the problem more imprecise. 
 \end{solution}
 
 \begin{problem}{c}
@@ -103,7 +102,7 @@ where the set $I$ is defined similarly to the one in question (a) but instead of
 \begin{align*}
 \widehat{\text{ATE}} = \int \left(\mu(1,p)-\mu(0,p)\right)\mathrm{d}F(p)
 \end{align*}
-Empirically, Since the 
+Empirically, since the pscore is a continuous variable, one can always create bins and box all observations such that the pscore lands in the same bin. This is somehow arbitrary as the size of the bin is a free variable. 
 \end{solution}
 
 \newpage
@@ -170,7 +169,7 @@ To investigate the balancing of covariates we can repeat the exercise in questio
 Furthermore, the support between both groups on the continuous covariates are presented Figure \ref{ps2:q2d:fig1}. Binary variables are not necesary to plot as long as their mean in Table \ref{ps2:q2d:tab1} is not exactly 0 or 1 (which is not the case). 
 \begin{figure}[htb]
     \centering
-    \caption{Covariates Balancing}
+    \caption{Covariate Balancing}
     \label{ps2:q2d:fig1}
     \begin{subfigure}[b]{0.4\textwidth}
          \centering
@@ -267,7 +266,8 @@ To compare the effect of doing homework as compared to an extra hour of math tea
 Explain your CIA. Be explicit about the counterfactual outcomes and the variables that you want to control for. Why might your CIA not hold? Can you think of examples where you get upward biased estimates? And downward biased estimates?
 \end{problem}
 \begin{solution}
-\todo[inline]{Need to add that we're trying to estimate ATUT}
+We want to estimate the average treatment effect on the untreated: $\operatorname{ATUT} = E[Y_1|D=0]-E[Y_0|D=0]$. This estimate will tell us how well students who are not doing their homework ($D=0$) \textit{would} do if they did their homework ($Y_1$) compared to how they do now ($Y_0$).
+
 The conditional independence assumption is that the potential outcomes are independent of treatment, conditional on covariates: $(Y_0,Y_1)\perp D | X$. In this case, our potential outcomes are the end of year test scores for a student who does ($Y_1$) and does not do ($Y_0$) their homework ($D$). 
 
 The variables we want to control for, $X$, are those that will impact selection into treatment, so that conditioning on them allows us to view the treatment of doing homework as random across individuals. To do so, we must only control for observables that are determined before treatment.  Given the rich data, we would want to include all covariates except for our outcome (``end year test scores'') and the number of missed classes, since this is clearly not a predetermined variable. Everything else will be useful for our CIA.
@@ -281,32 +281,47 @@ We would get upward biased estimates if the covariance between the omitted varia
 Explain how you use the CIA to estimate the counterfactual outcome, how you take into account that students that do their homework have different characteristics, and what support condition you need
 \end{problem}
 \begin{solution}
-The counterfactual outcome we would want to estimate is the effect of doing homework ($Y_1$) for students who do not currently do their homework ($D=0$): $E[Y_1|D=0]$. To estimate this counterfactual outcome we must condition on covariates so that we can use the actual outcome of students with the same covariate values. To do so, we use the CIA which tells us that expected outcomes for individuals with covariates $X$ are the same whether they received treatment or not: $E[Y_1|X,D=0]=E[Y_1|X,D=1]$.
+The counterfactual outcome we want to estimate is the effect of doing homework ($Y_1$) for students who do not currently do their homework ($D=0$): $E[Y_1|D=0]$. Note that this is the first part of the ATUT, and is all we need to estimate that effect, since $E[Y_0|D=0]$ is observed in the data.
+
+To estimate this counterfactual outcome we must condition on covariates so that we can use the actual outcome of students who did their homework with the same covariate values as those that didn't. To do so, we use the CIA which tells us that expected outcomes for individuals with covariates $X$ are the same whether they received treatment or not: $E[Y_1|X,D=0]=E[Y_1|X,D=1]$.
 
 To do so, start with the counterfactual outcome we want to find:
 \begin{align}
-    E[Y_1|D=0] & \tag{Counterfactual outcome} \\
-    &=E[ E[Y_1| X=x, D=0] | D=0] \tag{Expand inside using LIE} \\
-    &=E[ E[Y_1| X=x, D=1] | D=0] \tag{Use CIA} \\
-    &= \sum_{x} E[Y_1 | X=x, D=1] P(X=x|D=0) \tag{Outer E[$\cdot$] as weighted sum}
+    E[Y_1|D=0] &= E_X[ E[Y_1| X=x, D=0] | D=0] \tag{Expand inside using LIE} \\
+    &=E_X[ E[Y_1| X=x, D=1] | D=0] \tag{Use CIA} \\
+    &= \sum_{x} E[Y_1 | X=x, D=1] P(X=x|D=0) \tag{$E_X[\cdot]$ as weighted sum}
 \end{align}
 
 The last line shows the importance of the support condition. In order to properly match individuals, we need both treated and control observations for every combination of covariate values possible. For any $x^\star$ in the data, can't have $P(X=x^\star|D=0)$ be equal to either 1 or 0, otherwise that means that for all individuals with $X=x^\star$, they are either all treated or all not treated, which means we have no one to match them to. If this is the case, then the counterfactual that we are estimating will not include information from people with $X=x^\star$ and thus is not relevant to our sample, just a portion of it.
 
-\todo[inline]{Is this good enough on ``how do you take into account that students that do their homework have different characteristics''??}
+We have taken in to account the fact that students that do their homework may have different characteristics from those that do not. For instance, students with parents who have higher education levels may be more likely to do their homework. However, if we match students with parents who have the same level of education then we can estimate the impact of doing your homework on outcome. This is the CIA in action!
+
 \end{solution}
 
 \begin{problem}{f}
 How would you estimate your effect using OLS?
 \end{problem}
 \begin{solution}
-Using OLS, we would run a saturated-in-$X$ regression with a dummy for treatment versus control:\footnote{See MHE Eq 3.3.4}
+To estimate the effect (ATUT) using OLS, we want to construct an estimate of the mean comparison within each group $X=x$ and then weight these comparisons using the ATUT matching weight:
 \begin{align*}
-    Y = \sum_x \alpha_x \mathbf{1}[X=x] + \delta_R D + \varepsilon
+    \delta_x &\equiv E[Y_1|X,D=1]-E[Y_0|X,D=0] \\
+    p(X) &\equiv P(D=1|X) \\
+    w_{x,ATUT} &= (1-p(X))P(X=x) \\
+    \implies \operatorname{ATUT} &= E[\delta_x | D=0] \\
+    &= \frac{\sum_x \delta_x w_{x,ATUT}}{\sum_x w_{x,ATUT}}
 \end{align*}
-where $\mathbf{1}[X=x]$ is an indicator for each combination of observables and $\alpha_x$ is the regression coefficient for a specific value $X=x$. Our coefficient of interest is $\delta_R$, which is the regression estimand. Note that this model is not fully saturated as there is a single additive effect for $D$ and no $D\cdot X$ interactions.
 
-\todo[inline]{This gets us the reg coefficient but i dont think that's right for what they're asking aka the ATUT}
+First, to obtain the mean comparison $\delta_x$, we use OLS and run:
+\begin{align*}
+    Y = \sum_x \delta_x \mathbf{1}[X=x] + \varepsilon
+\end{align*}
+
+Now, to compute the weight, we can 
+
+\todo[inline]{Much easier to just do it for the counterfactual and then subtract out the part we see in the data ya dummy}
+
+Using OLS, we would run a saturated-in-$X$ regression with a dummy for treatment versus control:\footnote{See MHE Eq 3.3.4 and Slide 26 of Topic2.pdf}
+
 
 \end{solution}
 
@@ -315,6 +330,8 @@ where $\mathbf{1}[X=x]$ is an indicator for each combination of observables and 
 You see in your data that boys never do their homework. What implications does this have for your research?
 \end{problem}
 \begin{solution}
+If boys never do their homework, then the common support assumption does not hold. Any cell that includes boys will be not treated and any cell that includes girls will be treated. Thus we cannot make comparisons within cells, since each cell will have all observations either treated or untreated. 
+\todo[inline]{Conroy says something about getting an effect for girls, but I don't understand how}
 \end{solution}
 
 \textbf{You discover that not all teachers assign homework, and you get a new variable from Oslo municipality with information $(0 / 1)$ on whether the teacher assigned homework or not. They tell you that teachers were assigned to give homework (or not) in a randomized experiment.}
@@ -322,6 +339,7 @@ You see in your data that boys never do their homework. What implications does t
 First you add this new information to your matching variables. What will happen to your estimates and standard errors?
 \end{problem}
 \begin{solution}
+If we add this new information to our matching variables, the estimates will not be impacted because this new variable is randomly assigned and thus has no correlation with any of the other covariates. The standard errors will increase, because we have now increased the dimensionality. For all observations, half now have had a teacher that was assigned to give homework or not randomly. Thus, in expectation, each cell of size $n$ now is reduced to size $\frac{n}{2}$ since half of the previous cell is randomly assigned the value $0$ or $1$ for this new variable. With the smaller cell size, our standard errors increase.
 \end{solution}
 
 
@@ -329,6 +347,7 @@ First you add this new information to your matching variables. What will happen 
 How will you use this new data and what effects can you estimate?
 \end{problem}
 \begin{solution}
+LATE!
 \end{solution}
 
 
@@ -375,13 +394,28 @@ The implied data PK is of course
 $$
 \widehat{P}_K = \frac{\sum 1_{y\in [y_1, y_2]}}{N} - \delta * [f^-(18000) + f^+(22000)]
 $$
+
+In this data I find that
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{c|c}
+    \begin{array}{lll}
+    \hline f^{-}(18000) & f^{+}(22000) & P_{K} \\
+    \hline 0.0000106 & 0.000016 & 0.0687564 \\
+    \hline
+    \end{array}
+    \end{tabular}
+    \caption{Estimates}
+    \label{tab:my_label}
+\end{table}
+
 \end{solution}
 
 \begin{problem}{c}
 Given density, compute elasticity.
 \end{problem}
 \begin{solution}
-
 From equation 6 of the Blomquist et. al. paper we know that 
 \[
 P_{K}=\int_{\eta_{\ell}}^{\eta_{u}}\phi(\eta)d\eta
@@ -499,11 +533,10 @@ Specification & $\beta$\tabularnewline
 \end{solution}
 
 \pagebreak
-\begin{problem}
+\begin{problem}{d}
 Compare the magnitudes of these elasticities. How to explain the relationship between them? What can you say about identification of taxable income elasticity based on these results?
 \end{problem}
 \begin{solution}
-
 As we assume more density towards $\eta_{1}$ we get a higher value
 of $\beta$. As we assume more density towards $\eta_{2}$ we get
 a lower value of $\beta$. Clearly our estimate of the elasticity
@@ -545,13 +578,12 @@ So we can estimate the bounds on $\beta$ as follows
 What formal condition on the value of $\beta$ would justify the linearity assumption for the preference density on $\eta_1, \eta_2$. Does the elasticity you computed in c.1 satisfy this condition?
 \end{problem}
 \begin{solution}
-
 We know from Blomquist (2021) that it is okay to assume that $\phi$
 is linear if the kink region is small. In other words, if people only
 adjust in a small range then we can approximate the density in that
 small range with a linear density. 
 
-However, this is still tricky when it comes to inentification. Why?
+However, this is still tricky when it comes to identification. Why?
 Because the kink region depends on $\beta$. In the iso-elastic case
 we had
 \begin{align*}
