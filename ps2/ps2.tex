@@ -118,31 +118,109 @@ includes the NSW sample, as well as two non-experimental samples: one based on t
 Investigate whether the data is consistent with randomization of the treatment.
 \end{problem}
 \begin{solution}
+To check if the sample is consistent with randomization, we calculate the mean difference between the control variables. The results are presented in Table \ref{ps2:q2a:tab1}
+\begin{table}[htb]
+    \centering
+    \caption{Randomization}
+    \label{ps2:q2a:tab1}
+    \input{ps2/Tables/ps2q2atab1}
+\end{table}
+Note that there is no statistical difference in the mean of the control variables that suggest some selection going on with the exception of High school drop out. 
+
+
 \end{solution}
 
 \begin{problem}{b}
 Estimate the effect using the experimental sample. Now use the sample consisting in the treated from the NSW sample and the comparison individuals from the CPS sample.
 \end{problem}
 \begin{solution}
+Since the treatment is randomize, we can do a difference of means to calculate the ATE/ATT/ATUT. The results are presented in Table \ref{ps2:q2b:tab1}
+\begin{table}[htb]
+    \centering
+    \caption{ATE}
+    \label{ps2:q2b:tab1}
+    \input{ps2/Tables/ps2q2btab1}
+\end{table}
+This is equivalent to run a regression on the outcome and the treatment variable. 
 \end{solution}
 
 \begin{problem}{c}
 Estimate the effect using OLS.
 \end{problem}
 \begin{solution}
+\begin{table}[htb]
+    \centering
+    \caption{Caption}
+    \label{tab:my_label}
+    \input{ps2/Tables/ps2q2ctab1.txt}
+\end{table}
 \end{solution}
 
 \begin{problem}{d}
 Investigate covariate balancing and support between the treated and the CPS sample.
 \end{problem}
 \begin{solution}
-\end{solution}
+To investigate the balancing of covariates we can repeat the exercise in question (a). The results are presented in Table \ref{ps2:q2d:tab1}. Unlike question (a), there are several differences in the mean which are statistically significant and thus we can no longer conclude that there is randomization without selection on the covariates. 
+\begin{table}[htb]
+    \centering
+    \caption{Covariate Balancing}
+    \label{ps2:q2d:tab1}
+ \input{ps2/Tables/ps2q2dtab1}
+\end{table}
+Furthermore, the support between both groups on the continuous covariates are presented Figure \ref{ps2:q2d:fig1}. Binary variables are not necesary to plot as long as their mean in Table \ref{ps2:q2d:tab1} is not exactly 0 or 1 (which is not the case). 
+\begin{figure}[htb]
+    \centering
+    \caption{Covariates Balancing}
+    \label{ps2:q2d:fig1}
+    \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{ps2/Figures/ps2_q2d_age.pdf}
+         \caption{Age}
+     \end{subfigure}
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{ps2/Figures/ps2_q2d_educ.pdf}
+         \caption{Schooling}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{ps2/Figures/ps2_q2d_kids18.pdf}
+         \caption{\# Kids under 18}
+     \end{subfigure}
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{ps2/Figures/ps2_q2d_re74.pdf}
+         \caption{Real Earnings 74}
+         \label{fig:lab_prod}
+     \end{subfigure}
+\end{figure}
 
+Finally, we present the common support on the propensity score calculated using a probit regression. 
+\begin{figure}
+    \centering
+    \includegraphics[width=0.45\textwidth]{ps2/Figures/ps2_q2d_pscore.pdf}
+    \caption{Propensity Score}
+\end{figure}
+\end{solution}
+\FloatBarrier
 \begin{problem}{e}
 Estimate the effect using 1 nearest neighbor propensity score matching. (Use -psmatch2- which can be installed using: ssc install psmatch2, if you use Stata. Other languages have
 similar programs.).
 \end{problem}
 \begin{solution}
+We use psmatch2 to find a good control for every treated observation and calculate the ATT. We do not report standard errors as the function in Stata does not account for the ``first stage''. 
+\begin{table}[htb]
+    \centering
+    \caption{Treatment on the Treated}
+    \label{tab:my_label}
+    \begin{tabular}{lcc} \hline\hline 
+ & (1) & (2) \\ \\ \hline
+     ATT & -413.09 & -697.77  \\ \hline
+     Controls & No & Yes \\ \hline\hline
+\end{tabular}
+\end{table}
+
 \end{solution}
 
 \begin{problem}{f}
@@ -446,11 +524,12 @@ D^{-}(\beta)=f^{-}\left(y_{1}\right)\left[y_{2}\left(\frac{\rho_{1}}{\rho_{2}}\r
 $$
 
 So we can estimate the bounds on $\beta$ as follows
-
+\begin{equation}
 \begin{aligned}
 &\bar{\sigma} \max \left\{\hat{D}^{-}\left(\hat{\beta}_{\ell}\right), \hat{D}^{+}\left(\hat{\beta}_{\ell}\right)\right\}=\widehat{\operatorname{Pr}}\left(y_{1} \leq Y \leq y_{2}\right) = \widehat{P}_K, \\
 &\sigma \min \left\{\hat{D}^{-}\left(\hat{\beta}_{u}\right), \hat{D}^{+}\left(\hat{\beta}_{u}\right)\right\}=\widehat{\operatorname{Pr}}\left(y_{1} \leq Y \leq y_{2}\right) = \widehat{P}_K .
 \end{aligned}
+\end{equation}
 
 \begin{figure}[!htb]
     \centering    
