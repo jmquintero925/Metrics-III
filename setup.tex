@@ -1,4 +1,3 @@
-
 \usepackage[margin=1in]{geometry} 
 \usepackage{amsmath,amsthm,amssymb,amsfonts, fancyhdr, color, comment, graphicx, environ,bbm}
 \usepackage[dvipsnames]{xcolor}
@@ -43,10 +42,12 @@
   \addtocounter{footnote}{-1}%
 }
 
-% Problem formatting [Alex]
 
+    
+% Define problem environment
 \newenvironment{problem}[1]
     { \begin{mdframed}[backgroundcolor=Periwinkle!20] \textbf{(#1)} }
     {  \end{mdframed}}
+
 % Define solution environment
 \newenvironment{solution}{\textbf{Solution}\\}

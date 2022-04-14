@@ -1,6 +1,5 @@
 \documentclass{article}
-\include{setup.tex}
-
+\include{setup}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Fill in the appropriate information below
 \lhead{Problem Set 1}
@@ -302,24 +301,40 @@ Setup text here
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% QUESTION 3 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Problem 3}
-Setup text here
+Consider the adjusted set of assumptions conditional on covariates:
+\begin{itemize}
+    \item Exogeneity: $\left(Y_{0}, Y_{1}, D_{0}, D_{1}\right) \indp Z \mid X$
+    \item Relevance: $P(D=1 \mid X, Z=1) \neq P(D=1 \mid X, Z=0)$ a.s.
+    \item Monotonicity: $P\left(D_{1} \geq D_{0} \mid X\right)=1$ a.s.
+    \item Overlap: $P(Z=1 \mid X) \in(0,1)$ a.s.
+\end{itemize}
 
 \begin{problem}{a}
+Show that you can identify $\operatorname{LATE}(x)=E(Y_{1}-Y_{0} \mid \underbrace{T=c}_{\text {compliers }}, X=x)$.
 \end{problem}
 \begin{solution}
 \end{solution}
 
 \begin{problem}{b}
+Show $E\left(Y_{1}-Y_{0} \mid T=c\right)=E\left(\frac{\operatorname{LATE}(X) P(T=c \mid X)}{P(T=c)}\right)$.
 \end{problem}
 \begin{solution}
 \end{solution}
 
 \begin{problem}{c}
+Suppose that $X$ is discrete (a set of binary indicators), that excluded instruments are $Z$ and $X Z$, where $Z \in\{0,1\}$, and that the model is fully saturated. Show that:
+\begin{align*}
+\beta_{T S L S}=E\left(\operatorname{LATE}(X) \frac{\operatorname{Var}(p(X, Z) \mid X)}{E(\operatorname{Var}(p(X, Z) \mid X))}\right)
+\end{align*}
 \end{problem}
 \begin{solution}
 \end{solution}
 
 \begin{problem}{d}
+Show that, for binary $D$ and $Z$, and for any function $G=g(Y, X, D)$ :
+\begin{align*}
+E(G \mid T=c)=\frac{1}{P(T=c)} E(\kappa G), \quad \text { where: } \kappa=1-\frac{D(1-Z)}{P(Z=0 \mid X)}-\frac{Z(1-D)}{P(Z=1 \mid X)}
+\end{align*}
 \end{problem}
 \begin{solution}
 \end{solution}
