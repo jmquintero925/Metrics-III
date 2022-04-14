@@ -3,7 +3,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Fill in the appropriate information below
-\lhead{Problem Set 1}
+\lhead{Problem Set 2}
 \rhead{Empirical Analysis} 
 \title{Problem Set 2}
 \author{Alex Weinberg \and Isaac Norwich \and Jose M. Quintero}
@@ -258,7 +258,7 @@ If you want to make homework mandatory, you would want to know the effect of tre
 You want to compare the effect of doing homework as compared to an extra hour of math teaching. What effect of homework would you like to know?
 \end{problem}
 \begin{solution}
-To compare the effect of doing homework as compared to an extra hour of math teaching, we would want to know the ATE. The ATE is the average effect of doing homework for all 10th graders in Oslo, regardless of whether they are currently doing homework or not. The ATE is $E[Y_1-Y_0]$. We would then compare this effect to the effect of an extra hour of math teaching.\todo[inline]{Uhhh how do we get the effect of an hour of math teaching effect?? Or is that irrelevant to the answer?}
+To compare the effect of doing homework as compared to an extra hour of math teaching, we would want to know the ATE. The ATE is the average effect of doing homework for all 10th graders in Oslo, regardless of whether they are currently doing homework or not. The ATE is $E[Y_1-Y_0]$. We would then compare this effect to the effect of an extra hour of math teaching.
 \end{solution}
 
 \textbf{You want to estimate how well students that are currently not doing their homework would do, if they did their homework. You decide to use matching, and will therefore rely on a conditional independence assumption (CIA).}
@@ -302,27 +302,30 @@ We have taken in to account the fact that students that do their homework may ha
 How would you estimate your effect using OLS?
 \end{problem}
 \begin{solution}
-To estimate the effect (ATUT) using OLS, we want to construct an estimate of the mean comparison within each group $X=x$ and then weight these comparisons using the ATUT matching weight:
+To estimate the effect (ATUT) using OLS, we only need to estimate the counterfactual from part E, $E[Y_1|D=0]$, since we have $E[Y_0|D=0]$ in the data. The estimate of $E[Y_0|D=0]$ from the data is essentially the sum of $Y_0$ for all control individuals divided by the number of control individuals. That is:
+\begin{align}
+    \frac{\sum_{i} Y_0 \mathbf{1}[D=0]}{\sum_i  \mathbf{1}[D=0]} \xrightarrow{\text{P}} E[Y_0|D=0]
+\end{align}
+Next, we want to estimate $E[Y_1|D=0]$ using the last line of the equations in part E to do so. We use OLS to construct an estimator of $E[Y_1|X=x,D=1]$, which we'll call $\hat{\beta}_x$, by running the below regression for all individuals who are in the treated group ($D=1$):
 \begin{align*}
-    \delta_x &\equiv E[Y_1|X,D=1]-E[Y_0|X,D=0] \\
-    p(X) &\equiv P(D=1|X) \\
-    w_{x,ATUT} &= (1-p(X))P(X=x) \\
-    \implies \operatorname{ATUT} &= E[\delta_x | D=0] \\
-    &= \frac{\sum_x \delta_x w_{x,ATUT}}{\sum_x w_{x,ATUT}}
+    Y &= \sum_x \beta_x \mathbf{1}[X=x] + \varepsilon \\
+    \beta_x &= E[Y_1|X=x,D=1]
 \end{align*}
-
-First, to obtain the mean comparison $\delta_x$, we use OLS and run:
+With this estimator, we can then construct an estimator of $E[Y_1|D=0]$ by summing $\hat{\beta}_x$ over the support of $X$ and multiplying by the estimator of the weight $P(X=x|D=0)$. Let's denote the estimator as $\hat{w}$ and define it as:
 \begin{align*}
-    Y = \sum_x \delta_x \mathbf{1}[X=x] + \varepsilon
+    \hat{w}_x &= \frac{\sum_i \mathbf{1}[X=x, D=0]}{\sum_i \mathbf{1}[D=0]} \\
+    \hat{w}_x &\xrightarrow{\text{P}} w = P(X=x|D=0)
 \end{align*}
-
-Now, to compute the weight, we can 
-
-\todo[inline]{Much easier to just do it for the counterfactual and then subtract out the part we see in the data ya dummy}
-
-Using OLS, we would run a saturated-in-$X$ regression with a dummy for treatment versus control:\footnote{See MHE Eq 3.3.4 and Slide 26 of Topic2.pdf}
-
-
+Thus we have:
+\begin{align*}
+    \sum_x \hat{\beta}_x \hat{w}_x \xrightarrow{\text{P}} E[Y_1|D=0]
+\end{align*}
+So we can combine these two pieces to get an estimate of the ATUT using OLS:
+\begin{align*}
+    \operatorname{ATUT} &= E[Y_1|D=0] - E[Y_0|D=0] \\
+    \implies \widehat{\operatorname{ATUT}} &=  \sum_x \hat{\beta}_x \hat{w}_x - \frac{\sum_{i} Y_0 \mathbf{1}[D=0]}{\sum_i  \mathbf{1}[D=0]}
+\end{align*}
+One thing to note: if we have data on \textbf{all} 10th graders in Oslo for 2010/2011, why are we estimating the ATUT instead of just directly calculating it, since we have the full population? Well, because while we have the universe of 10th graders in Oslo, this might not be our reference population that we care about. Perhaps we want to use this estimate for 9th graders in Oslo in 2010/2001, or 10th graders in Oslo in a different year, or in a different country? Then we are not directly calculating ATUT but instead an estimate of it in this sample.
 \end{solution}
 
 
@@ -330,8 +333,7 @@ Using OLS, we would run a saturated-in-$X$ regression with a dummy for treatment
 You see in your data that boys never do their homework. What implications does this have for your research?
 \end{problem}
 \begin{solution}
-If boys never do their homework, then the common support assumption does not hold. Any cell that includes boys will be not treated and any cell that includes girls will be treated. Thus we cannot make comparisons within cells, since each cell will have all observations either treated or untreated. 
-\todo[inline]{Conroy says something about getting an effect for girls, but I don't understand how}
+If boys never do their homework, then the common support assumption does not hold. Any cell that includes boys will be not treated, so there will be no comparison to make within that cell. For girls, however, we can still estimate the treatment effect since we have overlap in the covariates.
 \end{solution}
 
 \textbf{You discover that not all teachers assign homework, and you get a new variable from Oslo municipality with information $(0 / 1)$ on whether the teacher assigned homework or not. They tell you that teachers were assigned to give homework (or not) in a randomized experiment.}
@@ -339,36 +341,48 @@ If boys never do their homework, then the common support assumption does not hol
 First you add this new information to your matching variables. What will happen to your estimates and standard errors?
 \end{problem}
 \begin{solution}
-If we add this new information to our matching variables, the estimates will not be impacted because this new variable is randomly assigned and thus has no correlation with any of the other covariates. The standard errors will increase, because we have now increased the dimensionality. For all observations, half now have had a teacher that was assigned to give homework or not randomly. Thus, in expectation, each cell of size $n$ now is reduced to size $\frac{n}{2}$ since half of the previous cell is randomly assigned the value $0$ or $1$ for this new variable. With the smaller cell size, our standard errors increase.
+If we add this new information to our matching variables, the estimates will not be impacted because this new variable is randomly assigned and thus has no correlation with any of the other covariates. The standard errors will increase, because we have now increased the dimensionality. For all observations, half now have had a teacher that was assigned to give homework or not randomly. Thus, in expectation, each cell of size $n$ now is reduced to size $\frac{n}{2}$ since half of the previous cell is randomly assigned the value $0$ or $1$ for this new variable. With the smaller cell size, our standard errors increase. Of course, what we expect in the population might not hold in the sample, but the direction of the results is what we are after.
 \end{solution}
-
 
 \begin{problem}{i}
 How will you use this new data and what effects can you estimate?
 \end{problem}
 \begin{solution}
-LATE!
+We can use this new variable as an instrument ($Z$) for doing homework ($D$) and estimate the LATE. To do so, we would need the instrument to satisfy our four assumptions, which we discuss below:
+\begin{itemize}
+    \item Random assignment: $Y_{d,z}, D_z \perp Z \forall d,z$. This is given in the setup.
+    \item Exclusion restriction: $Y_{d,1}=Y_{d,0}=Y_d$. If being randomly assigned homework or not ($Z$) only impacts end of year test scores ($Y_d$) through actually doing homework or not ($D$), then the exclusion restriction is satisfied. This seems reasonable.
+    \item Monotonicity: $D_1 \geq D_0$. This is the same as ruling out defiers, which is reasonable given the fact that students not assigned homework can't possibly do assignments that don't exist.
+    \item First-stage: $E[[D_1-D_0]\neq 0$. We need the instrument $Z$ to have some effect on the average probability of treatment, which is something we can test in the data.
+\end{itemize}
+Given that these assumptions are satisfied, we can estimate the LATE using the Wald estimand:
+\begin{align}
+    E[Y_1-Y_0|\operatorname{Complier}] &= \frac{E[Y|Z=1]-E[Y|Z=0]}{E[D|Z=1]-E[D|Z=0]}
+\end{align}
+Note that we no longer need to condition on covariates to achieve independence of potential outcomes and treatment. Instead, we are given that the instrument is randomly assigned and thus is independent of potential outcomes and treatment.
 \end{solution}
 
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% QUESTION 4 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Problem 4}
-Setup text here
-
+This problem is based on Blomquist et al. (2021). Download IncomeData.csv from Canvas.
 \begin{problem}{a}
 Plot a histogram of the data
 \end{problem}
 \begin{solution}
 \begin{figure}[!htb]
     \centering    
-    \includegraphics[width=0.75\textwidth]{ps2/4a.png}
+    \includegraphics[width=0.75\textwidth]{ps2/Figures/4a.png}
 \end{figure}
 
 \end{solution}
 
+\textbf{Assume isoelastic utility model and budget set kink at $K = 20,000$ with net of tax rate of $100\%$ before the kink and $80\%$ after the kink. Furthermore, assume that the excluded range is $[18000,22000]$.}
+\textbf{Using methods described in the paper:}
+
 \begin{problem}{b}
-Compute estimates for f-(18000) and f+(22000) and bunching probability PK.
+Compute estimates for $f^-(18000)$ and $f^+(22000)$ and bunching probability $P_K$.
 \end{problem}
 \begin{solution}
 I use a non-parametric estimator. Recall that the excluded range is given by the bounds
@@ -377,7 +391,7 @@ I use a non-parametric estimator. Recall that the excluded range is given by the
     y_2 &= K + \delta = 22000
 \end{align*}
 
-Count the number of data points in a band near the exluded range bounds. 
+Count the number of data points in a band near the excluded range bounds. 
 \begin{align*}
     N_1 &= \sum 1_{y\in [y_1-\delta, y_1]} \\
     N_2 &= \sum 1_{y\in [y_2, y_2+\delta]}
@@ -508,7 +522,7 @@ So then I can compute $P_{K}$ for all three specifications.
 
 \begin{figure}[!htb]
     \centering    
-    \includegraphics[width=0.75\textwidth]{ps2/4c.png}
+    \includegraphics[width=0.75\textwidth]{ps2/Figures/4c.png}
 \end{figure}
 
 \begin{table}
@@ -548,7 +562,7 @@ $\phi\left(\eta\right)$ that spits out our chosen $\beta$.
 \end{solution}
 
 \begin{problem}{e}
-Compute bounds on the taxable income elasticity under the assumption of increasing pref- erences density
+Compute bounds on the taxable income elasticity under the assumption of increasing preferences density
 \end{problem}
 \begin{solution}
 Blomquist et. al. 2021 show that since we assume monotonic density, $\sigma=1$. Our non-parametric estimators
@@ -567,7 +581,7 @@ So we can estimate the bounds on $\beta$ as follows
 
 \begin{figure}[!htb]
     \centering    
-    \includegraphics[width=0.75\textwidth]{ps2/4e.png}
+    \includegraphics[width=0.75\textwidth]{ps2/Figures/4e.png}
 \end{figure}
 
 
@@ -575,7 +589,7 @@ So we can estimate the bounds on $\beta$ as follows
 \end{solution}
 
 \begin{problem}{f}
-What formal condition on the value of $\beta$ would justify the linearity assumption for the preference density on $\eta_1, \eta_2$. Does the elasticity you computed in c.1 satisfy this condition?
+What formal condition on the value of $\beta$ would justify the linearity assumption for the preference density on $[\eta_1, \eta_2]$. Does the elasticity you computed in c.1 satisfy this condition?
 \end{problem}
 \begin{solution}
 We know from Blomquist (2021) that it is okay to assume that $\phi$

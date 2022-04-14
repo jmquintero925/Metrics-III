@@ -1,0 +1,372 @@
+\documentclass{article}
+\include{setup.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Fill in the appropriate information below
+\lhead{Problem Set 1}
+\rhead{Empirical Analysis} 
+\title{Problem Set 3}
+\author{Alex Weinberg \and Isaac Norwich \and Jose M. Quintero}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\maketitle
+
+Our code can be found in this GitHub respository: \url{https://github.com/jmquintero925/Metrics-III/tree/main/ps3}
+
+%Q1 - Alex
+%Q2 - Isaac
+%Q3 - Jose
+%Q4 - Isaac
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% QUESTION 1 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Problem 1}
+Suppose you want to understand how neighborhoods affect children's
+future earnings. You collect an i.i.d. sample $\left\{ Y_{i},D_{i}\right\} _{i=1}^{n}$,
+where $Y_{i}$ is a child's income in adulthood and $D_{i}$ indicates
+whether that child grows up in a low-poverty neighborhood $(1=yes$
+, $0=no)$. 
+
+% ------------------------------------
+\begin{problem}{a}
+Define the ATE, ATT, and ATUT in this setting. When can you estimate
+them via OLS? Do you believe that these restrictions you impose are
+likely to hold? Briefly explain. 
+\end{problem}
+
+Yes, I define them as follows
+\begin{align*}
+ATE & :=E\left[Y_{1}-Y_{0}\right]\\
+ATT & :=E\left[Y_{1}-Y_{0}|D=1\right]\\
+ATU & :=E\left[Y_{1}-Y_{0}|D=0\right]
+\end{align*}
+
+These are hard to estimate using OLS because OLS is going to pick
+up on selection bias. I decompose the OLS estimand for with respect
+to the ATT but the idea is the same for ATU, ATE, etc. 
+\begin{align*}
+\beta^{OLS} & =\frac{Cov\left[Y,D\right]}{Var\left[D\right]}\\
+ & =E\left[Y_{1}|D=1\right]-E\left[Y_{0}|D=0\right]\\
+ & =\underbrace{E\left[Y_{1}|D=1\right]-E\left[Y_{0}|D=1\right]}_{ATT}+\underbrace{E\left[Y_{0}|D=1\right]-E\left[Y_{0}|D=0\right]}_{selection}
+\end{align*}
+
+However if $D\perp Y_{1},Y_{0}$ then we have treatment randomly assigned
+so then $E\left[Y_{0}|D=1\right]-E\left[Y_{0}|D=0\right]=0$ and we
+are good. OLS recovers $ATE=ATT=ATU$.
+
+\rule[0.5ex]{1\columnwidth}{1pt}
+
+% ------------------------------------
+\begin{problem}{b}
+Suppose you collect data about $X_{i}$, the parents' annual incomes
+when the child is young. 
+\end{problem}
+
+
+(i) Under selection-on-observables (i.e. $Y_{d,i}\perp D_{i}\mid X_{i}$
+), explain how to estimate the ATE. 
+
+\rule[0.5ex]{1\columnwidth}{1pt}
+
+If I assume that $Y_{d,i}\perp D_{i}\mid X_{i}$ then I define the
+ATE and use the independence assumption to get
+\begin{align*}
+ATE & :=E\left[E\left[Y_{1}|X\right]-E\left[Y_{0}|X\right]\right]\\
+ & =E\left[E\left[Y_{1}|D=1,X\right]-E\left[Y_{0}|D=0,X\right]\right]
+\end{align*}
+
+(ii) Do you believe selection-on-observables is likely to hold in
+this case? Briefly explain. 
+
+\rule[0.5ex]{1\columnwidth}{1pt}
+
+Selection on observables seems hard to justify here. The assumption
+requires tht 
+\[
+E\left[Y_{d}|D=0,X\right]=E\left[Y_{d}|D=1,X\right]\qquad\forall d,X
+\]
+
+In words, in our context, that says \emph{conditional on parental
+income, children in poor neighborhoods would have had the same outcomes
+as children who grew up in rich neighborhoods. }I further assume that
+there is enough support (i.e. we observe rich families in poor neighborhoods). 
+\begin{itemize}
+\item This assumption fails because I believe parental income is an outcome
+variable. If one of the mechanisms by which bad neighborhoods hurt
+kids is by reducing parental income (e.g by poor access to jobs) then
+we are controlling for a mechanism - not kosher.
+\item This fails also because there is unobserved selection bias in the
+parents who choose to live in different neighborhoods. 
+\begin{itemize}
+\item Consider poor parents who choose to live in rich neighborhoods because
+they are very excited about the good schools available for their children
+there. Those parents are likely also taking other steps to improve
+their childs outcomes. So when we compare means we end up incorporating
+selection bias (here parental quality). 
+\end{itemize}
+\end{itemize}
+
+\begin{problem}{c}
+Suppose there exists a program
+that gives housing vouchers to underserved families with young children.
+Each voucher subsidizes the cost of moving to a low-poverty neighborhood.
+These vouchers are randomly assigned to families, and not everyone
+who is offered a voucher accepts one. Let $Z_{i}$ indicate whether
+a child's family receives a voucher $(1=yes,0=no)$. Assume that your
+population consists of children whose families are eligible for vouchers. 
+\end{problem}
+
+
+(i) Define the compliers, always-takers, never-takers, and defiers
+in this setting. 
+
+\rule[0.5ex]{1\columnwidth}{1pt}
+
+\begin{align*}
+D_{1}=1, & D_{0}=0\tag{compliers}\\
+D_{1}=0, & D_{0}=1\tag{defiers}\\
+D_{1}=1, & D_{0}=1\tag{always takers}\\
+D_{1}=0, & D_{0}=0\tag{never takers}
+\end{align*}
+
+In this setting Always-Takers move to rich neighborhoods regardless
+of voucher. Never-takers similarly never move, regardless of voucher.
+Compliers move if they get the voucher and don't move otherwise. Defiers
+move if they don't get the voucher and don't move if they do. 
+
+(ii) Argue whether $Z_{i}$ is a valid instrument for $D_{i}$. 
+
+\rule[0.5ex]{1\columnwidth}{1pt}
+
+We need four conditions to have a valid instrument. 
+\begin{enumerate}
+\item \textbf{Random assignment.} Satisfied here because voucher given by
+lottery.
+\[
+Y_{d,z},D_{z}\perp Z
+\]
+\item \textbf{Exclusion.} I believe that winning the voucher lottery only
+affects childrens outcomes via the treatment. I believe this because
+the voucher size is likely small and does not create income effects.
+\[
+Y_{d,1}=Y_{d,0}\qquad\forall d
+\]
+\item \textbf{First stage.} This is testable. It seems likely the voucher
+would have an effect on movement decisions if voucher size large enough.
+\[
+E\left[D_{1}-D_{0}\right]\neq0
+\]
+\item \textbf{Monotonicity (Uniformity)}. This seems sensible. I can't imagine
+that people who receive a voucher are less likely to move. 
+\[
+D_{1}-D_{0}\geq0
+\]
+\end{enumerate}
+\rule[0.5ex]{1\columnwidth}{1pt}
+
+(iii) In general, the ATT and LATE
+are not the same, since the ATT is a weighted average of two effects:
+one on always-takers and one on compliers. Show that this is the case. 
+
+\rule[0.5ex]{1\columnwidth}{1pt}
+
+Recall the definition of the ATT. Use the law of total probability.
+
+\begin{align*}
+ATT & :=E\left[Y_{1}-Y_{0}|D=1\right]\\
+ & =E\left[Y_{1}-Y_{0}|D_{1}>D_{0},D=1\right]Pr\left(D_{1}>D_{0}\right)+E\left[Y_{1}-Y_{0}|D_{1}=D_{0},D=1\right]Pr\left(D_{1}>D_{0}\right)\\
+\end{align*}
+
+We can see that the ATT is the weighted average of the treatment effect
+for two groups. The first group $D_{1}>D_{0}$ are the compliers.
+The second group $D_{1}=D_{0}=1$ are the always-takers. Note that
+$D_{1}\geq D_{0}$ by the monotonicity assumption. 
+
+\rule[0.5ex]{1\columnwidth}{1pt}
+
+(iv) Assuming $Z_{i}$ is a valid
+instrument for $D_{i}$, will running IV estimate the ATE? If so,
+explain. If not, specify the exact conditions under which the LATE
+equals the ATE. 
+
+\rule[0.5ex]{1\columnwidth}{1pt}
+
+No, IV will not estimate the ATE. It will estimate the LATE. We showed
+this in class. If the entire population are compliers then 
+\[
+ATE=LATE
+\]
+
+I will do the decomposition to show this is true. 
+
+If the $LATE_{always}=LATE_{complier}=LATE_{never}$ then LATE is
+also ATE.
+
+(v) Describe how to consistently estimate the average treatment effect
+of $Z_{i}$ on $Y_{i}$.
+
+\rule[0.5ex]{1\columnwidth}{1pt}
+
+I want to estimate 
+\[
+ATE_{Z}=E\left[Y|Z=1\right]-E\left[Y|Z=0\right]
+\]
+
+Recall
+\begin{align*}
+Y & =Y_{1}D+Y_{0}\left(1-D\right)\\
+D & =D_{1}Z+D_{0}\left(1-Z\right)
+\end{align*}
+
+Since $Z$ is randomly assigned we can run OLS. 
+\begin{align*}
+\beta^{OLS,Z} & =\frac{Cov\left[Y,Z\right]}{Var\left[Z\right]}\\
+ & =\frac{E\left[YZ\right]-E\left[Y\right]E\left[Z\right]}{E\left[Z^{2}\right]-E\left[Z\right]^{2}}\\
+ & =\frac{E\left[Y|Z=1\right]-E\left[Y|Z=0\right]}{E\left[D|Z=1\right]-E\left[D|Z=0\right]}
+\end{align*}
+
+I can write the denominator as
+\begin{align*}
+E\left[D|Z=1\right]-E\left[D|Z=0\right] & =E\left[D_{1}|Z=1\right]-E\left[D_{0}|Z=0\right]\\
+ & =E\left[D_{1}-D_{0}\right]\tag{random assignment}\\
+ & =E\left[D_{1}-D_{0}|D_{1}>D_{0}\right]Pr\left(D_{1}>D_{0}\right) \\
+ &+E\left[D_{1}-D_{0}|D_{1}=D_{0}\right]Pr\left(D_{1}=D_{0}\right)+E\left[D_{1}-D_{0}|D_{1}<D_{0}\right]Pr\left(D_{1}<D_{0}\right)\\
+ & =E\left[D_{1}-D_{0}|D_{1}>D_{0}\right]Pr\left(D_{1}>D_{0}\right)\\
+ & =Pr\left(D_{1}>D_{0}\right)
+\end{align*}
+
+where the always-takers, never-takers drop out because $D_{1}-D_{0}=0$
+and defiers are ruled out by assumption $Pr\left(D_{1}<D_{0}\right)=0$.
+
+The numerator becomes
+\begin{align*}
+E\left[Y|Z=1\right]-E\left[Y|Z=0\right] & =E\left[Y_{1}D+Y_{0}\left(1-D\right)|Z=1\right]-E\left[Y_{1}D+Y_{0}\left(1-D\right)|Z=0\right]\\
+ & =E\left[Y_{1}\left(D_{1}Z+D_{0}\left(1-Z\right)\right)+Y_{0}\left(1-\left(D_{1}Z+D_{0}\left(1-Z\right)\right)\right)|Z=1\right] \\
+ & -E\left[Y_{1}\left(D_{1}Z+D_{0}\left(1-Z\right)\right)+Y_{0}\left(1-\left(D_{1}Z+D_{0}\left(1-Z\right)\right)\right)|Z=0\right]\\
+ & =E\left[Y_{1}\left(D_{1}Z\right)+Y_{0}\left(1-\left(D_{1}Z\right)\right)|Z=1\right]-E\left[Y_{1}\left(D_{0}\left(1-Z\right)\right)+Y_{0}\left(1-\left(D_{0}\left(1-Z\right)\right)\right)|Z=0\right]\\
+ & =E\left[Y_{1}D_{1}+Y_{0}\left(1-D_{1}\right)|Z=1\right]-E\left[Y_{1}D_{0}+Y_{0}\left(1-D_{0}\right)|Z=0\right]\\
+ & =E\left[Y_{1}D_{1}+Y_{0}\left(1-D_{1}\right)-Y_{1}D_{0}+Y_{0}\left(1-D_{0}\right)\right]\tag{random assignment}\\
+ & =E\left[Y_{1}\left(D_{1}-D_{0}\right)-Y_{0}\left(D_{1}-D_{0}\right)\right]\\
+ & =E\left[\left(Y_{1}-Y_{0}\right)\left(D_{1}-D_{0}\right)\right]\\
+ & =E\left[\left(Y_{1}-Y_{0}\right)|\text{complier}\right]Pr\left(D_{1}>D_{0}\right)+0\times Pr\left(D_{1}=D_{0}\right)+E\left[\left(Y_{1}-Y_{0}\right)\right]Pr\left(D_{1}<D_{0}\right)\\
+ & =E\left[\left(Y_{1}-Y_{0}\right)|\text{complier}\right]Pr\left(D_{1}>D_{0}\right)
+\end{align*}
+
+where for the last inequality always takers, never takers, and defiers
+drop out. 
+
+Divide numerator by denominator to get 
+\begin{align*}
+\beta^{IV} & =\frac{E\left[Y|Z=1\right]-E\left[Y|Z=0\right]}{E\left[D|Z=1\right]-E\left[D|Z=0\right]}\\
+ & =\frac{E\left[\left(Y_{1}-Y_{0}\right)|\text{complier}\right]Pr\left(D_{1}>D_{0}\right)}{Pr\left(D_{1}>D_{0}\right)}\\
+ & =E\left[\left(Y_{1}-Y_{0}\right)|\text{complier}\right]
+\end{align*}
+
+
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% QUESTION 2 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Problem 2}
+Setup text here
+
+\begin{problem}{a}
+\end{problem}
+\begin{solution}
+\end{solution}
+
+\begin{problem}{b}
+\end{problem}
+\begin{solution}
+\end{solution}
+
+\begin{problem}{c}
+\end{problem}
+\begin{solution}
+\end{solution}
+
+\begin{problem}{d}
+\end{problem}
+\begin{solution}
+\end{solution}
+
+\begin{problem}{e}
+\end{problem}
+\begin{solution}
+\end{solution}
+
+\begin{problem}{f}
+\end{problem}
+\begin{solution}
+\end{solution}
+
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% QUESTION 3 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Problem 3}
+Setup text here
+
+\begin{problem}{a}
+\end{problem}
+\begin{solution}
+\end{solution}
+
+\begin{problem}{b}
+\end{problem}
+\begin{solution}
+\end{solution}
+
+\begin{problem}{c}
+\end{problem}
+\begin{solution}
+\end{solution}
+
+\begin{problem}{d}
+\end{problem}
+\begin{solution}
+\end{solution}
+
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% QUESTION 4 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Problem 4}
+Setup text here
+
+\begin{problem}{a}
+\end{problem}
+\begin{solution}
+\end{solution}
+
+\begin{problem}{b}
+\end{problem}
+\begin{solution}
+\end{solution}
+
+\begin{problem}{c}
+\end{problem}
+\begin{solution}
+\end{solution}
+
+\begin{problem}{d}
+\end{problem}
+\begin{solution}
+\end{solution}
+
+\begin{problem}{e}
+\end{problem}
+\begin{solution}
+\end{solution}
+
+\begin{problem}{f}
+\end{problem}
+\begin{solution}
+\end{solution}
+
+\begin{problem}{g}
+\end{problem}
+\begin{solution}
+\end{solution}
+
+\begin{problem}{h}
+\end{problem}
+\begin{solution}
+\end{solution}
+
+\end{document}
