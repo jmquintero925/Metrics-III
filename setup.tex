@@ -29,12 +29,15 @@
 \newcommand{\dV}[1]{\ensuremath\frac{\partial v}{\partial #1}}
 \newcommand{\ppx}[2]{\ensuremath\frac{\partial #1}{\partial #2}}
 \newcommand{\ddx}[2]{\ensuremath\frac{d #1}{d #2}}
+\newcommand{\var}{\text{Var}}
+\newcommand{\blp}[2]{\text{BLP}(#1\vert #2)}
+\newcommand{\cov}{\text{Cov}}
 \newcommand{\indp}{\perp\!\!\!\perp} 
 
 %\usepackage{mathpazo} %Dylan's fancy math bullshit that I don't want
 \usepackage{microtype}
 \usepackage{graphicx}
-\usepackage{setspace}
+%\usepackage{setspace}
 
 %Footnote without a number
 \newcommand\blfootnote[1]{%
@@ -43,11 +46,14 @@
 }
 
 
-    
 % Define problem environment
 \newenvironment{problem}[1]
     { \begin{mdframed}[backgroundcolor=Periwinkle!20] \textbf{(#1)} }
     {  \end{mdframed}}
 
+
 % Define solution environment
 \newenvironment{solution}{\textbf{Solution}\\}
+
+
+\usepackage{setspace}
