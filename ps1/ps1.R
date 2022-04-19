@@ -114,4 +114,9 @@ ATUplot<- ggplot(data=df2, aes(x=sigma, y=ATU)) +
     xlab(TeX(r'($\sigma$)'))
 ggsave(ATUplot, filename="./Figures/p2_qe_ATU.pdf")
 
+paramplot<- ggplot(data=df2, aes(x=sigma, y=param)) + 
+    geom_point() + 
+    ylab(TeX(r'(E[Y|D=1]-E[Y|D=0])')) +
+    xlab(TeX(r'($\sigma$)'))
+ggsave(paramplot, filename="./Figures/p2_qe_param.pdf")
 
