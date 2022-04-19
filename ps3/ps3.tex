@@ -701,12 +701,11 @@ Assess instrument relevance.
 \underline{Instrument relevance} is $E[D_{1,i}-D_{0,i}]\neq 0$ or equivalently $\pi_1 \neq 0$ in $D = \pi_0 + \pi_1 Z + \varepsilon$. Since this is a testable assumption, we will use the data provided to regress $D$ on $Z$ and test whether the coefficient on $Z$ is statistically indistinguishable from 0.
 
 From the below table, we can conclude that the instrument is relevant since we get a t-statistic of 26.67, which means the coefficient is statistically indistinguishable from 0 at any reasonable level of confidence.
-
-\todo[inline]{Format table properly!}
-\todo[inline]{Shouldn't this first stage regression be reg d on z,categ ?}
-
-\include{ps3/tables/q4_partb.tex}
-
+\begin{table}[H]
+    \centering
+    \input{ps3/tables/q4_partB}
+    \caption{Testing Instrument Relevance}
+\end{table}
 \end{solution}
 
 \begin{problem}{c}
@@ -715,8 +714,11 @@ Estimate the return to medical school on earnings in 2007 using IV. Interpret th
 \begin{solution}
 To estimate the return to medical school on earnings in 2007 using IV, we run TSLS in Stata and report the results in the table below. I also ran TSLS ``manually'' by regressing $D$ on $Z$, then predicting $D$ using the regression to create $\widehat{D}$, and finally regressing $\ln w$ on $\widehat{D}$. Of course, the results are identical.
 
-\todo[inline]{Format table properly!}
-%\include{ps3/tables/q4_partc.tex}
+\begin{table}[H]
+    \centering
+    \input{ps3/tables/q4_partC}
+    \caption{Return to medical school on log earnings}
+\end{table}
 
 These results show us that attending medical school increases log wage in 2007 by 0.187, or rather increases wages in 2007 by $\exp(0.187)-1=20.6\%$. We would like to interpret this causally, but given the lack of instrument exogeneity and exclusion restriction, we cannot. As Professor Mogstad said, IV results with non-credible assumptions go into the special filing cabinet!
 \end{solution}
@@ -731,7 +733,7 @@ Let $C \in \{c,a,n \}$ denote which group an individual is in. Then we have:
     p_n &\equiv P(C=n) = P(C=n|Z=1) \\
     p_c &\equiv P(C=c) = 1 - p_a - p_n
 \end{align*}
-Equivalently, we know that compliers are those for which $D_{1,i}>D_{0,i}$, so the proprotion of compliers in the sample is:
+Equivalently, we know that compliers are those for which $D_{1,i}>D_{0,i}$, so the proportion of compliers in the sample is:
 \begin{align*}
     P(D_{1,i}>D_{0,i}) &= E[D_{1,i}>D_{0,i}] \\
     &= E[D_1] - E[D_0] \\
@@ -739,17 +741,11 @@ Equivalently, we know that compliers are those for which $D_{1,i}>D_{0,i}$, so t
 \end{align*}
 Both of these we can estimate in the data and are reported in the table below. We see that the proportion of men that are compliers is higher than the proportion of women, even though the number of women that are compliers is higher. This raw count different is due to the fact that the sample is 64.2\% female, so there are just more women. The difference in the proportion of males and females that are compliers is something to think about in terms of conditioning on covariates.
 
-\todo[inline]{Format table properly!}
-%\include{ps3/tables/q4_partd.tex}
-\begin{tabular}{l*{2}{c}}
-\hline\hline
-            &        $\%$&           N\\
-\hline
-Female      &       0.504&     464.372\\
-Male        &       0.546&     303.080\\
-Total       &       0.520&     767.969\\
-\hline\hline
-\end{tabular}
+\begin{table}[H]
+    \centering
+    \input{ps3/tables/q4_partD.tex}
+    \caption{Estimated Complier Count}
+\end{table}
 \end{solution}
 
 \begin{problem}{e}
@@ -769,8 +765,12 @@ To estimate the mean of $Y_0$ and $Y_1$ for compliers, I follow Slide 20 of week
     E[Y_1|C=c] &= \frac{ E[ Y \cdot D | Z=1] - E[Y \cdot D | Z=0] }{ E[D|Z=1]-E[D|Z=0] }
 \end{align*}
 The results from these Wald estimands are in the table below. Since the LATE is the difference in $Y_1$ and $Y_0$ for the compliers, we can see that it the difference in the two rows lines up with our LATE from Part C.
-\todo[inline]{properly format table!}
-%\include{[ps3/tables/q4_partf.tex
+
+\begin{table}[H]
+    \centering
+    \input{ps3/tables/q4_partF.tex}
+    \caption{Mean of $Y_0$ and $Y_1$ for compliers}
+\end{table}
 
 To estimate the distributions, I follow the walk-through in the appendix of the week3.pdf slides. As in the slides, the observed marginal distribution of $Y$ conditional on $Z$ and $D$ is denoted $f_{zd}(y)$. Then, let the marginal distribution for never-takers be $g_n(y)$, always-takers be $g_a(y)$, compliers with $D=Z=1$ be $g_{c1}(y)$, and compliers with $D=Z=0$ be $g_{c0}(y)$. We want to plot $g_{c1}(y)$ and $g_{c0}(y)$.
 
@@ -790,12 +790,11 @@ Re-arranging as in the slides yields the two counterfactual distributions we'd l
     g_{c1}(y) &= f_{11}(y) \cdot \left(\frac{p_{c}+p_{a}}{p_{c}}\right) - f_{01}(y) \cdot \frac{p_{a}}{p_{c}}
 \end{align*}
 
-The combined plot of the distributions is below.
-\todo[inline]{Properly format the graph!}
-\includegraphics[width=0.5*\textwidth]{ps3/figures/q4_partf_compliers.pdf}
-
-
-
+The plot of the two distributions is below.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{ps3/figures/q4_partf_compliers.pdf}
+\end{figure}
 \end{solution}
 
 \begin{problem}{g}
@@ -803,12 +802,17 @@ What can you say about $Y_{0}$ and $Y_{1}$ for always-takers and never-takers?
 \end{problem}
 \begin{solution}
 Note that now the outcomes we are interested are observed in the data To calculate the mean of the outcome for always- and never-takers, we can just average over what is observed in the data. The means are reported in the table below:
-\todo[inline]{properly format table!}
-%\include{[ps3/tables/q4_partg.tex}
+\begin{table}[H]
+    \centering
+    \input{ps3/tables/q4_partG.tex}
+    \caption{Mean of $Y_0$ for never-takers and $Y_1$ for always-takers}
+\end{table}
 
 And the distributions are plotted below:
-\todo[inline]{Properly format the graph!}
-%\includegraphics[width=0.5*\textwidth]{ps3/figures/q4_partf_observed.pdf}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5*\textwidth]{ps3/figures/q4_partf_observed.pdf}
+\end{figure}
 
 It is interesting that the distributions look quite similar. Those who go to medical school after losing the lottery have a distribution of wages in 2007 that are quite similar to those who don't go even if they are offered. Perhaps the never-takers know something about themselves and know that going to medical school won't increase their earnings, so that's why they'd never go and that explains the lack of a gap in the distributions.
 \end{solution}
@@ -819,7 +823,7 @@ The lottery is within lottery category and year, so your instrument is only exog
 \begin{solution}
 
 \todo[inline]{Properly format the table!}
-\include{ps3/tables/q4_partH.tex}
+\input{ps3/tables/q4_partH_tab2}
 
 
 
