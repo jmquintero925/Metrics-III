@@ -477,6 +477,7 @@ If $\beta_{1}^{D}, \beta_{1}^{S} \geq 0$ and $\beta_{1}^{S}$ is constant, how do
 \end{problem}
 \begin{solution}
 If $\beta_1^S$ is a constant, then we can simplify the numerator from the IV estimand from Part E as such:
+
 \begin{align*}
     E\left [ \frac{\beta_1^D}{\beta_1^S+\beta_1^D} \right] &=  \frac{E[\beta_1^D]}{\beta_1^S+E[\beta_1^D]}
 \end{align*}
@@ -492,6 +493,21 @@ So combining gives:
 \end{align*}
 \end{solution}
 What this relationship says is that our IV estimand is the average of heterogeneous coefficients (LATEs). Normally, with heterogeneous treatment effects we think of the IV estimand as the average treatment effects on the compliers, however this result shows that we are not conditioning on any compliers. Why is that? Well first, let's think of this market in terms of there being one supplier and many buyers, where we only observe market equilibrium quantities, prices, and the supply shifter. Why only one supplier? Since $\beta_1^S$ is a constant and so too is $\kappa$, we only have one supplier or can think of there being many identical suppliers. With $\beta_1^D$ being a random variable, what we have is a distinct set of buyers whose aggregate quantity purchased at a given price is observed, but who each have their own $\beta_{1,i}^D$. Now that we have many buyers, who are the compliers and why are we not conditioning on them? In this context, it is weird to think of never- or always-takers since in competitive markets we have price-taking individuals. If an increase in the supply shifter lowers the price at a given quantity, who would choose to pay their old price? And if the supply shifter doesn't change, who would be able to get the better price as if it had? No one, in both cases! Thus there are no always- or never-takers and we only have compliers. Thus, we are estimating an average of each individual in the sample's treatment effect with our IV estimand.
+
+\todo[inline]{Okay I decided I have a gripe with the write-up. 
+
+Recall that compliers refers to the group who change D in response to Z. Here, compliers refers to the group of suppliers who are influenced by $Z$. Since we assume that $k\neq 0$ is constant, this implies that the representative supplier is a complier. 
+
+I don't think it makes sense to refer to buyers as compliers because they are not affected by the instrument directly. I have left further notes in a comment below this.}
+
+\begin{comment} In this setup, Z is the instrument which affects P through the supply side. Since $k,\beta^S_1$ are constant this is a constant effects model which is like what Isaac said - `only one supplier or many identical suppliers'. 
+
+So I can divide suppliers into four groups 1) Always 2) Never 3) Complier 4) Defier. Since $k$ is constant and positive, the representative supplier is a complier so we do not need to worry about the other groups.
+
+Compliers refers to the group for whom D (here P) is moved by Z. Complier doesn't make sense to describe consumers here because they are not moved by Z, by assumption. They are not compliers, defiers, always, never-takers. 
+
+Each consumer has her own price-elasticity. We are simply taking an average over these. Since we have assumed $\beta_i^d \geq 0$, everyone responds to the price change. 
+\end{comment}
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% QUESTION 3 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -687,6 +703,8 @@ Assess instrument relevance.
 From the below table, we can conclude that the instrument is relevant since we get a t-statistic of 26.67, which means the coefficient is statistically indistinguishable from 0 at any reasonable level of confidence.
 
 \todo[inline]{Format table properly!}
+\todo[inline]{Shouldn't this first stage regression be reg d on z,categ ?}
+
 \include{ps3/tables/q4_partb.tex}
 
 \end{solution}
@@ -802,6 +820,9 @@ The lottery is within lottery category and year, so your instrument is only exog
 
 \todo[inline]{Properly format the table!}
 \include{ps3/tables/q4_partH.tex}
+
+
+
 
 \end{solution}
 
