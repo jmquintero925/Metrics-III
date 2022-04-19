@@ -146,6 +146,8 @@ two line den_c0 den_c1 lnw, sort                                                
   legend(on  position(6) col(2))
 graph export "..\figures\q4_partF_compliers.pdf", replace
 
+graph close _all
+
 ****************************************************************************************************
 * G) Calculate mean and distribution of Y_0 and Y_1 for always- and never-takers
 ****************************************************************************************************
@@ -156,7 +158,7 @@ qui summ lnw if n==1
 matrix partG[2,1] = `r(mean)'
 
 *Save table with results
-matrix rownames partG = "$ Y\_0 $ for never-takers" "$ Y\_1 $ for always_takers"
+matrix rownames partG = "$ Y\_0 $ for never-takers" "$ Y\_1 $ for always-takers"
 matrix colnames partG = Mean
 esttab matrix(partG, fmt(%04.3f)) using "..\tables\q4_partG.tex", ///
   substitute(\_ _) nomtitles replace tex
@@ -166,6 +168,8 @@ twoway line den_a den_n lnw, sort                                               
   xtitle("Log Wage") ytitle("Density") title("Observed Density for Always- and Never-takers") ///
   legend(on  position(6) col(2))
 graph export "..\figures\q4_partG_observed.pdf", replace
+
+graph close _all
 
 ****************************************************************************************************
 * H) LATE estimation two ways
@@ -228,5 +232,3 @@ eststo: ivregress 2sls lnw lotcateg#year (d = z#lotcateg#year)
 la var year "Year"
 esttab using "..\tables\q4_partH_tab2.tex", b(%6.5f) se nostar nobaselevels label ///
   mtitle("Log Wage") nonum tex replace
-
-
