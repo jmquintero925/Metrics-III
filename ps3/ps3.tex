@@ -492,22 +492,9 @@ So combining gives:
     &= E[\beta_1^D]
 \end{align*}
 \end{solution}
-What this relationship says is that our IV estimand is the average of heterogeneous coefficients (LATEs). Normally, with heterogeneous treatment effects we think of the IV estimand as the average treatment effects on the compliers, however this result shows that we are not conditioning on any compliers. Why is that? Well first, let's think of this market in terms of there being one supplier and many buyers, where we only observe market equilibrium quantities, prices, and the supply shifter. Why only one supplier? Since $\beta_1^S$ is a constant and so too is $\kappa$, we only have one supplier or can think of there being many identical suppliers. With $\beta_1^D$ being a random variable, what we have is a distinct set of buyers whose aggregate quantity purchased at a given price is observed, but who each have their own $\beta_{1,i}^D$. Now that we have many buyers, who are the compliers and why are we not conditioning on them? In this context, it is weird to think of never- or always-takers since in competitive markets we have price-taking individuals. If an increase in the supply shifter lowers the price at a given quantity, who would choose to pay their old price? And if the supply shifter doesn't change, who would be able to get the better price as if it had? No one, in both cases! Thus there are no always- or never-takers and we only have compliers. Thus, we are estimating an average of each individual in the sample's treatment effect with our IV estimand.
+What this relationship says is that our IV estimand is the average of heterogeneous coefficients (LATEs). Normally, with heterogeneous treatment effects we think of the IV estimand as the average treatment effects on the compliers, however this result shows that we are not conditioning on any compliers. Why is that? Well first, let's think of this market in terms of there being one supplier and many buyers, where we only observe market equilibrium quantities, prices, and the supply shifter. Why only one supplier? Since $\beta_1^S$ is a constant and so too is $\kappa$, we only have one supplier or can think of there being many identical suppliers. With $\beta_1^D$ being a random variable, what we have is a distinct set of buyers whose aggregate quantity purchased at a given price is observed, but who each have their own $\beta_{1,i}^D$. 
 
-\todo[inline]{Okay I decided I have a gripe with the write-up. 
-
-Recall that compliers refers to the group who change D in response to Z. Here, compliers refers to the group of suppliers who are influenced by $Z$. Since we assume that $k\neq 0$ is constant, this implies that the representative supplier is a complier. 
-
-I don't think it makes sense to refer to buyers as compliers because they are not affected by the instrument directly. I have left further notes in a comment below this.}
-
-\begin{comment} In this setup, Z is the instrument which affects P through the supply side. Since $k,\beta^S_1$ are constant this is a constant effects model which is like what Isaac said - `only one supplier or many identical suppliers'. 
-
-So I can divide suppliers into four groups 1) Always 2) Never 3) Complier 4) Defier. Since $k$ is constant and positive, the representative supplier is a complier so we do not need to worry about the other groups.
-
-Compliers refers to the group for whom D (here P) is moved by Z. Complier doesn't make sense to describe consumers here because they are not moved by Z, by assumption. They are not compliers, defiers, always, never-takers. 
-
-Each consumer has her own price-elasticity. We are simply taking an average over these. Since we have assumed $\beta_i^d \geq 0$, everyone responds to the price change. 
-\end{comment}
+Now that we know we have many buyers and one supplier, who are the compliers and why are we not conditioning on them? In this context, since our instrument is a supply shifter, the suppliers are those being impacted by the instrument. Since we only have one supplier and we know $\kappa\neq 0$, we know that when $Z$ changes by $\delta Z$, $Q^S$ must change by $\kappa \delta Z$. Thus the one supplier is always a complier and we do not need to worry about always-takers, never-takers, or defiers in this setting. We are simply using the supply shifter to trace out the heterogeneous demand curves for each buyer and then estimating a weighted average of each buyers' price elasticity in $E[\beta_1^D]$. In addition, since we assumed that $\beta_1^D \geq 0$, we know that all buyers respond to an the price change in the same direction.
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% QUESTION 3 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -703,7 +690,7 @@ Assess instrument relevance.
 From the below table, we can conclude that the instrument is relevant since we get a t-statistic of 26.67, which means the coefficient is statistically indistinguishable from 0 at any reasonable level of confidence.
 \begin{table}[H]
     \centering
-    \input{ps3/tables/q4_partB}
+    \input{ps3/tables/q4_partB.tex}
     \caption{Testing Instrument Relevance}
 \end{table}
 \end{solution}
@@ -716,7 +703,7 @@ To estimate the return to medical school on earnings in 2007 using IV, we run TS
 
 \begin{table}[H]
     \centering
-    \input{ps3/tables/q4_partC}
+    \input{ps3/tables/q4_partC.tex}
     \caption{Return to medical school on log earnings}
 \end{table}
 
@@ -793,7 +780,7 @@ Re-arranging as in the slides yields the two counterfactual distributions we'd l
 The plot of the two distributions is below.
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{ps3/figures/q4_partf_compliers.pdf}
+    \includegraphics[width=0.8\textwidth]{ps3/figures/q4_partF_compliers.pdf}
 \end{figure}
 \end{solution}
 
@@ -807,13 +794,12 @@ Note that now the outcomes we are interested are observed in the data To calcula
     \input{ps3/tables/q4_partG.tex}
     \caption{Mean of $Y_0$ for never-takers and $Y_1$ for always-takers}
 \end{table}
-
 And the distributions are plotted below:
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5*\textwidth]{ps3/figures/q4_partF_observed.pdf}
+    \includegraphics[width=0.8\textwidth]{ps3/figures/q4_partG_observed.pdf}
 \end{figure}
-
+\vspace{-1cm}
 It is interesting that the distributions look quite similar. Those who go to medical school after losing the lottery have a distribution of wages in 2007 that are quite similar to those who don't go even if they are offered. Perhaps the never-takers know something about themselves and know that going to medical school won't increase their earnings, so that's why they'd never go and that explains the lack of a gap in the distributions.
 \end{solution}
 
@@ -821,9 +807,24 @@ It is interesting that the distributions look quite similar. Those who go to med
 The lottery is within lottery category and year, so your instrument is only exogenous within these groups. Estimate lottery category $\times$ year specific LATEs and combine these in one estimate. Compare this to the specification where you control for lottery category $\times$ year dummies and also interact the instrument with these dummies. Comment on your results.
 \end{problem}
 \begin{solution}
+I follow Slide 59 of week3.pdf, which is based on Angrist \& Imbens (1995). I calculate the $x$-specific LATEs and the $x$-specific weights. The most important part of this procedure is to recognize that the expectations are over the density of $X$:
+\begin{align*}
+    \omega(x) &= \frac{\pi_x^2 \sigma_Z(x)}{E[\pi_x^2 \sigma_Z(x)]} = \frac{\pi_x^2 \sigma_Z(x)}{\sum_x \pi_x^2 \sigma_Z(x) P(X=x)} \\
+    \beta &= E[\beta(x)\omega(x)] = \sum_x \beta(x)\omega(x) P(X=x)
+\end{align*}
 
-\todo[inline]{Properly format the table!}
-\input{ps3/tables/q4_partH_tab2}
+In the table below, proportion is $P(X=x)$ and weight is $\omega(x)$. For each row, we multiply these three together and then sum them to get $0.19156$, as is reported in the footnote.
+\begin{table}[H]
+    \centering
+    \input{ps3/tables/q4_partH_tab1.tex}
+\end{table}
+The above specification compares favorably to the one where we control for lottery category $\times$ year dummies and also interact the instrument with these dummies. The coefficient below, $0.19152$, is only slightly off from the weighted-average version. This makes perfect sense, as the difference is probably due to estimation error and in a larger sample would become even smaller.
+\begin{table}[H]
+    \centering
+    \input{ps3/tables/q4_partH_tab2.tex}
+\end{table}
+The results show that the causal impact of attending medical school on wages is positive and that doing so leads to wages that are $\operatorname{exp}(.19152)-1=21\%$ higher than not attending medical school. This certainly seems plausible, since medical school training is intensive and can lead to large gains in human capital.
+    
 
 
 
