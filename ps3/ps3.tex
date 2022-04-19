@@ -494,7 +494,7 @@ So combining gives:
 \end{solution}
 What this relationship says is that our IV estimand is the average of heterogeneous coefficients (LATEs). Normally, with heterogeneous treatment effects we think of the IV estimand as the average treatment effects on the compliers, however this result shows that we are not conditioning on any compliers. Why is that? Well first, let's think of this market in terms of there being one supplier and many buyers, where we only observe market equilibrium quantities, prices, and the supply shifter. Why only one supplier? Since $\beta_1^S$ is a constant and so too is $\kappa$, we only have one supplier or can think of there being many identical suppliers. With $\beta_1^D$ being a random variable, what we have is a distinct set of buyers whose aggregate quantity purchased at a given price is observed, but who each have their own $\beta_{1,i}^D$. 
 
-Now that we know we have many buyers and one supplier, who are the compliers and why are we not conditioning on them? In this context, since our instrument is a supply shifter, the suppliers are those being impacted by the instrument. Since we only have one supplier and we know $\kappa\neq 0$, we know that when $Z$ changes by $\delta Z$, $Q^S$ must change by $\kappa \delta Z$. Thus the one supplier is always a complier and we do not need to worry about always-takers, never-takers, or defiers in this setting. We are simply using the supply shifter to trace out the heterogeneous demand curves for each buyer and then estimating a weighted average of each buyers' price elasticity in $E[\beta_1^D]$. In addition, since we assumed that $\beta_1^D \geq 0$, we know that all buyers respond to an the price change in the same direction.
+Now that we know we have many buyers and one supplier, who are the compliers and why are we not conditioning on them? In this context, since our instrument is a supply shifter, the suppliers are those being impacted by the instrument. Since we only have one supplier and we know $\kappa\neq 0$, we know that when $Z$ changes by $\Delta Z$, $Q^S$ must change by $\kappa \Delta Z$. Thus the one supplier is always a complier and we do not need to worry about always-takers, never-takers, or defiers in this setting. We are simply using the supply shifter to trace out the heterogeneous demand curves for each buyer and then estimating a weighted average of each buyers' price elasticity in $E[\beta_1^D]$. In addition, since we assumed that $\beta_1^D \geq 0$, we know that all buyers respond to an the price change in the same direction.
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% QUESTION 3 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -558,7 +558,7 @@ Begin by using the LIE to use the definition of LATE given in the question:
 \begin{problem}{c}
 Suppose that $X$ is discrete (a set of binary indicators), that excluded instruments are $Z$ and $X Z$, where $Z \in\{0,1\}$, and that the model is fully saturated. Show that:
 \begin{align*}
-\beta_{T S L S}=E\left(\operatorname{LATE}(X) \frac{\operatorname{Var}(p(X, Z) \mid X)}{E(\operatorname{Var}(p(X, Z) \mid X))}\right)
+\beta_{T S L S}=\E\left(\operatorname{LATE}(X) \frac{\operatorname{Var}(p(X, Z) \mid X)}{\E(\operatorname{Var}(p(X, Z) \mid X))}\right)
 \end{align*}
 \end{problem}
 \begin{solution}
@@ -605,9 +605,31 @@ From part (a) note that the Wald estimate can be written in terms of the covarin
 \end{equation*}
 Using this fact we can rewrite the two stage least square estimate as 
 \begin{equation*}
-    \beta_{TSLS} = \frac{\E[\text{LATE}(X)\cov(D,Z\vert X)]}{\E[\cov(D,Z\vert X)]}
+    \beta_{TSLS} = \frac{\E[\text{LATE}(X)\cov(D,Z\vert X)(p(X,1)-p(X,0))]}{\E[\cov(D,Z\vert X)(p(X,1)-p(X,0))]}
 \end{equation*}
-To finish the proof we use the fact that 
+To finish the proof we use can repeat the previous argument 
+\begin{align*}
+   \cov(D,Z\vert X) &= \E[D(Z-\E[Z\vert X])\vert X] \\ 
+   &= \sum_{z\in\{0,1\}}\E[D(z-\E[Z\vert X])\vert X,Z=z]\Pr(Z=z\vert X) \\
+   &= \sum_{z\in\{0,1\}}\E[D(z-\E[Z\vert X])\vert X,Z=z]\E[Z\vert X] \\
+   &=(\mathbb{E}[D \mid X, Z=1]-\mathbb{E}[D \mid X, Z=0])(1-\mathbb{E}[Z \mid X]) \mathbb{E}[Z \mid X] \\ 
+   &= (p(X,1)-p(X,0))\Pr(Z=1\vert X)(1-\Pr(Z=1\vert X))
+   \\ 
+   &= (p(X,1)-p(X,0))\var(Z\vert X)
+\end{align*}
+which implies 
+\begin{equation*}
+    \beta_{TSLS} = \frac{\E[\text{LATE}(X)\var(Z\vert X)(p(X,1)-p(X,0))^2]}{\E[\var(Z\vert X)(p(X,1)-p(X,0))^2]}
+\end{equation*}
+Finally note that 
+\begin{align*}
+\var(Z \mid X) (p(X, 1)-p(X, 0))^{2} &=\var((p(X, 1)-p(X, 0)) Z \mid X) \\
+&= \var((p(X, 1)-p(X, 0)) Z \mid X) +\underbrace{\var(p(X,0)\vert X)}_{=0} \\ 
+&=\var(p(X, 0)+(p(X, 1)-p(X, 0)) Z \mid X)\\
+&=\var(p(X, 1) Z+p(X, 0)(1-Z) \mid X) \\
+&=\var(p(X, Z) \mid X),
+\end{align*}
+which concludes the proof. 
 \end{solution}
 
 \begin{problem}{d}
@@ -809,7 +831,7 @@ The lottery is within lottery category and year, so your instrument is only exog
 \begin{solution}
 I follow Slide 59 of week3.pdf, which is based on Angrist \& Imbens (1995). I calculate the $x$-specific LATEs and the $x$-specific weights. The most important part of this procedure is to recognize that the expectations are over the density of $X$:
 \begin{align*}
-    \omega(x) &= \frac{\pi_x^2 \sigma_Z(x)}{E[\pi_x^2 \sigma_Z(x)]} = \frac{\pi_x^2 \sigma_Z(x)}{\sum_x \pi_x^2 \sigma_Z(x) P(X=x)} \\
+    \omega(x) &= \frac{\pi_x^2 \sigma_Z^2(x)}{E[\pi_x^2 \sigma_Z^2(x)]} = \frac{\pi_x^2 \sigma_Z^2(x)}{\sum_x \pi_x^2 \sigma_Z^2(x) P(X=x)} \\
     \beta &= E[\beta(x)\omega(x)] = \sum_x \beta(x)\omega(x) P(X=x)
 \end{align*}
 
