@@ -1,0 +1,110 @@
+\documentclass{article}
+\include{setup.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Fill in the appropriate information below
+\lhead{Problem Set 1}
+\rhead{Empirical Analysis} 
+\title{Problem Set 4}
+\author{Alex Weinberg \and Isaac Norwich \and Jose M. Quintero}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\maketitle
+
+Our code can be found in this GitHub respository: \url{https://github.com/jmquintero925/Metrics-III/tree/main/ps4}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% QUESTION 1 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Problem 1}
+In addition to regular neighborhood schools which are open to all local students, the Chicago Public School System contains several elite ``selective enrollment'' high schools which a student must test into. Assume seats at selective enrollment schools are allocated purely on the basis of test scores\footnote{Note the actual process is more complicated.} and that there is full compliance - all students with test scores above a certain cutoff will be assigned a seat and will attend, and no students who didn't test above the threshold will attend.
+
+\begin{problem}{1}
+Suppose you are interested in the average effect on prime-age wages of attending a selective enrollment school for all students who actually did attend a selective enrollment school. Can you identify such an effect if you observed data on all Chicago public high schoolers, their test scores, their high school, and their wages at 40?
+\end{problem}
+\begin{solution}
+No, we wouldn't be able to identify the average effect of attending a selective school for \textbf{all} students who actually did attend a selective enrollment school.
+\end{solution}
+
+\begin{problem}{2}
+If not, what effect can you identify? How would you identify it? Is it interesting? Is it policy-relevant? For what policy?
+\end{problem}
+\begin{solution}
+Assuming full compliance, what we can identify is 
+
+
+Just selective versus not
+E[Y_1 - Y_0 | R=c]
+
+For ID: y is continuous in R and identify from y(c+-epsilon)
+
+Identify the LATE for people at the cutoff. 
+Interesting yes
+Policy-relevant. Answers what if we moved the cutoff by 1 point. Opened up another spot. 
+
+to identify the effect, we would need to be able to calculate the cutoff score for each selective school by finding the individual with the lowest test score who attended each selective school. Denote $R_i$ as an individual's test score and $c_j$ be the cutoff score for school $j$. The best case scenario is 
+\end{solution}
+
+\begin{problem}{3}
+Now suppose some high-schoolers in Chicago exit the Public School system and instead attend a Catholic or other private high school. How would this change your identification? Be specific about the new identification procedure and whether the treatment effect you're identifying in this part should be interpreted differently than in the previous part. Is this effect policy-relevant?
+\end{problem}
+\begin{solution}
+
+Attrition fucks up estimate.
+If its random, it doesnt matter
+But since its to private school or catholic assume its higher income. 
+Assuming education normal good and ppl who drop out have rich parents
+People who are below cutoff but with big Y_0 leave the sample and go to catholic school
+Beta_est > LATE
+Regular selection
+
+E[Y_2-Y_1|D-1, Selective to Cath]
+assump is y1-y0 is uncorr w y2-y1 and uncorr w y2-y0. Then dont need to worry about catholic school. ppl who go go for orthogonal reasons to our Y.
+Is problematic if those things are not true.
+
+If your y_0 is low by the cutoff and you dont wanna go to public so you go to private, the mass by the cutoff raises bc the low y0 ppl were keeping it lower and then it goes up.
+
+
+Rich kids high y_0 -> leave for gain from private school. Selection on gains story.
+
+Ashenfelters dip???
+
+
+\end{solution}
+
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% QUESTION 2 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Problem 2}
+Setup text here
+
+\begin{problem}{a}
+\end{problem}
+\begin{solution}
+\end{solution}
+
+\begin{problem}{b}
+\end{problem}
+\begin{solution}
+\end{solution}
+
+\begin{problem}{c}
+\end{problem}
+\begin{solution}
+\end{solution}
+
+\begin{problem}{d}
+\end{problem}
+\begin{solution}
+\end{solution}
+
+\begin{problem}{e}
+\end{problem}
+\begin{solution}
+\end{solution}
+
+\begin{problem}{f}
+\end{problem}
+\begin{solution}
+\end{solution}
+
+\end{document}
