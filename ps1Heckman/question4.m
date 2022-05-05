@@ -9,7 +9,7 @@ par.sigma = -0.9;
 par.Sigma = [1,par.sigma;par.sigma,1];
 par.mu    = [0,0];
 par.C     = 1.5;
-N         = 1e03;
+N         = 1e05;
 % Generate model 
 U   = mvnrnd(par.mu,par.Sigma,N);
 Y1  = par.alpha + par.beta + U(:,1);
@@ -79,7 +79,7 @@ for j=1:length(sigma)
     % New decision for PRTE
     Yn  = Y1.*Dn + (1-Dn).*Y0;
     % Estimate PRTE
-    PRTE(j)     = mean(Yn) - mean(Y);
+    PRTE(j)     = (mean(Yn) - mean(Y))/mean(D~=Dn);
     % Get MTE
     MTEf    = @(u) par.beta - 2*(1-par.sigma)*norminv(u);
     x       = linspace(0,1,100);
@@ -98,6 +98,19 @@ legend(strcat('$\rho=$',string([sigma(idx)])),'location','northeast',...
       'box','off','NumColumns',2)
 export_fig('Figures/MTEgrid','-pdf','-transparent'); 
 
+% Plot treatments
+figure;
+hold on
+plot(sigma,ATE,'Color',c.maroon)
+plot(sigma,TT,'Color',c.dkGreen)
+plot(sigma,TUT,'Color',c.nvyBlue)
+plot(sigma,LATE,'Color','#7E2F8E')
+plot(sigma,PRTE,'--k')
+xlabel('$\rho$')
+ylabel('Treatment Effect')
+legend('ATE','TT','TUT','LATE','PRTE','location','northeast',...
+      'box','off','NumColumns',2)
+export_fig('Figures/treatments','-pdf','-transparent'); 
 % Export treatment effects as a table 
 latex.data = [ATE,TT,TUT,LATE,PRTE];
 latex.tableCaption = 'Treatment effects';
