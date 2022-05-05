@@ -23,26 +23,26 @@ In addition to regular neighborhood schools which are open to all local students
 Suppose you are interested in the average effect on prime-age wages of attending a selective enrollment school for all students who actually did attend a selective enrollment school. Can you identify such an effect if you observed data on all Chicago public high schoolers, their test scores, their high school, and their wages at 40?
 \end{problem}
 \begin{solution}
-No, we wouldn't be able to identify the average effect of attending a selective school for \textbf{all} students who actually did attend a selective enrollment school.
+No, we wouldn't be able to identify the average effect of attending a selective school for \textbf{all} students who actually did attend a selective enrollment school. Due to the test score threshold, treatment is correlated with underlying $Y_0$ and $Y_0$, so we cannot recover the ATE.
 \end{solution}
 
 \begin{problem}{2}
 If not, what effect can you identify? How would you identify it? Is it interesting? Is it policy-relevant? For what policy?
 \end{problem}
 \begin{solution}
-Assuming full compliance, what we can identify is 
+For simplicity, assume there is one public school and one selective public school.
 
+With full compliance, we are in the sharp RD world. Let $R$ be the test score, our running variable, and $c$ be the threshold for getting in to selective public schools. That is, $Y=Y_1$ if $R\geq c$ and $Y=Y_0$ if $R<c$ where 1 denotes selective and 0 regular public schools. If we assume that $E[Y_d | R = r]$ is continuous at $r=c$ for $d \in \{0,1\}$ then we can identify the ATE at the cutoff:
+\begin{equation*}
+    E[Y_1=Y_0 | R=c] =  \lim_{r \downarrow c} E[Y|R=r] - \lim_{r \uparrow c} E[Y|R=r]
+\end{equation*}
+Note that with the continuity assumption, this becomes:
+\begin{equation*}
+    E[Y_1=Y_0 | R=c] =  E[Y_1|R=c] -  E[Y_0|R=c]
+\end{equation*}
 
-Just selective versus not
-E[Y_1 - Y_0 | R=c]
+This treatment effect is interesting if we are considering policy choices where we would increase or decrease the number of spots at the selective schools. If we increase the number spot by one, the student who now gets in is expected to have the above treatment effect. If we decrease the number of spots by one, then the negative of this value is how that student who no longer goes to a selective school's income decreases.
 
-For ID: y is continuous in R and identify from y(c+-epsilon)
-
-Identify the LATE for people at the cutoff. 
-Interesting yes
-Policy-relevant. Answers what if we moved the cutoff by 1 point. Opened up another spot. 
-
-to identify the effect, we would need to be able to calculate the cutoff score for each selective school by finding the individual with the lowest test score who attended each selective school. Denote $R_i$ as an individual's test score and $c_j$ be the cutoff score for school $j$. The best case scenario is 
 \end{solution}
 
 \begin{problem}{3}
@@ -50,33 +50,16 @@ Now suppose some high-schoolers in Chicago exit the Public School system and ins
 \end{problem}
 \begin{solution}
 
-Attrition fucks up estimate.
-If its random, it doesnt matter
-But since its to private school or catholic assume its higher income. 
-Assuming education normal good and ppl who drop out have rich parents
-People who are below cutoff but with big Y_0 leave the sample and go to catholic school
-Beta_est > LATE
-Regular selection
+If some high-schoolers exit the system and attend a catholic high school, the identification described above is no longer valid if we do not have random attrition. 
 
-E[Y_2-Y_1|D-1, Selective to Cath]
-assump is y1-y0 is uncorr w y2-y1 and uncorr w y2-y0. Then dont need to worry about catholic school. ppl who go go for orthogonal reasons to our Y.
-Is problematic if those things are not true.
+First, let's discuss how differential attrition impacts the LATE identified above. Since we no longer have perfect compliance (if we view compliance as graduating, not enrolling), then we have an instrument $Z$ that takes two values: $Z=1$ when $R\geqc$ is you get in to public school and $Z=0$ when $R<c$ is get in to public school. Students who attend public school have $D=0$, attend selective have $D=1$, and attend catholic/private school have $D=c4$. 
+\begin{itemize}
+    \item If students who have $R<c$ and thus are accepted to public school, $Z=0$, but attend private school, $D=c$, are more likely to have scores right below the threshold, $\operatorname{cov}(Y_0,D=c|Z=0)>0$, then the parameter we would estimate using the above formula will be too large: $\beta_RD > \beta_{LATE}$. This story is plausible: (rich) parents who think that think that their kid's $Y_c>Y_0$ would choose to enroll their child in private school. Since these children are more likely to have high $Y_0$'s compared to those with $R<c$, possibly due to their parent's high SES, the mass on the left hand side of the cutoff is lower than it should be will perfect compliance. 
+    \item If going to catholic school only benefits certain types of people and those types do not have systematically higher or lower $Y_0$'s, then our estimate from above is still correct. That is, if attrition is orthogonal to $R$, $Y_0$, and $Y_1$, then our identification above is valid. If not, then we need a new identification strategy.
+    \item Consider the case where students only learn their $Y_d$ for $d\in \{0,1\}$ once they attend either public or selective school. Students who go to regular schools don't learn anything about $Y_c$ because they don't interact with people who go to catholic schools. Students who attend selective schools do, and therefore learn what their $Y_c$ would be. For students with $R>c$, if $Y_c>Y_1$ then they leave. If this difference is negatively correlated with $Y_1$, then we end up with missing mass on the right hand side of the cutoff and $\beta_RD < \beta_{LATE}$.
+\end{itemize}
 
-If your y_0 is low by the cutoff and you dont wanna go to public so you go to private, the mass by the cutoff raises bc the low y0 ppl were keeping it lower and then it goes up.
-
-
-Rich kids high y_0 -> leave for gain from private school. Selection on gains story.
-
-Ashenfelters dip???
-
-Let Catholic be a new variable such that going to catholic school is only better than public school if you're catholic! Catholic can be correlated with SES and therefore Y_0, but if you're high SES and arent catholic then theres no point in going to catholic school. Since catholic doesnt impact Y_0, only Y_c, then we could get differential attrition based on SES
-
-cov(SES,R)>0, cov(SES,Y_0)>0, cov(SES,Catholic School)=0, cov(Catholic,Catholic School)>0, cov(Catholic,SES)=0, cov(Y_c,Catholic)>0. 
-if i have no data on kids who go to catholic school, i can identify beta_hat and given assumptions i can tell you if its an upper or lower bound on the treatment effect
-
-
-Could also have y_2>y_1 but only learn after entering y_1 do attrition is even among people with d=1…. Moves RHS line down
-
+With attrition, we now no longer have perfect compliance and instead can estimate the treatment effect using a fuzzy RD design. It is now the case that $R>c$ is an exact predictor of $D$, but it may still be strong assuming attrition is not too low. So now we think of $Z\equiv \mathbf{1}[R\geq c]$ as an incentive for $D$.
 
 \end{solution}
 
