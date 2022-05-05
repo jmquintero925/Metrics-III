@@ -72,15 +72,14 @@ for j=1:length(sigma)
     TT(j)   = mean(Y1(D)-Y0(D));
     TUT(j)  = mean(Y1(~D)-Y0(~D));
     % New decision for LATE
-    Dn  = (Y1-Y0-(par.C-0.5)>=0);
+    Dn  = (Y1-Y0-(par.C-1)>=0);
     % Estimate LATE
     compl   = ~D & Dn;
     LATE(j) = mean(Y1(compl)-Y0(compl));
     % New decision for PRTE
-    Dn  = (Y1-Y0-(par.C-1)>=0);
     Yn  = Y1.*Dn + (1-Dn).*Y0;
     % Estimate PRTE
-    PRTE(j) = mean(Yn) - mean(Y);
+    PRTE(j)     = mean(Yn) - mean(Y);
     % Get MTE
     MTEf    = @(u) par.beta - 2*(1-par.sigma)*norminv(u);
     x       = linspace(0,1,100);
