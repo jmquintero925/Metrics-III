@@ -73,11 +73,29 @@ Simulate a normal Generalized Roy model using the parameters used by Figure 1 in
 Compute ATE, TOT, MTE, for values of $\operatorname{Cov}\left(\frac{Y_{0}}{\sigma_{0}}, \frac{Y_{1}}{\sigma_{1}}\right)$ ranging from 1 to $-1$ in steps of $.10$.
 \end{problem}
 \begin{solution}
-
+\begin{figure}[htb]
+    \centering
+    \caption{Marginal Treatment Effect}
+    \label{ps1H:q4:fig1}
+    \begin{subfigure}[b]{0.43\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{ps1Heckman/Figures/MTEcompare.pdf}
+         \caption{Simulation vs. Analytic}
+     \end{subfigure}
+     \begin{subfigure}[b]{0.43\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{ps1Heckman/Figures/MTEgrid.pdf}
+         \caption{Compare while varying $\rho$}
+     \end{subfigure}
+\end{figure}
+\FloatBarrier
 \end{solution}
 \begin{problem}{b}
 For each case, give LATE for a unit downward change in $C=.5$.
 \end{problem}
+\begin{solution}
+\input{ps1Heckman/Tables/treatEffect}
+\end{solution}
 \begin{problem}{c}
 What is PRTE for a unit downward change in $C$ ?
 \end{problem}
