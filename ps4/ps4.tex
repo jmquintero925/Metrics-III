@@ -49,7 +49,6 @@ This treatment effect is interesting if we are considering policy choices where 
 Now suppose some high-schoolers in Chicago exit the Public School system and instead attend a Catholic or other private high school. How would this change your identification? Be specific about the new identification procedure and whether the treatment effect you're identifying in this part should be interpreted differently than in the previous part. Is this effect policy-relevant?
 \end{problem}
 \begin{solution}
-
 If some high-schoolers exit the system and attend a catholic high school, the identification described above is no longer valid if we do not have random attrition. 
 
 First, let's discuss how differential attrition impacts the LATE identified above. Since we no longer have perfect compliance (if we view compliance as graduating, not enrolling), then we have an instrument $Z$ that takes two values: $Z=1$ when $R\geqc$ is you get in to public school and $Z=0$ when $R<c$ is get in to public school. Students who attend public school have $D=0$, attend selective have $D=1$, and attend catholic/private school have $D=c4$. 
@@ -59,7 +58,11 @@ First, let's discuss how differential attrition impacts the LATE identified abov
     \item Consider the case where students only learn their $Y_d$ for $d\in \{0,1\}$ once they attend either public or selective school. Students who go to regular schools don't learn anything about $Y_c$ because they don't interact with people who go to catholic schools. Students who attend selective schools do, and therefore learn what their $Y_c$ would be. For students with $R>c$, if $Y_c>Y_1$ then they leave. If this difference is negatively correlated with $Y_1$, then we end up with missing mass on the right hand side of the cutoff and $\beta_RD < \beta_{LATE}$.
 \end{itemize}
 
-With attrition, we now no longer have perfect compliance and instead can estimate the treatment effect using a fuzzy RD design. It is now the case that $R>c$ is an exact predictor of $D$, but it may still be strong assuming attrition is not too low. So now we think of $Z\equiv \mathbf{1}[R\geq c]$ as an incentive for $D$.
+With attrition, we now no longer have perfect compliance and instead can estimate the treatment effect using a fuzzy RD design. While it is no longer the case that $R>c$ is an exact predictor of $D$, it still may still be a strong predictor. We now think of $Z\equiv \mathbf{1}[R\geq c]$ as an incentive for $D$. We assume monotonicity, $D_1 \geq D_0$, leaving three types $T$: always-takers, compliers, and never-takers. We also assume that $\mathbb{E}\left[Y_{d} \mid R=r, T=t\right]$ and $\mathbb{P}[T=t \mid R=r]$ are continuous at $r=c$. In addition, I assume that $Y_c>Y_0$ so that students below the threshold who can afford private/catholic school will attend and be never-takers. With these assumptions, we estimate the LATE by taking the limit of the Wald estimate as $R \to c$:
+\begin{align*}
+    \frac{\lim _{r \downarrow c} \mathbb{E}[Y \mid R=r]-\lim _{r \uparrow c} \mathbb{E}[Y \mid R=r]}{\lim _{r \downarrow c} \mathbb{E}[D \mid R=r]-\lim _{r \uparrow c} \mathbb{E}[D \mid R=r]}=\mathbb{E}\left[Y_{1}-Y_{0} \mid R=c, Complier\right]
+\end{align*}
+Note the similar Wald estimand formula on the left side above. So what does this LATE tell us and how does it compare to the LATE in the first case? It's a very local parameter---meaning that it is not only the difference in $Y_1$ and $Y_0$ at $R=c$---but also only for those who are compliers at the cutoffs. So the people that this estimand is identified off of are different from the estimand in part 1. Whether it is policy relevant again depends on how interesting we think the instrument is, which in this case is the cutoff test score. If we lower the cutoff score and allow one more person in to selective high schools, we now have to consider whether that person is a complier or if they would instead go to catholic school (a never-taker). It's possible that the treatment effect for a complier is higher than for a never-taker at the cutoff, so the estimate is larger in magnitude than in the first part.
 
 \end{solution}
 
