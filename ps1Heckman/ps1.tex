@@ -21,16 +21,56 @@ Comment on Richard Feynman’s commentary on social science and John Geweke’s 
 \begin{problem}{a}
 What are the rewards to the author for doing careful empirical research?
 \end{problem}
+
+\begin{solution}
+The rewards to careful empirical research is to `learn something' about the real world. 
+Richard Feyman discusses how `hard it is to truly know something' and critiques social scientists as being sloppy and not taking precise care. However, if one truly takes care, then it is possible to feel confident that you know something. 
+
+I think there is the possibility of a Type II error when taking too much care. If we have only the highest of standards, then it is possible to miss out of `true things' about the world simply because it is difficult to prove. 
+\end{solution}
+
 \begin{problem}{b}
 Should empirical economic analysts be required to submit pre-analysis
 plans before conducting research?
 \end{problem}
+
+\begin{solution}
+
+I am a fan of pre-analysis plans. PAPs tie the hands of the research and limit the possibility of specification searching or author bias affecting the results. Furthermore, PAPs can insulate the research from donor pressure.
+
+The downsides are that they are expensive and difficult. Furthermore, PAPs are not a panacea. They do not address issues raised by the `desk drawer problem' or underpowered studies. Due to this, perhaps replication requirements or results-blind review are preferable. 
+
+
+
+
+In class, Professor Heckman distinguished between understanding the `effects of causes' (e.g. Neyman-Rubin potential outcomes model) and the `causes of effects' (e.g. more structural approach). I think 
+
+\end{solution}
+
 \begin{problem}{c}
 Explain how Bayesian, likelihood, and classical statistical inference approaches differ in learning from data.
 \end{problem}
+
+\begin{solution}
+
+Classical inference appeals to long run frequencies. Given a fixed parameter, frequentists ask `if we ran this experiment infinite times, on average how often will we observe _______.`
+
+Bayesians ask, `given this data is fixed, what conclusions can we draw about the parameter of interest'?
+
+\end{solution}
+
 \begin{problem}{d}
  Read the papers by Christensen and Miguel (2018) and Chang and Li (2015). In light of results reported in these papers, is Feynman right? Is economics a pseudoscience?
 \end{problem}
+
+\begin{solution}
+I have read the papers. Feynman argues that knowing things are hard and that it requires being very careful. Feynman further argues that it is possible to know things in social science, but it had not yet happened in his day. 
+
+Chang and Li (2005) show that there is a deep replication crisis in economics. Christensen and Miguel (2018) show that due to under-powered studies and publication bias $PPV=P[true|reported true]$ is likely small in economics. 
+
+While pseudoscience is not the term I would choose, this evidence make me doubt most results in economics. Feynman says it is hard to know things and that it requires being very careful. Economics clearly has not been careful enough. 
+
+\end{solution}
 
 
 \newpage
@@ -79,10 +119,46 @@ where $A$ is a Hicks-neutral productivity shock and $K$ and $L$ are capital and 
 \begin{problem}{a}
 Are $Y(k, l, a)$ and $Y\left(k^{\prime}, l, a\right)$ potential outcomes? Outputs of a structural model? What is the difference? What is the difference between a causal parameter and comparisons of structural functions evaluated at different points of their arguments? What is the causal effect of $k \rightarrow k^{\prime}$ ? What is ATE for a policy of fixing $K=k$ and $K=k^{\prime}$ ? How is it related to the marginal product of $k$ ?
 \end{problem}
+\begin{solution}
+Both $Y(k,l,a)$ and $Y(k',l,a)$ are both potential outcomes and outputs of a structural model. It all comes down to interpretation. Under the interpretation of potential outcomes, $Y(k,l,a)$ and $Y(k',l,a)$ are the results of shifting $k$ to $k'$ while keeping fixed $l$ and $a$. This however, does not exclude potential distributional changes. On the other hand, if they are outputs of of a structural model then is the result of evaluating the structural equation 
+\begin{equation*}
+    Y(K,L,A) = AK^\alpha L^\beta
+\end{equation*}
+in $(k,l,a)$ and $(k',l,a)$. Casual parameters do not need to be identified using structural assumptions. For instance, the data generating process is not a concern in the casual parameter. In fact, casual parameters are associated to reduce form set ups and typically, identification does not have an underlying structural model. On the contrary, the structural functions are implied by the structural model. The two approaches can actually match, if the identifying assumptions done on the reduce form are correct and the underlying model is correctly specified. 
+
+The casual effect is 
+\begin{equation*}
+    \left(e^{\hat\alpha}\frac{k'}{k}-1\right)Y(k,l,a)
+\end{equation*}
+with
+\begin{equation*}
+    \hat\alpha = \frac{\cov(\tilde{K},\Tilde{Y}))}{\var(\tilde{K})}
+\end{equation*}
+Note the equation is estimating the percentile change and then multiplying by the initial value. The ATE for this particular exercise is 
+\begin{align*}
+    ATE = \E[Y(k',l,a)-Y(k,l,a)] &= \E[a\left.k'\right.^\alpha l^\beta-ak^\alpha l^\beta] \\ 
+    &= a\left.k'\right.^\alpha l^\beta-ak^\alpha l^\beta \\
+    &= \frac{al^\beta}{\left.k'\right.^{1-\alpha}}k' - \frac{al^\beta}{k^{1-\alpha}}k \\ 
+    &= \frac{1}{\alpha}\left[\alpha\frac{al^\beta}{\left.k'\right.^{1-\alpha}}k' - \alpha\frac{al^\beta}{k^{1-\alpha}}k\right] \\ 
+    &= \frac{1}{\alpha}\left[\text{MP}_K(k',l,a)k'-\text{MP}_K(k,l,a)k\right]
+\end{align*}
+were the second line removes the expectation as we are conditioning on the rest of the variables and $\alpha$ and $\beta$ are structural parameters. In other words the ATE is proportional to the marginal product of capital multiplied by the amount of capital. This is interesting because if we were to assume the underlying model represents a maximizing production firm, then the FOC imply that the marginal productivity of capital is equal to the price and thus under that specific underlying model the ATE could be written as the difference in the total purchases of capital of the firm. Off course prices can change from scenario to the other, and thus it depends on the specified underlying model. 
+\end{solution}
 
 \begin{problem}{b}
 Explain the difference between fixing $K$ and conditioning on it? When are they the same? When different? (Use a regression of (1) in logs to make your points.)
 \end{problem}
+\begin{solution}
+This questions is again related to the interpretation of equation. Fixing $k$ is part of the hypothetical exercise while conditioning is part of an empirical approach. Consider the equation in logs
+\begin{equation*}
+    \log Y = \log A + \alpha\log K +\beta\log L + \varepsilon
+\end{equation*}
+Note that conditioning on $K$ and taking expectation to get rid of the error term yields 
+\begin{equation*}
+    \E[Y\vert K=k] = \E[A\vert K=k] + \alpha k + \beta\E[L\vert K=k]
+\end{equation*}
+Note that its not necessarily true that $\E[A]=\E[A\vert K=k]$ for distributional reasons. On the contrary, while fixing, $A$ remains unchanged as $A$ is part of the underlying structural model.  They will be same if both $A$ and $L$ are independent of $k$ and there are no heterogeneity in the structural parameters $\alpha$ and $\beta$.
+\end{solution}
 
 \newpage
 \section*{Problem 4}
@@ -126,7 +202,7 @@ As a sanity check, we compare the results of the simulation with the analytic co
      \end{subfigure}
 \end{figure}
 \FloatBarrier
-Next, we plot the MTE for different values of $\rho_{01}$. This results are presented in \ref{ea3:ps1:q3b:fig1}. Note as the correlation approaches to 1 the MTE approaches a flat curve around 0. When $\rho_{01}=1$ there is no gains in unobservables and thus no selection in unobservables. the rest of the treatment effects are presented in Figure \ref{ps1H:q4:fig2}. 
+Next, we plot the MTE for different values of $\rho_{01}$. This results are presented in \ref{ps1H:q4:fig1b}. Note as the correlation approaches to 1 the MTE approaches a flat curve around 0. When $\rho_{01}=1$ there is no gains in unobservables and thus no selection in unobservables. the rest of the treatment effects are presented in Figure \ref{ps1H:q4:fig2}. 
 \end{solution}
 \begin{problem}{b}
 For each case, give LATE for a unit downward change in $C=.5$.
@@ -148,7 +224,11 @@ See Figure \ref{ps1H:q4:fig2}
 Write this model as a random coefficient regression model with $Y=D Y_{1}+(1-D) Y_{0}$ as the dependent variable. $D=1$ corresponds to being in Sector $1 ; D=0$ otherwise. When is least squares a consistent estimator of ATE? TOT?
 \end{problem}
 \begin{solution}
-
+Consider the regression 
+\begin{equation*}
+    Y = \underbrace{\E[Y_0]}_{\beta_0} + \underbrace{(Y_1-Y_0)}_{\beta} D + \underbrace{Y_0-\E[Y_0]}_{\varepsilon_i}
+\end{equation*}
+Observe that if $D\indp(Y_1,Y_0)$ then there will be no correlation between the unobserved terms and the explanatory variables. This is to say, there is no selection and thus the decision is uncorrelated with the potential outcomes. In this case, the estimator of OLS will be consistent. However, since the asusmption requires no selection then ATE=TT=TUT. 
 \end{solution}
 
 
