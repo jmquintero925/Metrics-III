@@ -35,15 +35,9 @@ plans before conducting research?
 \end{problem}
 
 \begin{solution}
-
 I am a fan of pre-analysis plans. PAPs tie the hands of the research and limit the possibility of specification searching or author bias affecting the results. Furthermore, PAPs can insulate the research from donor pressure.
 
 The downsides are that they are expensive and difficult. Furthermore, PAPs are not a panacea. They do not address issues raised by the `desk drawer problem' or underpowered studies. Due to this, perhaps replication requirements or results-blind review are preferable. 
-
-
-
-
-In class, Professor Heckman distinguished between understanding the `effects of causes' (e.g. Neyman-Rubin potential outcomes model) and the `causes of effects' (e.g. more structural approach). I think 
 
 \end{solution}
 
@@ -53,10 +47,13 @@ Explain how Bayesian, likelihood, and classical statistical inference approaches
 
 \begin{solution}
 
-Classical inference appeals to long run frequencies. Given a fixed parameter, frequentists ask `if we ran this experiment infinite times, on average how often will we observe _______.`
+Classical inference appeals to long run frequencies. Given a fixed parameter, frequentists ask "if we ran this experiment infinite times, on average how often will we observe what we observe?"
 
-Bayesians ask, `given this data is fixed, what conclusions can we draw about the parameter of interest'?
+Bayesians take the data as fixed and ask what conclusions can be drawn about the underlying parameter given that data. In particular, they start with a prior about the parameter of interest and use bayesian updating to allow the data to `update' their thoughts on the distribution of the parameter. 
 
+The likelihood approach argues that the likelihood of the data is the most useful summary statistic. 
+
+In our view, Bayesian inference with informative priors is indistinguishable from data falsification. See  García-Pérez (2019) for more details. 
 \end{solution}
 
 \begin{problem}{d}
@@ -155,7 +152,7 @@ This questions is again related to the interpretation of equation. Fixing $k$ is
 \end{equation*}
 Note that conditioning on $K$ and taking expectation to get rid of the error term yields 
 \begin{equation*}
-    \E[Y\vert K=k] = \E[A\vert K=k] + \alpha k + \beta\E[L\vert K=k]
+    \E[Y\vert K=k] = \E[\log A\vert K=k] + \alpha \log k + \beta\E[\log L\vert K=k]
 \end{equation*}
 Note that its not necessarily true that $\E[A]=\E[A\vert K=k]$ for distributional reasons. On the contrary, while fixing, $A$ remains unchanged as $A$ is part of the underlying structural model.  They will be same if both $A$ and $L$ are independent of $k$ and there are no heterogeneity in the structural parameters $\alpha$ and $\beta$.
 \end{solution}
@@ -228,7 +225,7 @@ Consider the regression
 \begin{equation*}
     Y = \underbrace{\E[Y_0]}_{\beta_0} + \underbrace{(Y_1-Y_0)}_{\beta} D + \underbrace{Y_0-\E[Y_0]}_{\varepsilon_i}
 \end{equation*}
-Observe that if $D\indp(Y_1,Y_0)$ then there will be no correlation between the unobserved terms and the explanatory variables. This is to say, there is no selection and thus the decision is uncorrelated with the potential outcomes. In this case, the estimator of OLS will be consistent. However, since the asusmption requires no selection then ATE=TT=TUT. 
+Observe that if $D\indp(Y_1,Y_0)$ then there will be no correlation between the unobserved terms and the explanatory variables. This is to say, there is no selection and thus the decision is uncorrelated with the potential outcomes. In this case, the estimator of OLS will be consistent. However, since the assumption requires no selection then ATE=TT=TUT. 
 \end{solution}
 
 

@@ -1,0 +1,223 @@
+\documentclass{article}
+\include{setup.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Fill in the appropriate information below
+\lhead{Problem Set 2}
+\rhead{Empirical Analysis} 
+\title{Problem Set 2}
+\author{Alex Weinberg \and Isaac Norwich \and Jose M. Quintero}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\maketitle
+
+\begin{comment}
+Q3 - three estimators - no solutions
+Q4 1 part - no solutions
+Q5 no idea - no solutions
+Q8 5 parts - no solutions - Isaac
+
+Q1 7 parts - solutions
+Q2 4 parts - solutions - Isaac
+Q6 1 part - solutions
+Q7 3 parts - solutions 
+
+Parts:
+Isaac - 5
+Alex
+Jose
+
+Total of 21 parts and 2 other questions
+
+\end{comment}
+
+
+Our code can be found in this GitHub respository: \url{https://github.com/jmquintero925/Metrics-III/tree/main/ps2Heckman}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% QUESTION 1 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Problem 1}
+Answer the questions embedded in the econometric causality model handouts based on Heckman (2008).
+
+\begin{problem}{Question 1 Slide 27}
+Question: Can agents ex ante evaluate the ex post evaluation?
+\end{problem}
+\begin{solution}
+\end{solution}
+
+
+\begin{problem}{Question 2 Slide 32}
+Question: How can agents identify what might have been for states they have not experienced? Consider alternative approaches.
+\end{problem}
+\begin{solution}
+\end{solution}
+ 
+\begin{problem}{Question 3 Slide 35}
+Question: What are the precise requirements for solving P3 for the PRTE?
+\end{problem}
+\begin{solution}
+\end{solution}
+ 
+ 
+\begin{problem}{Question 4 Slide 36}
+Question: In the context of a policy of tuition reduction,
+under what conditions is Ya = Yb;Ya = Yb where Yj denotes 0011i
+the present value of life cycle earnings under policy j in state i?
+\end{problem}
+\begin{solution}
+\end{solution}
+
+\begin{problem}{Question 5 Slide 38}
+Question: What is the relationship between PRTE and ITT (Intention To Treat)? Is PRTE a causal parameter?
+\end{problem}
+\begin{solution}
+\end{solution}
+
+
+\begin{problem}{Question 6 Slide 41}
+Question: Is LATE a causal parameter? How does it address P1-P3?
+\end{problem}
+\begin{solution}
+\end{solution}
+
+
+\begin{problem}{Question 7 Slide 43}
+Question: Verify each claim in this box.
+\end{problem}
+\begin{solution}
+\end{solution}
+
+
+
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% QUESTION 2 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Problem 2}
+Answer the questions embedded in the ``Classical Discrete Choice Theory'' handout.
+
+\begin{problem}{Question 1 Slide 17}
+Prove
+\end{problem}
+\begin{solution}
+\end{solution}
+
+\begin{problem}{Question 2 Slide 28}
+Prove why introduction of identical good changes probability of riding a bus.
+\end{problem}
+\begin{solution}
+\end{solution}
+
+
+\begin{problem}{Question 1 Slide 40}
+Prove this
+\end{problem}
+\begin{solution}
+\end{solution}
+
+\begin{problem}{Question 2 Slide 56}
+Prove it can be used to identify $\sigma_{U}^{2}$ and $\sum_{\beta}$.
+\end{problem}
+\begin{solution}
+\end{solution}
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% QUESTION 3 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Problem 3}
+ For the model $Y=X_{1} \beta_{1}+X_{2} \beta_{2}+U$,
+\begin{align*}
+\begin{aligned}
+&E\left(U \mid X_{1}, X_{2}\right)=0 \\
+&\sum_{X_{1}, X_{2}} \text { full rank, }
+\end{aligned}
+\end{align*}
+discuss and compare the properties of the three estimators: \\
+\begin{align*}
+    &(a) \quad \text{ OLS } \beta_{1} \\
+    &(b) \quad \hat{\beta}_{1} \text{ from a regression of $Y$ on $X_{1}$ alone.} \\
+    &(c) \quad \hat{\beta}_{1}= 
+        \begin{cases}
+            \beta_{1} \mathrm{OLS}, & \text { if } t_{\hat{\beta}_{1}} \geq 2 \\ 
+            \hat{\beta}_{1}, & \text{ otherwise (from a regression of } Y \text{ on } X_{1} \text { alone). }
+        \end{cases}    
+\end{align*}
+
+\begin{solution}
+\end{solution}
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% QUESTION 4 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Problem 4}
+Answer the questions embedded in the ``Hypothesis Testing: Part I'' handout.
+
+\todo[inline]{I have no idea where the questions are in these slides -Isaac}
+
+\begin{problem}{a}
+\end{problem}
+\begin{solution}
+\end{solution}
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% QUESTION 5 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Problem 5}
+Answer the questions embedded in the ``How to Correct for Sampling Biases'' handout.
+\todo[inline]{I don't think we have this yet -Isaac}
+
+\begin{problem}{a}
+\end{problem}
+\begin{solution}
+\end{solution}
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% QUESTION 6 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Problem 6}
+Answer the questions embedded in the ``Roy Models of Policy Evaluation'' handout.
+\todo[inline]{I don't think we have this yet, but its just 1 part from Q1B from last year. -Isaac}
+
+\begin{problem}{Question 1 Slide 9}
+\end{problem}
+\begin{solution}
+\end{solution}
+
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% QUESTION 7 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Problem 7}
+Answer the questions embedded in the ``Notes on Identification of the Roy Model'' and the ``Generalized Roy Model'' handout.
+
+%%%%%``Notes on Identification of the Roy Model''
+\begin{problem}{Question 1 Slide 5}
+Just invert known $f_{U_{l}}$ to establish $\frac{\mu_{l}(X, Z)}{\sigma_{l}}$. Prove.
+\end{problem}
+\begin{solution}
+\end{solution}
+
+\begin{problem}{Question 1 Slide 10}
+Problem: Prove this using the first line of $(* *)$ realizing that you know $\frac{U_{1}}{\delta_{I}}$.
+\end{problem}
+\begin{solution}
+\end{solution}
+
+%%%%% ``Generalized Roy Model''
+\begin{problem}{Question 1 Slide 31}
+Prove MTE $=\frac{\partial E(Y \mid Z=z)}{\partial P(z)}$
+\end{problem}
+\begin{solution}
+\end{solution}
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% QUESTION 8 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Problem 8}
+ 
+\begin{problem}{a}
+\end{problem}
+\begin{solution}
+\end{solution}
+
+
+\end{document}
