@@ -99,6 +99,24 @@ Answer the questions embedded in the ``Classical Discrete Choice Theory'' handou
 Prove
 \end{problem}
 \begin{solution}
+Let $F(\varepsilon_1,...,\varepsilon_N)$ the join CDF of the idiosyncratic shocks. Then note that
+\begin{align*}
+    \ppx{}{\varepsilon_j}F(\varepsilon_1,...,\varepsilon_N) &= \ppx{}{\varepsilon_j} \int_{-\infty}^{\varepsilon_1}\cdots\int_{-\infty}^{\varepsilon_j}\cdots\int_{-\infty}^{\varepsilon_N} f(x_1,...,x_N)\mathrm{d}x_1\cdots\mathrm{d}x_j\cdots\mathrm{d}x_N \\
+     &= \int_{-\infty}^{\varepsilon_1}\cdots\int_{-\infty}^{\varepsilon_{j-1}}\int_{-\infty}^{\varepsilon_{j+1}}\cdots\int_{-\infty}^{\varepsilon_N} f(x_1,...,\varepsilon_j,...,x_N)\mathrm{d}x_1\cdots\mathrm{d}x_{j-1}\mathrm{d}x_{j+1}\cdots\mathrm{d}x_N
+\end{align*}
+where the second line uses Fubini's theorem (interchange the order of integrals) and the fact for pdfs, the integral and the derivative are commutative operations. Using this fact, note that the conditional CDF can be written as 
+\begin{align*}
+    F(\varepsilon_1,...\varepsilon_{j-1},\varepsilon_{j+1},...,\varepsilon_N\vert\varepsilon_j) &= \frac{1}{f_{\varepsilon_j}(\varepsilon_j)} \int_{-\infty}^{\varepsilon_1}\cdots\int_{-\infty}^{\varepsilon_{j-1}}\int_{-\infty}^{\varepsilon_{j+1}}\cdots\int_{-\infty}^{\varepsilon_N} f(x_1,...,\varepsilon_j,...,x_N)\mathrm{d}x_1\cdots\mathrm{d}x_{j-1}\mathrm{d}x_{j+1}\cdots\mathrm{d}x_N \\ 
+    &=\frac{1}{f_{\varepsilon_j}(\varepsilon_j)} \ppx{}{\varepsilon_j}F(\varepsilon_1,...,\varepsilon_N)
+\end{align*}
+Using this equation, we can prove the result by taking conditional expectations. 
+\begin{align*}
+\Pr\left(\varepsilon_{I}\leq v_{j}-v_{I} + \varepsilon_{j}, \quad \forall I \neq j\right)=&\E\left[\Pr\left(\varepsilon_{I}\leq v_{j}-v_{I} + \varepsilon_{j}, \forall I \neq j\Big\vert \varepsilon_{j}\right)\right]\\
+%%%%%%%
+&\int_{-\infty}^{\infty} F\left(v_{j}-v_{1} + \varepsilon_{1},..., v_{j}-v_{j-1} + \varepsilon_{j},\varepsilon_{j},...v_{j}-v_{N} + \varepsilon_{j}\right) f_{\varepsilon_j}\left(\varepsilon_{j}\right) d \varepsilon_{j}\\
+%%%%%%%%
+&\int_{-\infty}^{\infty} \frac{\partial F}{\partial \varepsilon_{j}}\left(v_{j}-v_{1} + \varepsilon_{1},..., v_{j}-v_{j-1} + \varepsilon_{j},\varepsilon_{j},...v_{j}-v_{N} + \varepsilon_{j}\right) d \varepsilon_{j}
+\end{align*}
 \end{solution}
 
 \begin{problem}{Question 2 Slide 28}
@@ -133,17 +151,31 @@ Prove it can be used to identify $\sigma_{U}^{2}$ and $\sum_{\beta}$.
 \end{aligned}
 \end{align*}
 discuss and compare the properties of the three estimators: \\
-\begin{align*}
-    &(a) \quad \text{ OLS } \beta_{1} \\
-    &(b) \quad \hat{\beta}_{1} \text{ from a regression of $Y$ on $X_{1}$ alone.} \\
-    &(c) \quad \hat{\beta}_{1}= 
-        \begin{cases}
+\begin{enumerate}[label=(\alph*)]
+    \item OLS $\beta_1$
+    \item $\hat{\beta_1}$
+    \item $\hat{\beta}_1=\begin{cases}
             \beta_{1} \mathrm{OLS}, & \text { if } t_{\hat{\beta}_{1}} \geq 2 \\ 
             \hat{\beta}_{1}, & \text{ otherwise (from a regression of } Y \text{ on } X_{1} \text { alone). }
-        \end{cases}    
-\end{align*}
+        \end{cases}    $
+\end{enumerate}
+
+
 
 \begin{solution}
+For each of the cases
+\begin{enumerate}[label=(\alph*)]
+    \item $\beta_1$ from OLS is consistent and unbiased. It is not necessarily efficient though as no assumptions are given on the structure of the error terms. In the absence of heteroscedasticity then the problem would satisfy Gauss-Markov hypothesis and it will have minimal variance over the class of linear unbiased estimators. 
+    \item Consider the formula for omitted variables
+    \begin{align*}
+        \hat{\beta}_1 &= \frac{\cov(Y,X_1)}{\var(X_1)} \\ 
+        &= \frac{\cov(X_1\beta_1+X_2\beta_2+U,X_1)}{\var(X_1)} \\ 
+        &= \beta_1 + \beta_2\frac{\cov(X_1,X_2)}{\var(X_1)}
+    \end{align*}
+    Then the properties of this estimator are going to depend on the covariance between $X_1$ and $X_2$. If $\cov(X_1,X_2)=0$ then the estimator will be both consistent and unbiased. Otherwise it will both inconsistent and biased. 
+    \item 
+\end{enumerate}
+
 \end{solution}
 
 \newpage
@@ -152,22 +184,62 @@ discuss and compare the properties of the three estimators: \\
 \section*{Problem 4}
 Answer the questions embedded in the ``Hypothesis Testing: Part I'' handout.
 
-\todo[inline]{I have no idea where the questions are in these slides -Isaac}
-
-\begin{problem}{Question 1 Slide 7}
-How to construct a ‘best’ test? Compare alternative tests.
-Any monotonic transformation of the “$t$” statistic produces
-the same $P$ value.
+\begin{problem}{Slide 6}
+Prove that for random variable with density (absolutely continuous with
+Lebesgue measure) Z = FX (X ) is uniform for any X given
+that FX is continuous.
 \end{problem}
+
 \begin{solution}
+Given any random continuous variable X, define $Z := f(X) = F_X(X)$. Because its a probability it is in the unit interval. Define $G$ as the CDF of $Z$. Assuming requisite continuity:
+
+\begin{align*}
+G(z) &= \operatorname{P}(Z\leq z) \\
+        &= \operatorname{P}(f(X)\leq z) \\
+        &= \operatorname{P}(X\leq f^{-1}(z)) \\
+        &= f (f^{-1}(z)) \\
+        &= z
+\end{align*}
+
+QED.
+
 \end{solution}
 
-\begin{problem}{Question 2 Slide 7}
-Pure significance tests depend on the sampling rule used to
-collect the data. This is not necessarily bad.
+% ---------------------
+\begin{problem}{Slide 12}
 \end{problem}
-\begin{solution}
-\end{solution}
+
+Increasing the sample size increases the power of the test to detect smaller differences between the null and alternative hypotheses. We reject the null hypothesis $\mathrm{H}_{0}$ if
+
+$$
+|\bar{X}-\mu|>c(\alpha)=\frac{\sigma}{\sqrt{T}} \Phi^{-1}(\alpha)
+$$
+
+As $T \rightarrow \infty$, the critical value converges to zero almost surely, which implies that we always reject the null.
+% ---------------------
+\begin{problem}{Slide 29}
+\end{problem}
+
+With two trials, we get $C\left(\mathrm{X}_{1}, \mathrm{X}_{2}\right)=\theta_{0}$ in 3 of the 4 possible combinations.
+
+
+
+% ---------------------
+\begin{problem}{Slide 30}
+\end{problem}
+If the two labs are exactly the same, the coin toss need not be included, as the resulting marginal density under any hypothesis will be the same regardless of whether the coin toss is included. However, if the two labs are different in their testing procedures, when a single confidence interval must be chosen ex-ante to conduct the statistical test, then this should account for the coin flip in the testing statistic.
+
+
+% ---------------------
+\begin{problem}{Slide 39}
+\end{problem}
+The probability of getting any sequence of $x$ black and 3 red balls (without a stopping rule) is given by $\theta^{x}(1-\theta)^{3}$. The sequence stops after three red balls are drawn. This implies that the last draw is red. This leaves $\left(\begin{array}{c}x+2 \\ x\end{array}\right)$ possible arrangements of the remaining $x+2$ balls.
+
+% ---------------------
+\begin{problem}{Slide 72}
+\end{problem}
+
+Slide 72: An OLS derivation.
 
 \newpage
 
@@ -179,6 +251,37 @@ Answer the questions embedded in the ``How to Correct for Sampling Biases'' hand
 Why?
 \end{problem}
 \begin{solution}
+Consider the censored model where the reseacher observes $y_i$ according to the following rule 
+\begin{equation*}
+    y_i = \begin{cases}
+        y_0 &\mbox{if } y^*_i< y_0 \\ 
+        y_i^* &\mbox{if } y^*_i\geq y_0
+    \end{cases}
+\end{equation*}
+Assume that the underlying random utility has the following functional form
+\begin{equation*}
+ y_i^* = X_i'\beta + u_i
+\end{equation*}
+with $u_i\sim\mathcal{N}(0,\sigma_u^2)$. Then the density of $y_i$ is 
+\begin{align*}
+    g(y_i) &= \Pr(y_i=0) + f(y_i\vert y_i=y_i^*)\Pr(y_i = y_i^*) \\ 
+    &= \Pr(y_i^*<y_0) + f(y_i^*\vert y_i^*\geq y_0)\Pr(y_i^*\geq y_0) \\
+    &= \Pr\left(\frac{u_i}{\sigma_u}<\frac{y_0-X_i\beta}{\sigma_u}\right) + f(y_i^*\vert y_i^*\geq y_0)\Pr\left(\frac{u_i}{\sigma_u}\geq\frac{y_0-X_i\beta}{\sigma_u}\right) \\ 
+    &= \Phi\left(\frac{y_0-X_i\beta}{\sigma_u}\right) + f(y_i^*\vert y_i^*\geq y_0)\left[1-\Phi\left(\frac{y_0-X_i\beta}{\sigma_u}\right)\right]
+\end{align*}
+Note that this itself is a density. Before proving that claim, lets calculate the conditional density:
+\begin{align*}
+    f(y_i\vert y_i^*\geq y_0) &= \frac{1}{\Pr\left(y_i^*\geq y_0\right)}f(y_i^*) \\ 
+    &= \frac{1}{1-\Phi\left(\frac{y_0-X_i\beta}{\sigma_u}\right)} \frac{1}{\sigma_u\sqrt{2\pi}} \exp\left(-\frac{1}{2}\left(\frac{y_i-X_i'\beta}{\sigma_u}\right)^2\right) \tag{Let $x_i=\frac{y_i-X_i'\beta}{\sigma_u}$} \\ 
+    &= \frac{1}{1-\Phi\left(\frac{y_0-X_i\beta}{\sigma_u}\right)} \frac{1}{\sigma_u\sqrt{2\pi}} \exp\left(-\frac{1}{2}x_i^2\right) \\
+     &= \frac{\frac{1}{\sigma_u}\phi(x_i)}{1-\Phi\left(\frac{y_0-X_i\beta}{\sigma_u}\right)}
+     = \frac{\frac{1}{\sigma_u}\phi\left(\frac{y_i-X_i'\beta}{\sigma_u}\right)}{1-\Phi\left(\frac{y_0-X_i\beta}{\sigma_u}\right)}
+\end{align*}
+Putting everything together the density of $y_i$ is 
+\begin{equation}
+    g(y_i) = \Phi\left(\frac{y_0-X_i\beta}{\sigma_u}\right) + \frac{1}{\sigma_u}\phi\left(\frac{y_i-X_i'\beta}{\sigma_u}\right)
+\end{equation}
+\textcolor{red}{Check the density}
 \end{solution}
 
 \newpage
@@ -228,7 +331,22 @@ Prove MTE $=\frac{\partial E(Y \mid Z=z)}{\partial P(z)}$
 \begin{problem}{a}
 \end{problem}
 \begin{solution}
+Dataset
+1 pos corr
+2 neg corr
+3 no corr
+4 as Z increases so does prob
+5 as Z increases so does prob
+
+Ok so part A is to do a probit of d given x
+Treat each dataset separately
+
+Part B vs Part C???
+Look at references at end of Filippo's stuff
+
+
 \end{solution}
+
 
 
 \end{document}
