@@ -61,9 +61,7 @@ Question: What are the precise requirements for solving P3 for the PRTE?
  
  
 \begin{problem}{Question 4 Slide 36}
-Question: In the context of a policy of tuition reduction,
-under what conditions is Ya = Yb;Ya = Yb where Yj denotes 0011i
-the present value of life cycle earnings under policy j in state i?
+Question: In the context of a policy of tuition reduction, under what conditions is $Y^a_0 = Y^b_0; Y^a_1 = Y^b_1$ where $Y_i^j$ denotes the present value of life cycle earnings under policy $j$ in state $i$?
 \end{problem}
 \begin{solution}
 \end{solution}
@@ -123,7 +121,7 @@ Using this equation, we can prove the result by taking conditional expectations.
 Prove why introduction of identical good changes probability of riding a bus.
 \end{problem}
 \begin{solution}
-Hola hola!
+Consider the example discuss during class 
 \end{solution}
 
 
@@ -131,12 +129,49 @@ Hola hola!
 Prove this
 \end{problem}
 \begin{solution}
+In the nested logit model, let
+
+\begin{equation*}
+G\left(e^{v_{1}}, \ldots, e^{v_{J}}\right)=\sum_{m=1}^{M} a_{m}\left[\sum_{i \in B_{m}} e^{\frac{v_{i}}{1-\sigma_{m}}}\right]^{1-\sigma_{m}}
+\end{equation*}
+
+Then,
+
+\begin{equation*}
+\begin{aligned}
+& p_{i}=\frac{\partial \ln G}{\partial v_{i}}=\frac{\partial \ln \left[\sum_{m=1}^{M} a_{m}\left[\sum_{i \in B_{m}} e^{\frac{v_{i}}{1-\sigma_{m}}}\right]^{1-\sigma_{m}}\right]}{\partial v_{i}} \\
+& =\frac{\sum_{m=1}^{M} a_{m}\left[\sum_{i \in B_{m}} e^{\frac{v_{i}}{1-\sigma_{m}}}\right]^{-\sigma_{m}} e^{\frac{v_{i}}{1-\sigma_{m}}}}{\sum_{m=1}^{M} a_{m}\left[\sum_{i \in B_{m}} e^{\frac{v_{i}}{1-\sigma_{m}}}\right]^{1-\sigma_{m}}} \\
+& =\frac{\sum_{m=1}^{M} a_{m}\left[\sum_{i \in B_{m}} e^{\frac{v_{i}}{1-\sigma_{m}}}\right]^{1-\sigma_{m}} e^{\frac{v_{i}}{1-\sigma_{m}}}\left[\sum_{i \in B_{m}} e^{\frac{v_{i}}{1-\sigma_{m}}}\right]^{-1}}{\sum_{m=1}^{M} a_{m}\left[\sum_{i \in B_{m}} e^{\frac{v_{i}}{1-\sigma_{m}}}\right]^{1-\sigma_{m}}} \\
+& =\sum_{m=1}^{M} \underbrace{\left(\frac{e^{\frac{v_{i}}{1-\sigma_{m}}}}{\sum_{i \in B_{m}} e^{\frac{v_{i}}{1-\sigma_{m}}}}\right)}_{\Pr\left(i \mid B_{m}\right)} \underbrace{\left(\frac{a_{m}\left[\sum_{i \in B_{m}} e^{\frac{v_{i}}{1-\sigma_{m}}}\right]^{1-\sigma_{m}}}{\sum_{m=1}^{M} a_{m}\left[\sum_{i \in B_{m}} e^{\frac{v_{i}}{1-\sigma_{m}}}\right]^{1-\sigma_{m}}}\right)}_{\Pr\left(B_{m}\right)} \\
+& =\sum_{m=1}^{M} \Pr\left(i \mid B_{m}\right) P\left(B_{m}\right)
+\end{aligned}
+\end{equation*}
+
+Observe that if $\Pr\left(B_{m}\right)=1, p_{i}=\sum_{m=1}^{M} \Pr\left(i \mid B_{m}\right)=\sum_{m=1}^{M}\left(\frac{e^{\frac{v_{i}}{1-\sigma_{m}}}}{\sum_{i \in B_{m} e^{\frac{v_{i}}{1-\sigma_{m}}}}}\right)$. Thus if 
 \end{solution}
 
 \begin{problem}{Question 2 Slide 56}
 Prove it can be used to identify $\sigma_{U}^{2}$ and $\sum_{\beta}$.
 \end{problem}
 \begin{solution}
+Under some reasonable assumptions $\hat{\beta}$ is a consistent estimator of $\beta$, then
+
+\begin{align*}
+W &=Y-X \hat{\beta} \\  
+&\xrightarrow{p} Y-X \E[\beta] \\ 
+&=Y-X \bar{\beta} \\
+&=X(\beta-\bar{\beta})+U
+\end{align*}
+Given that $\E[X(\beta-\bar{\beta})+U]=0$,
+\begin{equation*}
+\begin{aligned}
+\E\left[W^{2}\right]&=\operatorname{Var}(W) \\
+&\xrightarrow{p}\operatorname{Var}(X(\beta-\bar{\beta})+U)\\
+&=X^{\prime} \Sigma_{\beta} X+\sigma_{U}^{2}
+\end{aligned}
+\end{equation*}
+
+Thus, by regressing squared OLS residuals $W$ on a second degree polynomial of $X$ will identify both $\sigma_u^2$ and $\Sigma_\beta$. The $y$-intercept will identify $\sigma_u^2$. The square terms identify the diagonal of the matrix. Specifically, let $\hat{\beta}_{ij}$ the coefficient with $X_iX_j$. Then $\hat{\beta}_{ij}$ identifies $\Sigma_\beta(i,j)$.  
 \end{solution}
 
 \newpage
@@ -152,12 +187,12 @@ Prove it can be used to identify $\sigma_{U}^{2}$ and $\sum_{\beta}$.
 \end{align*}
 discuss and compare the properties of the three estimators: \\
 \begin{enumerate}[label=(\alph*)]
-    \item OLS $\beta_1$
-    \item $\hat{\beta_1}$
-    \item $\hat{\beta}_1=\begin{cases}
-            \beta_{1} \mathrm{OLS}, & \text { if } t_{\hat{\beta}_{1}} \geq 2 \\ 
-            \hat{\beta}_{1}, & \text{ otherwise (from a regression of } Y \text{ on } X_{1} \text { alone). }
-        \end{cases}    $
+    \item OLS $\hat\beta_1$
+    \item $\bar{\beta_1}$
+    \item $\tilde{\beta}_1=\begin{cases}
+            \hat\beta_{1}, & \text { if } t_{\hat{\beta}_{1}} \geq 2 \\ 
+            \bar{\beta}_{1}, & \text{ otherwise}
+        \end{cases}$
 \end{enumerate}
 
 
@@ -165,15 +200,34 @@ discuss and compare the properties of the three estimators: \\
 \begin{solution}
 For each of the cases
 \begin{enumerate}[label=(\alph*)]
-    \item $\beta_1$ from OLS is consistent and unbiased. It is not necessarily efficient though as no assumptions are given on the structure of the error terms. In the absence of heteroscedasticity then the problem would satisfy Gauss-Markov hypothesis and it will have minimal variance over the class of linear unbiased estimators. 
+    \item $\hat\beta_1$ from OLS is consistent and unbiased. It is not necessarily efficient though as no assumptions are given on the structure of the error terms. In the absence of heteroscedasticity then the problem would satisfy Gauss-Markov hypothesis and it will have minimal variance over the class of linear unbiased estimators. For the sake of the variance argument, assume there is homoscedasticity and the variance of the errors is $\sigma^2$. Then \begin{equation*}
+        \sqrt{N}\left(\hat{\beta}_1-\beta\right) \xrightarrow{d} \mathcal{N}\left(0,\frac{\sigma^2}{1-\rho^2}\right)
+    \end{equation*}
+    where $\rho = \text{Corr}(X_1,X_2)$. Thus, as $\rho\to1$ the variance of the estimator goes to infinity. 
     \item Consider the formula for omitted variables
     \begin{align*}
         \hat{\beta}_1 &= \frac{\cov(Y,X_1)}{\var(X_1)} \\ 
         &= \frac{\cov(X_1\beta_1+X_2\beta_2+U,X_1)}{\var(X_1)} \\ 
-        &= \beta_1 + \beta_2\frac{\cov(X_1,X_2)}{\var(X_1)}
+        &= \beta_1 + \beta_2\frac{\cov(X_1,X_2)}{\var(X_1)} \\ 
+        &= \beta_1 + \beta_2g(\rho)
     \end{align*}
-    Then the properties of this estimator are going to depend on the covariance between $X_1$ and $X_2$. If $\cov(X_1,X_2)=0$ then the estimator will be both consistent and unbiased. Otherwise it will both inconsistent and biased. 
-    \item 
+    where $g$ is an increasing function of the correlation. Then the properties of this estimator are going to depend on the correlation between $X_1$ and $X_2$. If $\text{Corr}(X_1,X_2)=0$ then the estimator will be both consistent and unbiased. Otherwise it will both inconsistent and biased. Finally, the distribution of $\bar{\beta}_1$\footnote{See Heckman and Pinto paper for full derivations. } is 
+    \begin{equation*}
+        \bar{\beta}_1 \xrightarrow{d}\mathcal{N}\left(\beta_1+\beta_2g(\rho),\sigma^2+\beta_2^2(1-\rho^2)\right)
+    \end{equation*}
+    Thus,, now there is a trade-off between variance and bias. As the correlation approaches 1, then bias hits its higher bound but the estimator becomes efficient. If the correlation is 0, then there is no bias but the variance increases. 
+    \item This procedure is a mixture between the two last procedures but first begin by noting that 
+    \begin{equation*}
+        \tilde{\beta}_1\sim\begin{cases}
+        \mathcal{N}\left(0,\frac{\sigma^2}{1-\rho^2}\right) &\mbox{with prob. } \Pr(t_{\hat{\beta}_1}\geq 2) \\ 
+        \mathcal{N}\left(\beta_1+\beta_2g(\rho),\sigma^2+\beta_2^2(1-\rho^2)\right) &\mbox{with prob. } 1-\Pr(t_{\hat{\beta}_1}\geq 2)
+        \end{cases}
+    \end{equation*}
+    But note that 
+    \begin{equation*}
+        \Pr(t_{\hat{\beta}_1}\geq 2) \longrightarrow 1-\Phi\left(2-\frac{\beta_1}{\sqrt{\frac{\sigma^2}{1-\rho^2}}} \right) 
+    \end{equation*}
+    Thus as $\rho\to 1$ then $\Pr(t_{\hat{\beta}_1}\geq 2)\to 1$. Thus the the higher the correlation with the omitted, chances are that the true model will be the one. 
 \end{enumerate}
 
 \end{solution}
@@ -207,40 +261,78 @@ QED.
 
 % ---------------------
 \begin{problem}{Slide 12}
+In what sense does increasing sample size always lead to rejection of an hypothesis?
 \end{problem}
 
-Increasing the sample size increases the power of the test to detect smaller differences between the null and alternative hypotheses. We reject the null hypothesis $\mathrm{H}_{0}$ if
+To fix ideas, suppose we are considering the null hypothesis that the mean is zero $H_0: \mu_0 = 0$.
+
+If we increase the sample size by letting $T\rightarrow \infty$ then the power of our test will correspondingly go to $1$.
+
+We reject the null if 
 
 $$
 |\bar{X}-\mu|>c(\alpha)=\frac{\sigma}{\sqrt{T}} \Phi^{-1}(\alpha)
 $$
 
-As $T \rightarrow \infty$, the critical value converges to zero almost surely, which implies that we always reject the null.
+This is mechanically increasing in T. If $T$ gets large enough we will reject with probability one. However is this is kind of weird. What if the true value of the mean is $\epsilon$ infinitesimally small. It seems weird to reject in this instance. 
+ 
+
 % ---------------------
 \begin{problem}{Slide 29}
+Verify that 75\% of the time C (X1, X2) contains $\theta_0$ (75\% of repeated trials it covers $\theta_0$). (Verify this)
 \end{problem}
 
-With two trials, we get $C\left(\mathrm{X}_{1}, \mathrm{X}_{2}\right)=\theta_{0}$ in 3 of the 4 possible combinations.
+There are four possibilities when there are two independent draws $T=2$.
+
+% $$
+% \begin{gathered}
+% \quad X_{1} \perp X_{2} \\
+% P_{\theta_{0}}\left(X=\theta_{0}-1\right)=P_{\theta}\left(X=\theta_{0}+1\right)=\frac{1}{2}
+% \end{gathered}
+% $$
+
+% Under the $\theta_0$, with probability 1/4, $X_1 = X_2 = \theta_0 - 1$, with probability $1/4 $, 
 
 
+% One possible (smallest) confidence set for $\theta_{0}$ is
+% $$
+% C\left(X_{1}, X_{2}\right)=\left\{\begin{array}{ccc}
+% \frac{1}{2}\left(X_{1}+X_{2}\right) & \text { if } & X_{1} \neq X_{2} \\
+% X_{1}-1 & \text { if } & X_{1}=X_{2}
+% \end{array}\right.
+% $$
 
 % ---------------------
 \begin{problem}{Slide 30}
 \end{problem}
-If the two labs are exactly the same, the coin toss need not be included, as the resulting marginal density under any hypothesis will be the same regardless of whether the coin toss is included. However, if the two labs are different in their testing procedures, when a single confidence interval must be chosen ex-ante to conduct the statistical test, then this should account for the coin flip in the testing statistic.
 
+If the two labs are identical then we can ignore the coin toss. 
+If the labs are different, then we need to take this into account when calculating the testing statistic.
 
 % ---------------------
 \begin{problem}{Slide 39}
+Draw balls until 3 red balls are observed and then stop.
+Whats the distribution? $\theta =P(black)$
 \end{problem}
-The probability of getting any sequence of $x$ black and 3 red balls (without a stopping rule) is given by $\theta^{x}(1-\theta)^{3}$. The sequence stops after three red balls are drawn. This implies that the last draw is red. This leaves $\left(\begin{array}{c}x+2 \\ x\end{array}\right)$ possible arrangements of the remaining $x+2$ balls.
 
+So the probability of drawing $X$ black balls and $3$ red balls is given by
+
+$$
+\theta ^ X \times (1-\theta)^3
+$$
+
+However the above is when we don't have a stopping rule. 
+
+If we stop after drawing 3 reds, then this means that a red ball must have been the final ball. Thus we must permute $\theta ^ X \times (1-\theta)^3$ by the possible orders that the two previous red balls were drawn. In other words:
+
+$$
+\left(\begin{array}{c}x+2 \\ x\end{array}\right)\times \theta ^ X \times (1-\theta)^3
+$$
 % ---------------------
 \begin{problem}{Slide 72}
 \end{problem}
 
-Slide 72: An OLS derivation.
-
+This is just least squares algebra.
 \newpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% QUESTION 5 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -264,10 +356,10 @@ Assume that the underlying random utility has the following functional form
 \end{equation*}
 with $u_i\sim\mathcal{N}(0,\sigma_u^2)$. Then the density of $y_i$ is 
 \begin{align*}
-    g(y_i) &= \Pr(y_i=0) + f(y_i\vert y_i=y_i^*)\Pr(y_i = y_i^*) \\ 
-    &= \Pr(y_i^*<y_0) + f(y_i^*\vert y_i^*\geq y_0)\Pr(y_i^*\geq y_0) \\
-    &= \Pr\left(\frac{u_i}{\sigma_u}<\frac{y_0-X_i\beta}{\sigma_u}\right) + f(y_i^*\vert y_i^*\geq y_0)\Pr\left(\frac{u_i}{\sigma_u}\geq\frac{y_0-X_i\beta}{\sigma_u}\right) \\ 
-    &= \Phi\left(\frac{y_0-X_i\beta}{\sigma_u}\right) + f(y_i^*\vert y_i^*\geq y_0)\left[1-\Phi\left(\frac{y_0-X_i\beta}{\sigma_u}\right)\right]
+    g(y_i) &= \mathbbm{1}_{\{y_i^*<y_0\}}\Pr(y_i=0) + f(y_i\vert y_i=y_i^*)\Pr(y_i = y_i^*)\mathbbm{1}_{\{y_i^*\geq y_0\}} \\ 
+    &= \mathbbm{1}_{\{y_i^*<y_0\}}\Pr(y_i^*<y_0) + f(y_i^*\vert y_i^*\geq y_0)\Pr(y_i^*\geq y_0)\mathbbm{1}_{\{y_i^*\leq y_0\}} \\
+    &= \mathbbm{1}_{\{y_i^*<y_0\}}\Pr\left(\frac{u_i}{\sigma_u}<\frac{y_0-X_i\beta}{\sigma_u}\right) + f(y_i^*\vert y_i^*\geq y_0)\Pr\left(\frac{u_i}{\sigma_u}\geq\frac{y_0-X_i\beta}{\sigma_u}\right)\mathbbm{1}_{\{y_i^*\geq y_0\}} \\ 
+    &= \Phi\left(\frac{y_0-X_i\beta}{\sigma_u}\right)\mathbbm{1}_{\{y_i^*<y_0\}} + f(y_i^*\vert y_i^*\geq y_0)\left[1-\Phi\left(\frac{y_0-X_i\beta}{\sigma_u}\right)\right]\mathbbm{1}_{\{y_i^*\geq y_0\}}
 \end{align*}
 Note that this itself is a density. Before proving that claim, lets calculate the conditional density:
 \begin{align*}
@@ -279,9 +371,15 @@ Note that this itself is a density. Before proving that claim, lets calculate th
 \end{align*}
 Putting everything together the density of $y_i$ is 
 \begin{equation}
-    g(y_i) = \Phi\left(\frac{y_0-X_i\beta}{\sigma_u}\right) + \frac{1}{\sigma_u}\phi\left(\frac{y_i-X_i'\beta}{\sigma_u}\right)
+    g(y_i) = \Phi\left(\frac{y_0-X_i\beta}{\sigma_u}\right)\mathbbm{1}_{\{y_i^*<y_0\}} + \frac{1}{\sigma_u}\phi\left(\frac{y_i-X_i'\beta}{\sigma_u}\right)\mathbbm{1}_{\{y_i^*\geq y_0\}}
 \end{equation}
-\textcolor{red}{Check the density}
+To check that this in fact a density note that the CDF is 
+\begin{equation*}
+    G(y_i) = \begin{cases}
+    \Phi\left(\frac{y_0-X_i\beta}{\sigma_u}\right) &\mbox{if } y_i<y_0 \\ 
+    \Phi\left(\frac{y_0-X_i\beta}{\sigma_u}\right)  +\int_{y_0}^{y_i}\frac{1}{\sigma_u}\phi\left(\frac{x-X_i'\beta}{\sigma_u}\right) \mathrm{d}x &\mbox{if } y_i\geq y_0
+    \end{cases}
+\end{equation*}
 \end{solution}
 
 \newpage
@@ -289,11 +387,39 @@ Putting everything together the density of $y_i$ is
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% QUESTION 6 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Problem 6}
 Answer the questions embedded in the ``Roy Models of Policy Evaluation'' handout.
-\todo[inline]{I don't think we have this yet, but its just 1 part from Q1B from last year. -Isaac}
 
 \begin{problem}{Question 1 Slide 9} How does this covariance relate to the question of whether a country is a meritocracy?
 \end{problem}
 \begin{solution}
+
+I repeat our setup here for convinience.
+\begin{align*}
+    Y_{1} &=\mu_{1}(X)+U_{1} \\ 
+    Y_{0}&=\mu_{0}(X)+U_{0} \\
+    U_{1}&=U_{0}=\varepsilon_{0} \\
+    C &=\mu_{C}(Z)+U_{C} \\
+    D&=\boldsymbol{1}_{\left\{Y_{1}-Y_{0}-C \geq 0\right\}} \\ 
+    Y&=D Y_{1}+(1-D) Y_{0}
+\end{align*}
+
+Recall we can write the switching regression in conventional notation so 
+
+$$
+Y = \underbrace{\alpha}_{\mu_0} + \underbrace{\beta}_{\mu_1 - \mu_0 + U_1 - U_0} D + \underbrace{U}_{U_0}
+$$
+
+Simple OLS algebra yields:
+
+\begin{align*}
+\widehat{\beta} &= \frac{Cov[Y,D]}{Var[D]} \\
+&= \beta + \frac{Cov[U,D]}{Var[D]} \\
+&= \beta + \frac{Cov[\epsilon_0,\boldsymbol{1}_{\left\{Y_{1}-Y_{0}-C \geq 0\right\}}]}{Var[D]} \\
+&= \beta + \frac{Cov[\epsilon_0,\boldsymbol{1}_{\left\{Y_{1}-Y_{0}-\mu_{C}(Z)-U_{C} \geq 0\right\}}]}{Var[D]}
+\end{align*}
+
+So if $Cov[\epsilon_0, U_C]>0$ then $\widehat{\beta} > \beta$. Conversely if $Cov[\epsilon_0, U_C]<0$ then $\widehat{\beta} < \beta$
+
+If the unobserved determinants of success are \emph{negatively} correlated with the unobserved costs of treatment then those who are most likely to benefit from treatment are the most likely to receive treatment. This feels meritocratic to me.
 \end{solution}
 
 
@@ -308,29 +434,92 @@ Answer the questions embedded in the ``Notes on Identification of the Roy Model'
 Just invert known $f_{U_{l}}$ to establish $\frac{\mu_{l}(X, Z)}{\sigma_{l}}$. Prove.
 \end{problem}
 \begin{solution}
+
+On the slide we're given that
+
+$$
+\begin{aligned}
+\operatorname{Pr}(D=1 \mid X, Z) &=\operatorname{Pr}\left(\mu_{I}(X, Z)+U_{I} \geq 0 \mid X, Z\right) \\
+&=\operatorname{Pr}\left(\frac{U_{I}}{\sigma_{U_{I}}} \geq-\frac{\mu_{I}(X, Z)}{\sigma_{U_{I}}} \mid X, Z\right)
+\end{aligned}
+$$
+
+We have from assumption the distribution $f_{U_I}$. Given $f_{U_I}$ we can construct $F_{U_I}$ and $F_{\frac{U_{I}}{\sigma_{U_{I}}}}$.
+
+Finally I do algebra to get 
+
+\begin{align*}
+    \operatorname{Pr}(D=1 \mid X, Z) &= \operatorname{Pr}\left(\frac{U_{I}}{\sigma_{U_{I}}} \geq-\frac{\mu_{I}(X, Z)}{\sigma_{U_{I}}} \mid X, Z\right) \\
+    &= 1- \operatorname{Pr}\left(\frac{U_{I}}{\sigma_{U_{I}}} \leq-\frac{\mu_{I}(X, Z)}{\sigma_{U_{I}}} \mid X, Z\right)\\
+    &= 1-F_{\frac{U_{I}}{\sigma_{U_{I}}}}\left(-\frac{\mu_{I}(X, Z)}{\sigma_{U_{I}}}\right) \\
+\implies \frac{\mu_{I}(X, Z)}{\sigma_{U_{I}}}&=F_{\frac{U_{I}}{\sigma_{U_{I}}}}^{-1}(1-\operatorname{Pr}(D=1 \mid X, Z))
+\end{align*}
 \end{solution}
 
 \begin{problem}{Question 1 Slide 10}
 Problem: Prove this using the first line of $(* *)$ realizing that you know $\frac{U_{1}}{\delta_{I}}$.
 \end{problem}
 \begin{solution}
+From the slides
+
+\begin{align*} \operatorname{Pr}(D=1 \mid X, Z) &=\operatorname{Pr}\left(U_{l} \geq-\mu_{l}(X, Z)\right)\tag{**} \\ 
+&=\operatorname{Pr}\left(\frac{U_l}{\sigma_l}\geq-\frac{\mu_{l}(X, Z)}{\simga_I}\right)
+\end{align*}
+
+Fix $X=x$,
+
+\begin{align*} 
+    \operatorname{Pr}(D=1 \mid X=x, Z) 
+    &=\operatorname{Pr}\left(\frac{U_l}{\sigma_l}\geq-\frac{\mu_{l}(x, Z)}{\simga_I}\right) 
+\end{align*}
+
+Using the result from above I get
+
+\begin{align*} 
+    \operatorname{Pr}(D=1 \mid X=x, Z) 
+    &= 1-F_{\frac{U_{I}}{\sigma_{U_{I}}}}\left(-\frac{\mu_{I}(x, Z)}{\sigma_{U_{I}}}\right)
+\end{align*}
+
+Note that I can do this for every $x$ I observe so I can trace out the support for the $U$.
 \end{solution}
 
-%%%%% ``Generalized Roy Model''
-\begin{problem}{Question 1 Slide 31}
-Prove MTE $=\frac{\partial E(Y \mid Z=z)}{\partial P(z)}$
-\end{problem}
-\begin{solution}
-\end{solution}
+% %%%%% ``Generalized Roy Model''
+% -
+% NOT IN THE SCREENSHOT YOUNGGEUN SENT
+% - 
+% \begin{problem}{Question 1 Slide 31}
+% Prove MTE $=\frac{\partial E(Y \mid Z=z)}{\partial P(z)}$
+% \end{problem}
+% \begin{solution}
+% \end{solution}
 
 \newpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% QUESTION 8 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Problem 8}
  
-\begin{problem}{a}
-\end{problem}
-\begin{solution}
+ 
+Apply the Generalized Roy model to analyze each data set. In particular, consider
+\begin{align*}
+    &Y_{1}=\mu_{1}(X)+U_{1} \\
+    &Y_{0}=\mu_{0}(X)+U_{0} \\
+    &C=\phi(Z)+U_{c}
+\end{align*}
+and
+\begin{align*}
+    D=&\mathbbm{1}\left(Y_{1}-Y_{0}-C>0\right) \\
+    Y=D Y_{1}+(1-D) Y_{0}(X, Z) &\indp\left(U_{1}, U_{0}, U_{c}\right) .\left(U_{1}, U_{0}, U_{c}\right) \sim \mathcal{N}(0, \Sigma)
+\end{align*}
+Assume the specification:
+\begin{align*}
+    \mu_{1}(X) &=\beta_{1} X \\
+    \mu_{0}(X) &=\beta_{0} X
+    C &=\beta_{C} Z
+\end{align*}
+ 
+ 
+ 
+\todo[inline]{
 Dataset
 1 pos corr
 2 neg corr
@@ -342,10 +531,72 @@ Ok so part A is to do a probit of d given x
 Treat each dataset separately
 
 Part B vs Part C???
-Look at references at end of Filippo's stuff
+Look at references at end of Filippo's stuff}
+
+
+\begin{problem}{a}
+Estimate, for a given $X, \operatorname{Pr}(D=1)$ for each data set and graph the estimate as a function of $Z$. What is the subjective treatment effects for each data set? Define the graph for each data set.
+\end{problem}
+\begin{solution}
+\end{solution}
+
+\begin{problem}{b}
+Use the normal selection correction model to estimate $\beta_{1}$ and $\beta_{0}$. Using your estimates, identify:
+
+(i) $\mathrm{ATE}$
+
+(ii) $\mathrm{TT}$
+
+(iii) TUT
+
+(iv) PRTE (for policy change $Z$ ): Consider the policy changes $Z$ to $Z^{\prime}$ where $Z=0.5$ and $Z^{\prime}=1$ as well as for $Z^{\prime}=-0.5$.
+
+(v) MTE
+
+(vi) LATE
+
+(This asks you to use the selection corrected estimates to identify each parameter.)
+\end{problem}
+\begin{solution}
+\begin{itemize}[(i)]
+    \item $\mathrm{ATE}(x) = E[Y_1 - Y_0 | X=x] = \mu_1(x)-\mu_0(x)$
+    
+    \item $\mathrm{TT}$
+    
+    \item TUT
+    
+    \item PRTE (for policy change $Z$ ): Consider the policy changes $Z$ to $Z^{\prime}$ where $Z=0.5$ and $Z^{\prime}=1$ as well as for $Z^{\prime}=-0.5$.
+    
+    \item MTE
+    
+    \item LATE
+
+\end{itemize}
 
 
 \end{solution}
+
+\begin{problem}{c}
+Use the instrument $Z$ to identify the same parameters as in $8(\mathrm{~b})$ (i.e., define LATE and address what it identifies). Compare your estimates. Interpret LATE in terms of the MTE.
+\end{problem}
+\begin{solution}
+\end{solution}
+
+\begin{problem}{d}
+Does LATE identify subjective treatment effects?
+\end{problem}
+\begin{solution}
+\end{solution}
+
+\begin{problem}{e}
+Using your estimates from $8(\mathrm{~b})$ and $8(\mathrm{c})$, compute the gain (or loss) surplus from changing $Z$ to $Z^{\prime}$ where $Z=0.5$ and $Z^{\prime}=1$ as well as for $Z^{\prime}=-0.5$. Write out the formula and compute.
+\end{problem}
+\begin{solution}
+\end{solution}
+
+
+
+
 
 
 
