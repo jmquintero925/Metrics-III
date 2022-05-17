@@ -79,7 +79,7 @@ Question: Is LATE a causal parameter? How does it address P1-P3?
 \begin{solution}
 \end{solution}
 
-
+\todo[inline]{Technically not part of the list the TAs sent Younggeun}
 \begin{problem}{Question 7 Slide 43}
 Question: Verify each claim in this box.
 \end{problem}
@@ -254,8 +254,8 @@ Answer the questions embedded in the ``Hypothesis Testing: Part I'' handout.
 
 \begin{problem}{Slide 6}
 Prove that for random variable with density (absolutely continuous with
-Lebesgue measure) Z = FX (X ) is uniform for any X given
-that FX is continuous.
+Lebesgue measure) $Z = F_X (X )$ is uniform for any $X$ given
+that $F_X$ is continuous.
 \end{problem}
 
 \begin{solution}
@@ -308,9 +308,12 @@ The confidence interval from the question is:
 $$
 C\left(X_{1}, X_{2}\right)= \begin{cases}\frac{1}{2}\left(X_{1}+X_{2}\right) & \text { if } X_{1} \neq X_{2} \\ X_{1}-1 & \text { if } X_{1}=X_{2}\end{cases}
 $$
-The probability that $X_{1} \neq X_{2}$ is $1 / 2$ and this gets the correct $\theta_0$; $\theta_{0}=\frac{X_{1}+X_{2}}{2}$. 
 
-However if $X_{1}=X_{2}$, which occurs with probability $=1 / 2$, there is $50 \%$ chance $\theta_{0}$ is $X_{1}-1$. Thus $75 \%$ of repeated trials cover $\theta_{0}$.
+If $X_{1} \neq X_{2}$, then our confidence interval covers $\theta_0$ because $\theta_{0}=\frac{X_{1}+X_{2}}{2}$ which is the point in $C(X_1,X_2)$. This occurs 50\% of the time.
+
+However if $X_{1}=X_{2}$, there is $50 \%$ chance $\theta_{0}$ is $=X_{1}-1$. The two draw are equal 50\% of the time.
+
+Addign together, gives $75 \%$ of repeated trials cover $\theta_{0}$.
 
 
 % $$
@@ -361,8 +364,81 @@ $$
 \begin{problem}{Slide 72}
 \end{problem}
 
-This is just least squares algebra.
-\newpage
+The model is given by:
+\begin{align*}
+    \begin{bmatrix}
+    Y^\star \\ Y
+    \end{bmatrix} &= \begin{bmatrix}
+    X^\star \\ X
+    \end{bmatrix}\beta + \begin{bmatrix}
+    U^\star \\ U
+    \end{bmatrix}
+\end{align*} 
+
+
+$(U^\star, U) \perp (X^\star, X)$ by assumption. So OLS will satisfy 
+
+$$
+\begin{bmatrix}
+    X^\star \\ X
+    \end{bmatrix}^\intercal\begin{bmatrix}
+    U^\star \\ U
+    \end{bmatrix} = 0 
+$$
+    
+Premultiply the model with $[X^\ast X]$ 
+    
+
+\begin{align*}
+        \begin{bmatrix}
+            X^\star^\intercal & X^\intercal
+        \end{bmatrix}  \begin{bmatrix}
+    Y^\star \\ Y
+    \end{bmatrix} &=         \begin{bmatrix}
+            X^\star ^\intercal& X^\intercal
+        \end{bmatrix} \begin{bmatrix}
+    X^\star \\ X
+    \end{bmatrix}\beta^{OLS} +         {\begin{bmatrix}
+            X^\star^\intercal & X^\intercal
+        \end{bmatrix} \begin{bmatrix}
+    U^\star \\ U
+    \end{bmatrix}}
+\end{align*}
+
+The rightmost term cancels from the orthogonality of OLS:
+\begin{align*}
+        \begin{bmatrix}
+            X^\star^\intercal & X^\intercal
+        \end{bmatrix}  \begin{bmatrix}
+    Y^\star \\ Y
+    \end{bmatrix} &=         \begin{bmatrix}
+            X^\star ^\intercal& X^\intercal
+        \end{bmatrix} \begin{bmatrix}
+    X^\star \\ X
+    \end{bmatrix}\beta^{OLS} 
+\end{align*}
+
+Assume that the covariance matrix is invertible.
+    \begin{align*}
+        \beta^{OLS} &=  \left(\begin{bmatrix}
+            X^\star ^\intercal& X^\intercal
+        \end{bmatrix} \begin{bmatrix}
+    X^\star \\ X
+    \end{bmatrix}\right)^{-1}   \begin{bmatrix}
+            X^\star^\intercal & X^\intercal
+        \end{bmatrix}  \begin{bmatrix}
+    Y^\star \\ Y
+    \end{bmatrix} \\
+    &= \left(X^\star^\intercal X^\star + X^\intercal X\right)^{-1}\left(X^\star^\intercal Y^\star + X^\intercal Y\right) \\
+    &= \left(X^\star^\intercal X^\star + X^\intercal X\right)^{-1}\left(X^\star^\intercal X^\star b^\star + X^\intercal Xb\right)
+\end{align*}
+    
+Where the last equality follows from the OLS:
+    \begin{align*}
+        b &= \left(X^\intercal X\right)^{-1}X^\intercal Y \\
+        b^\ast &= \left(X^\ast^\intercal X^\ast\right)^{-1}X^\ast^\intercal Y^\ast 
+    \end{align*}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% QUESTION 5 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Problem 5}
@@ -421,7 +497,7 @@ Answer the questions embedded in the ``Roy Models of Policy Evaluation'' handout
 \end{problem}
 \begin{solution}
 
-I repeat our setup here for convinience.
+I repeat our setup here for convenience.
 \begin{align*}
     Y_{1} &=\mu_{1}(X)+U_{1} \\ 
     Y_{0}&=\mu_{0}(X)+U_{0} \\
@@ -491,15 +567,15 @@ Problem: Prove this using the first line of $(* *)$ realizing that you know $\fr
 \begin{solution}
 From the slides
 
-\begin{align*} \operatorname{Pr}(D=1 \mid X, Z) &=\operatorname{Pr}\left(U_{l} \geq-\mu_{l}(X, Z)\right)\tag{**} \\ 
-&=\operatorname{Pr}\left(\frac{U_l}{\sigma_l}\geq-\frac{\mu_{l}(X, Z)}{\simga_I}\right)
+\begin{align*} 
+    \operatorname{Pr}(D=1 \mid X, Z) &=\operatorname{Pr}\left(U_{l} \geq-\mu_{l}(X, Z)\right)\tag{**} \\ &=\operatorname{Pr}\left(\frac{U_l}{\sigma_l}\geq-\frac{\mu_{l}(X, Z)}{\sigma_I}\right)
 \end{align*}
 
 Fix $X=x$,
 
 \begin{align*} 
     \operatorname{Pr}(D=1 \mid X=x, Z) 
-    &=\operatorname{Pr}\left(\frac{U_l}{\sigma_l}\geq-\frac{\mu_{l}(x, Z)}{\simga_I}\right) 
+    &=\operatorname{Pr}\left(\frac{U_l}{\sigma_l}\geq-\frac{\mu_{l}(x, Z)}{\sigma_I}\right) 
 \end{align*}
 
 Using the result from above I get
@@ -526,8 +602,6 @@ Note that I can do this for every $x$ I observe so I can trace out the support f
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% QUESTION 8 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Problem 8}
- 
- 
 Apply the Generalized Roy model to analyze each data set. In particular, consider
 \begin{align*}
     &Y_{1}=\mu_{1}(X)+U_{1} \\
@@ -535,92 +609,152 @@ Apply the Generalized Roy model to analyze each data set. In particular, conside
     &C=\phi(Z)+U_{c}
 \end{align*}
 and
-\begin{align*}
-    D=&\mathbbm{1}\left(Y_{1}-Y_{0}-C>0\right) \\
-    Y=D Y_{1}+(1-D) Y_{0}(X, Z) &\indp\left(U_{1}, U_{0}, U_{c}\right) .\left(U_{1}, U_{0}, U_{c}\right) \sim \mathcal{N}(0, \Sigma)
-\end{align*}
+\begin{gather*}
+    D=\mathbbm{1}\left\{Y_{1}-Y_{0}-C>0\right\} \\
+    Y=D Y_{1}+(1-D) Y_{0} \\
+    (X, Z) \indp \left(U_{1}, U_{0}, U_{c}\right) \\
+    \left(U_{1}, U_{0}, U_{c}\right) \sim \mathcal{N}(0, \Sigma)
+\end{gather*}
 Assume the specification:
 \begin{align*}
     \mu_{1}(X) &=\beta_{1} X \\
-    \mu_{0}(X) &=\beta_{0} X
-    C &=\beta_{C} Z
+    \mu_{0}(X) &=\beta_{0} X \\
+    \phi(Z) &=\beta_{C} Z
 \end{align*}
  
  
- 
-\todo[inline]{
-Dataset
-1 pos corr
-2 neg corr
-3 no corr
-4 as Z increases so does prob
-5 as Z increases so does prob
-
-Ok so part A is to do a probit of d given x
-Treat each dataset separately
-
-Part B vs Part C???
-Look at references at end of Filippo's stuff}
-
-
 \begin{problem}{a}
-Estimate, for a given $X, \operatorname{Pr}(D=1)$ for each data set and graph the estimate as a function of $Z$. What is the subjective treatment effects for each data set? Define the graph for each data set.
+Estimate, for a given $X, \operatorname{Pr}(D=1)$ for each data set and graph the estimate as a function of $Z$. What is the subjective treatment effects for each data set? Define the graph for each data set. Note that these are \textbf{not} the propensity score, $\operatorname{Pr}(D=1|X,Z)$, and as such the correlation between the value and $Z$ is essentially zero in each dataset. These plots show how the cost, which depends on $Z$, is important for our analyses using these data.
 \end{problem}
 \begin{solution}
+For each dataset I have run the probit of $D$ on $X$ and below I report the plots and linear fit for each dataset.
+\begin{figure}[H]
+    \centering
+    \caption{$P(D=1|X)$ for each of the five datasets}
+    %\label{ps1H:q4:fig1}
+    \begin{subfigure}[b]{0.43\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{ps2Heckman/figures/q8_parta_d1.png}
+        %\caption{Simulation vs. Analytic}
+        %\label{ps1H:q4:fig1a}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.43\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{ps2Heckman/figures/q8_parta_d2.png}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.43\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{ps2Heckman/figures/q8_parta_d3.png}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.43\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{ps2Heckman/figures/q8_parta_d4.png}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.43\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{ps2Heckman/figures/q8_parta_d5.png}
+    \end{subfigure}
+\end{figure}
 \end{solution}
+
+First, let's define what we assume ``subjective treatment effect'' means. Taking the perspective of each individual who chooses whether $D=0$ or $D=0$, we know that this decision takes the form $D=\mathbb{1}\{Y_1-Y_0-C>0\}$. That is, if the subjective benefit $Y_1-Y_0$ are greater than the subjective cost, $C$, the individual chooses state 1 over state 0. So the subjective treatment effect for an individual with $X=x$ and $Z=z$ is:
+\begin{align*}
+    Y_1 - Y_0 - C &= (\mu_1(x) + U_1) - (\mu_0(x) + U_0) - (\phi(z) + U_c) \\
+    &= (\beta_1- \beta_0)x - \beta_C z + U_1 - U_0 - U_c 
+\end{align*}
+The net benefit to state 1 is $Y_1 - C$ and the net benefit to state 0 is $Y_0$, so the subjective treatment effect is the difference in these two values. Only the first three terms above are observed to the econometrician, whereas the $U_j$s are known to the individual and informs their decision-making process.
 
 \begin{problem}{b}
 Use the normal selection correction model to estimate $\beta_{1}$ and $\beta_{0}$. Using your estimates, identify:
-
-(i) $\mathrm{ATE}$
-
-(ii) $\mathrm{TT}$
-
-(iii) TUT
-
-(iv) PRTE (for policy change $Z$ ): Consider the policy changes $Z$ to $Z^{\prime}$ where $Z=0.5$ and $Z^{\prime}=1$ as well as for $Z^{\prime}=-0.5$.
-
-(v) MTE
-
-(vi) LATE
-
+\begin{enumerate}[(i)]
+    \item $\mathrm{ATE}$
+    \item $\mathrm{TT}$
+    \item TUT
+    \item PRTE (for policy change $Z$ ): Consider the policy changes $Z$ to $Z^{\prime}$ where $Z=0.5$ and $Z^{\prime}=1$ as well as for $Z^{\prime}=-0.5$.
+    \item MTE
+    \item LATE
+\end{enumerate}
 (This asks you to use the selection corrected estimates to identify each parameter.)
 \end{problem}
 \begin{solution}
-\begin{itemize}[(i)]
-    \item $\mathrm{ATE}(x) = E[Y_1 - Y_0 | X=x] = \mu_1(x)-\mu_0(x)$
-    
-    \item $\mathrm{TT}$
-    
-    \item TUT
-    
-    \item PRTE (for policy change $Z$ ): Consider the policy changes $Z$ to $Z^{\prime}$ where $Z=0.5$ and $Z^{\prime}=1$ as well as for $Z^{\prime}=-0.5$.
-    
-    \item MTE
-    
-    \item LATE
+Please see the attached code for calculations. I use the Heckman two-step correction to estimate the $\beta$s and the $\rho$s and use these to create the relevant treatment effects. The table below reports the ATE, ATT, ATUT, PRTE from $z=0.5$ to $z^\prime=1$ and $z^\prime=-0.5$, and the average MTE.
+\begin{table}[H]
+    \centering
+    \input{ps2Heckman/tables/q8_partb}
+\end{table}
 
-\end{itemize}
+I then plot these treatment effects against the propensity score $P(Z)$ for each dataset.
+
+\begin{figure}[H]
+    \centering
+    \caption{$P(D=1|X)$ for each of the five datasets}
+    %\label{ps1H:q4:fig1}
+    \begin{subfigure}[b]{0.43\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{ps2Heckman/figures/q8_partb_d1_all.png}
+        %\caption{Simulation vs. Analytic}
+        %\label{ps1H:q4:fig1a}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.43\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{ps2Heckman/figures/q8_partb_d2_all.png}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.43\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{ps2Heckman/figures/q8_partb_d3_all.png}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.43\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{ps2Heckman/figures/q8_partb_d4_all.png}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.43\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{ps2Heckman/figures/q8_partb_d5_all.png}
+    \end{subfigure}
+\end{figure}
 
 
+In this instance, it is unclear what the LATE is since each observation in each dataset has a different $Z$ value. As such, I derive the LATE formula for any instrument shift from $z$ to $z^\prime$. 
+
+Let $\mu_D(X,Z) \equiv \mu_1(X)- \mu_0(X) - \mu_C(Z)$ and $V \equiv - (U_1 - U_0 - U_C)$ such that $D_z = 0 \Leftrightarrow \mu_D(x,z) \leq V $. Then, assuming $\sigma_V=1$:
+\begin{align*}
+    \operatorname{LATE}(z,z^\prime,x) &= \operatorname{E}[Y_1 - Y_0 \mid D_z = 0, D_{z^\prime}=1,X=x] \\
+    &= x(\beta_1 - \beta_0) + E[U_1-U_0 | \mu_D(x,z) \leq V, \mu_D(x,z^\prime) > V, X=x] \\
+    &= x(\beta_1 - \beta_0) + E[U_1-U_0 | \mu_D(x,z) \leq V < \mu_D(x,z^\prime) , X=x] \\
+    &= x(\beta_1 - \beta_0) + \operatorname{Cov}(U_1-U_0,V) 
+    \left( \frac{\phi(\mu_D(x,z))-\phi(\mu_D(x,z^\prime)}{\Phi(\mu_D(x,z^\prime))-\Phi(\mu_D(x,z)} \right)
+\end{align*}
+Note that if we were given $z$ and $z^\prime$ we could calculate this late since the covariance is $\rho_1 - \rho0$ and the arguments to $\phi$ and $\Phi$ are estimable.
 \end{solution}
 
 \begin{problem}{c}
-Use the instrument $Z$ to identify the same parameters as in $8(\mathrm{~b})$ (i.e., define LATE and address what it identifies). Compare your estimates. Interpret LATE in terms of the MTE.
+Use the instrument $Z$ to identify the same parameters as in $8(b)$ (i.e., define LATE and address what it identifies). Compare your estimates. Interpret LATE in terms of the MTE.
 \end{problem}
 \begin{solution}
+I have defined the LATE above. The LATE identifies the treatment effect for the individuals whose decision rule changes after $z$ becomes $z^\prime$. As we take the limit of the LATE as the difference between these two instrument values gets closer (or rather, $z^\prime$ approaches $z$), the LATE then becomes the MTE:
+\begin{align*}
+    \lim _{z^{\prime} \rightarrow z} \operatorname{LATE}\left(z, z^{\prime}, x\right)
+    &=x\left(\beta_{1}-\beta_{0}\right)+\operatorname{Cov}\left(U_{1}-U_{0}, V\right) \lim _{z^{\prime} \rightarrow z}\left(\frac{\phi(\mu_D(x,z))-\phi\left(\mu_D(x,z^\prime)\right)}{\Phi\left(\mu_D(x,z^\prime)\right)-\Phi(\mu_D(x,z))}\right) \\
+&=x\left(\beta_{1}-\beta_{0}\right)+\operatorname{Cov}\left(U_{1}-U_{0}, v\right)[\mu_D(x,z)] \\
+&=\operatorname{MTE}(x,\mu_D(x,z))
+\end{align*}
+
 \end{solution}
 
 \begin{problem}{d}
 Does LATE identify subjective treatment effects?
 \end{problem}
 \begin{solution}
+No, LATE identifies the average treatment effect for compliers when we shift the instrument and does not capture the cost to an individual of moving from sector 1 to sector 0 (i.e. C).
+
+Perhaps what the question means to ask is if the LATE identified by shifting the instrument from $z$ in the data to $z^\prime=0$, i.e. lowering the cost, is the subjective treatment effect? Still, the LATE does not incorporate the cost to the agent of making said decision, only the gain from treatment. However, LATE does identify the average subjective treatment effect for individuals whose decision of treatment or not changes. In this instance, since we now have $C_{z^\prime}=U_c$, which is mean 0, the subjective treatment effect is $Y_1-Y_0$ and so is the LATE for compliers. Under $z$ in the data, only some observations take up treatment $D_z=1$. With $z^\prime=0$ then the ``compliers'' are those who now take up treatment $D_{z^\prime}=1$. The subjective treatment effect is now the gain that occurs due to treatment when the cost falls to 0, and LATE identifies it for the individuals whose STE is positive under $z^\prime=0$ but was negative under $z$.
 \end{solution}
 
 \begin{problem}{e}
-Using your estimates from $8(\mathrm{~b})$ and $8(\mathrm{c})$, compute the gain (or loss) surplus from changing $Z$ to $Z^{\prime}$ where $Z=0.5$ and $Z^{\prime}=1$ as well as for $Z^{\prime}=-0.5$. Write out the formula and compute.
+Using your estimates from 8(b) and 8(c), compute the gain (or loss) surplus from changing $Z$ to $Z^{\prime}$ where $Z=0.5$ and $Z^{\prime}=1$ as well as for $Z^{\prime}=-0.5$. Write out the formula and compute.
 \end{problem}
 \begin{solution}
+
 \end{solution}
 
 
