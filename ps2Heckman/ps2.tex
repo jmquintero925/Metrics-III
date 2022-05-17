@@ -121,7 +121,21 @@ Using this equation, we can prove the result by taking conditional expectations.
 Prove why introduction of identical good changes probability of riding a bus.
 \end{problem}
 \begin{solution}
-Consider the example discuss during class 
+Consider the example discuss during class. Based on Luce Model, the probability of taking bus is:
+\begin{equation*}
+\operatorname{Pr}(\text{Bus} \mid\{\text{Car},\text{Bus}\}, s)=\frac{e^{\theta(s)^{\prime} x_{\text{Bus}}}}{e^{\theta(s)^{\prime} x_{\text{Car}}}+e^{\theta(s)^{\prime} x_{\text{Bus}}}}
+\end{equation*}
+Now consider an expanded choice set with a red bus which is identical to blue bus. Then the probability of taking bus becomes:
+
+\begin{equation*}
+\operatorname{Pr}(\text{Bus} \mid\{\text{Car},\text{Bus},\text{Red Bus}\}, s)=\frac{e^{\theta(s)^{\prime} x_{\text{Bus}}}+e^{\theta(s)^{\prime} x_{\text{Red Bus}}}}{e^{\theta(s)^{\prime} x_{\text{Car}}}+e^{\theta(s)^{\prime} x_{\text{Bus}}}+e^{\theta(s)^{\prime} x_{\text{Red Bus}}}}
+\end{equation*}
+
+Since red and blue buses can be seen as perfect substitutes, we can assume that the agent obtains same utility from them, i.e. $e^{\theta(s)^{\prime} x_{\text{Bus}}}=e^{\theta(s)^{\prime} x_{\text{Red Bus}}}$. As a result,
+
+\begin{equation*}
+\operatorname{Pr}(\text{Bus}\mid\{\text{Car},\text{Bus},\text{Bus}\}, s)=\frac{2 e^{\theta(s)^{\prime} x_{\text{Bus}}}}{e^{\theta(s)^{\prime} x_{\text{Car}}}+2 e^{\theta(s)^{\prime} x_{\text{Bus}}}} \neq \operatorname{Pr}(\text{Bus} \mid\{\text{Car},\text{Bus}\}, s)
+\end{equation*}
 \end{solution}
 
 
@@ -282,7 +296,22 @@ This is mechanically increasing in T. If $T$ gets large enough we will reject wi
 Verify that 75\% of the time C (X1, X2) contains $\theta_0$ (75\% of repeated trials it covers $\theta_0$). (Verify this)
 \end{problem}
 
-There are four possibilities when there are two independent draws $T=2$.
+There are two independent draws $i=1,2$.
+
+$$
+X_{i} \sim^{iid} \begin{cases}\theta_{0}+1 & \text { prob 1/2 } \\ \theta_{0}-1 & \text { prob } 1 / 2\end{cases}
+$$
+Then, for two draws, the probability that both draws are the same is $1 / 2$, and the probability that the draws are different is $1 / 2$. 
+
+The confidence interval from the question is:
+ 
+$$
+C\left(X_{1}, X_{2}\right)= \begin{cases}\frac{1}{2}\left(X_{1}+X_{2}\right) & \text { if } X_{1} \neq X_{2} \\ X_{1}-1 & \text { if } X_{1}=X_{2}\end{cases}
+$$
+The probability that $X_{1} \neq X_{2}$ is $1 / 2$ and this gets the correct $\theta_0$; $\theta_{0}=\frac{X_{1}+X_{2}}{2}$. 
+
+However if $X_{1}=X_{2}$, which occurs with probability $=1 / 2$, there is $50 \%$ chance $\theta_{0}$ is $X_{1}-1$. Thus $75 \%$ of repeated trials cover $\theta_{0}$.
+
 
 % $$
 % \begin{gathered}
