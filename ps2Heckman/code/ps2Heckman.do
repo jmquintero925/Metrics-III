@@ -96,19 +96,19 @@ forv n = 1/5 {
     gen TE = (`beta_1'-`beta_0')*x
     qui summ TE
     local ATE = `r(mean)'
-    tw scatter TE p_score || lfit TE p_score, ytitle("TE") title("Dataset `n'") legend(off)
+    tw scatter TE p_score || lfit TE p_score, ytitle("TE") title("Dataset `n'") xlabel(0.35(.05).65, format(%4.3f)) legend(off)
     graph export "..\figures\q8_partb_d`n'_te.png", replace
 
     gen TT = TE + (`rho_1'-`rho_0')*inv_mill_tilde
     qui summ TT
     local ATT = `r(mean)'
-    tw scatter TT p_score || lfit TT p_score, ytitle("TT") title("Dataset `n'") legend(off)
+    tw scatter TT p_score || lfit TT p_score, ytitle("TT") title("Dataset `n'") xlabel(0.35(.05).65, format(%4.3f)) legend(off)
     graph export "..\figures\q8_partb_d`n'_tt.png", replace
 
     gen TU = TE + (`rho_1'-`rho_0')*inv_mill
     qui summ TU
     local ATUT = `r(mean)'
-    tw scatter TU p_score || lfit TU p_score, ytitle("TU") title("Dataset `n'") legend(off)
+    tw scatter TU p_score || lfit TU p_score, ytitle("TU") title("Dataset `n'") xlabel(0.35(.05).65, format(%4.3f)) legend(off)
     graph export "..\figures\q8_partb_d`n'_tu.png", replace
 
     *PRTE with z=0.5 to zprime=1, -0.5
@@ -124,18 +124,18 @@ forv n = 1/5 {
         local count = `count' + 1
         drop mu_z1 
     }
-    tw scatter PRTE1 PRTE2 p_score || lfit PRTE1 p_score || lfit PRTE2 p_score, ytitle("PRTE") title("Dataset `n'") legend(off)
+    tw scatter PRTE1 PRTE2 p_score || lfit PRTE1 p_score || lfit PRTE2 p_score, ytitle("PRTE") title("Dataset `n'") xlabel(0.35(.05).65, format(%4.3f)) legend(off)
     graph export "..\figures\q8_partb_d`n'_prte.png", replace
 
     *MTE
-    *Note this v is equal to mu_d_z from above
+    *Note that v is equal to mu_d_z from above
     gen v = (`gamma_x'*x + `gamma_w'*w)
     la var v "(Gamma_x*X + Gamma_w*W)"
-    *gen v = -`gamma_w'*w
-    *la var v "-Gamma_w*W"
     gen MTE = TE + (`rho_1'-`rho_0')*v
     la var MTE "MTE"
-    tw scatter MTE p_score || lfit MTE p_score, ytitle("MTE") title("Dataset `n'") legend(off)
+    qui summ MTE
+    local AMTE = `r(mean)'
+    tw scatter MTE p_score || lfit MTE p_score, ytitle("MTE") title("Dataset `n'") xlabel(0.35(.05).65, format(%4.3f)) legend(off)
     graph export "..\figures\q8_partb_d`n'_mte.png", replace
 
     *Graph All
@@ -143,7 +143,7 @@ forv n = 1/5 {
     graph export "..\figures\q8_partb_d`n'_all.png", replace
 
     *Save results
-    matrix results = nullmat(results) \ `ATE', `ATT', `ATUT', `PRTE1', `PRTE2'
+    matrix results = nullmat(results) \ `ATE', `ATT', `ATUT', `PRTE1', `PRTE2', `AMTE'
 
     rename (mu_d_z p_score v TE TT TU PRTE1 PRTE2 MTE) (mu_d_z_`n' p_score_`n' v_`n' TE_`n' TT_`n' TU_`n' PRTE1_`n' PRTE2_`n' MTE_`n')
 
@@ -153,10 +153,9 @@ forv n = 1/5 {
     *cap drop TE TT TU PRTE* MTE
 
 }
-mat li ests
-mat li results
+frmttable using "..\tables\q8_partb_ests.tex", statmat(ests) ctitles("Dataset","$\gamma_x$","$\gamma_w$","$\beta_1$","$\beta_0$","$\rho_1$","$\rho_0$") rtitles("1"\"2"\"3"\"4"\"5") coljust(l r) sdec(3) fragment tex replace
 
-frmttable using "..\tables\q8_partb.tex", statmat(results) ctitles("Dataset","ATE","ATT","ATUT","PRTE1","PRTE2","MTE") rtitles("1"\"2"\"3"\"4"\"5") fragment tex replace
+frmttable using "..\tables\q8_partb_TEs.tex", statmat(results) ctitles("Dataset","ATE","ATT","ATUT","PRTE1","PRTE2","AMTE") rtitles("1"\"2"\"3"\"4"\"5") coljust(l r) sdec(3) fragment tex replace
 
 gen n = _n
 reshape long y_ d_ mu_d_z_ p_score_ v_ TE_ TT_ TU_ PRTE1_ PRTE2_ MTE_, i(n) j(dataset)
