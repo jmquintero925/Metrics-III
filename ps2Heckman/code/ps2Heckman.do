@@ -16,6 +16,7 @@
 clear all
 mat drop _all
 set more off
+set graphics off
 cd "C:\Users\inorwich\OneDrive - The University of Chicago\Metrics III\ps2Heckman\code"
 
 /*
@@ -34,9 +35,9 @@ cap net install sg97_5.pkg, replace
 *Load the data
 forv n=1/5 {
     import delimited "..\data\econ31200-ps2-dataset-`n'.csv", varnames(1) clear
-    
+
     rename (y d) (y_`n' d_`n')
-    
+
     tempfile temp`n'
     save `temp`n''
 }
@@ -52,13 +53,13 @@ drop v1
 save "..\data\merged.dta", replace
 
 ****************************************************************************************************
-* A) Estimate, for a given X, Pr(D = 1) for each data set and graph the estimate as a function of Z. 
+* A) Estimate, for a given X, Pr(D = 1) for each data set and graph the estimate as a function of Z
 *  What is the subjective treatment effects for each data set? Define the graph for each data set.
 ****************************************************************************************************
 use "..\data\merged.dta", clear
 
 forv n = 1/5 {
-    probit d_`n' x, nocons
+    qui probit d_`n' x, nocons
     predict prob_d_`n'
 
     tw scatter prob_d_`n' z  || lfit prob_d_`n' z, ylabel(0.45(.025).55, format(%4.3f)) title("Results from Probit of D on X for Dataset `n'") legend(off)
@@ -85,14 +86,14 @@ forv n = 1/5 {
     qui reg y_`n' x inv_mill_tilde if d_`n' == 1, nocons
     local beta_1 = e(b)[1,1]
     local rho_1  = e(b)[1,2]
-
+    
     qui reg y_`n' x inv_mill       if d_`n' == 0, nocons
     local beta_0 = e(b)[1,1]
     local rho_0  = e(b)[1,2]
-
+    
     matrix row = `gamma_x', `gamma_w', `beta_1', `beta_0', `rho_1', `rho_0'
     matrix ests = nullmat(ests) \ row
-
+ 
     gen TE = (`beta_1'-`beta_0')*x
     qui summ TE
     local ATE = `r(mean)'
@@ -115,14 +116,13 @@ forv n = 1/5 {
     gen mu_z0 = TE - (`gamma_x'*x + `gamma_w'*0.5)
     local count = 1
     foreach z in 1 -0.5 {
-        gen mu_z1 = TE - (`gamma_x'*x + `gamma_w'*`z')
-        gen PRTE`count' = TE*(normal(mu_z1)-normal(mu_z0)) - (`rho_1'-`rho_0')*(normalden(mu_z1)-normalden(mu_z0))
+    gen mu_z1 = TE - (`gamma_x'*x + `gamma_w'*`z')
+    gen PRTE`count' = TE*(normal(mu_z1)-normal(mu_z0)) - (`rho_1'-`rho_0')*(normalden(mu_z1)-normalden(mu_z0))
+    qui summ PRTE`count'
+    local PRTE`count' = `r(mean)'
 
-        qui summ PRTE`count'
-        local PRTE`count' = `r(mean)'
-        
-        local count = `count' + 1
-        drop mu_z1 
+    local count = `count' + 1
+    drop mu_z1 
     }
     tw scatter PRTE1 PRTE2 p_score || lfit PRTE1 p_score || lfit PRTE2 p_score, ytitle("PRTE") title("Dataset `n'") xlabel(0.35(.05).65, format(%4.3f)) legend(off)
     graph export "..\figures\q8_partb_d`n'_prte.png", replace
@@ -147,16 +147,71 @@ forv n = 1/5 {
 
     rename (mu_d_z p_score v TE TT TU PRTE1 PRTE2 MTE) (mu_d_z_`n' p_score_`n' v_`n' TE_`n' TT_`n' TU_`n' PRTE1_`n' PRTE2_`n' MTE_`n')
 
-    *cap drop p* 
+    *cap drop p*
     cap drop mu_z0
     cap drop inv_mill*
     *cap drop TE TT TU PRTE* MTE
-
 }
-frmttable using "..\tables\q8_partb_ests.tex", statmat(ests) ctitles("Dataset","$\gamma_x$","$\gamma_w$","$\beta_1$","$\beta_0$","$\rho_1$","$\rho_0$") rtitles("1"\"2"\"3"\"4"\"5") coljust(l r) sdec(3) fragment tex replace
+frmttable using "..\tables\q8_partb_TEs.tex", statmat(results) ctitles("Dataset","ATE","ATT","ATUT","PRTE1","PRTE2","AMTE") rtitles("1"\"2"\"3"\"4"\"5") sdec(3) coljust(l r r r r r r) sfmt(f,f,f,f,f) tex fragment nocenter replace
 
-frmttable using "..\tables\q8_partb_TEs.tex", statmat(results) ctitles("Dataset","ATE","ATT","ATUT","PRTE1","PRTE2","AMTE") rtitles("1"\"2"\"3"\"4"\"5") coljust(l r) sdec(3) fragment tex replace
+matrix rownames ests = "1" "2" "3" "4" "5"
+matrix colnames ests = "$\gamma_x$" "$\gamma_w$" "$\beta_1$" "$\beta_0$" "$\rho_1$" "$\rho_0$"
+estout matrix(ests, fmt(%3.2f)) using "..\tables\q8_partb_ests.tex", varwidth(12) modelwidth(12) delimiter(&)  end(\\) prehead(`"\begin{tabular}{lr r r r r r}"' `"\hline\hline"') posthead("\hline") postfoot(`"\hline\hline"' `"\end{tabular}"') mlabels(none) eqlabels(, begin("\hline" "") nofirst) substitute(\_ \) interaction(" $\times$ ") notype level(95) style(esttab) replace
+save "..\data\treatmenteffects.dta", replace
 
+****************************************************************************************************
+* D) Surplus
+****************************************************************************************************
+use "..\data\treatmenteffects.dta", clear
+
+gen z1  =  0.5
+gen z2a =  1
+gen z2b = -0.5
+forv n = 1/5 {
+    qui probit d_`n' x w, nocon
+    local gamma_x = e(b)[1,1]
+    local gamma_w = e(b)[1,2]
+    gen inv_mill_tilde = - normalden(mu_d_z_`n') /      normal(mu_d_z_`n')
+    gen inv_mill       =   normalden(mu_d_z_`n') / (1 - normal(mu_d_z_`n'))
+    qui reg y_`n' x inv_mill_tilde if d_`n' == 1, nocons
+    local beta_1 = e(b)[1,1]
+    local rho_1  = e(b)[1,2]
+    qui reg y_`n' x inv_mill       if d_`n' == 0, nocons
+    local beta_0 = e(b)[1,1]
+    local rho_0  = e(b)[1,2]
+
+    gen p_1  = normal(`gamma_x'*x + `gamma_w'*z1)
+    gen p_2a = normal(`gamma_x'*x + `gamma_w'*z2a)
+    gen p_2b = normal(`gamma_x'*x + `gamma_w'*z2b)
+    gen MTE_ctfla_`n' = TE_`n'*(p_2a-p_1) + (`rho_1'-`rho_0')*(normalden(invnormal(p_1)-normalden(invnormal(p_2a))))
+    gen MTE_ctflb_`n' = TE_`n'*(p_2b-p_1) + (`rho_1'-`rho_0')*(normalden(invnormal(p_1)-normalden(invnormal(p_2b))))
+
+    qui summ MTE_ctfla_`n'
+    local surplus1 = `r(mean)'
+    qui summ MTE_ctflb_`n'
+    local surplus2 = `r(mean)'
+
+    matrix partd = nullmat(partd) \ `n', `surplus1', `surplus2'
+
+    cap drop p_1 p_2a p_2b
+    cap drop inv*
+    qui summ x
+    local mean_x = `r(mean)'
+    local p_1  = normal(`gamma_x'*`mean_x' + `gamma_w'*z1)
+    local p_2a = normal(`gamma_x'*`mean_x' + `gamma_w'*z2a)
+    local p_2b = normal(`gamma_x'*`mean_x' + `gamma_w'*z2b)
+    local MTE_ctfla = `mean_x'*(`beta_1'-`beta_0')*(`p_2a'-`p_1') + (`rho_1'-`rho_0')*(normalden(invnormal(`p_1')-normalden(invnormal(`p_2a'))))
+    local MTE_ctflb = `mean_x'*(`beta_1'-`beta_0')*(`p_2b'-`p_1') + (`rho_1'-`rho_0')*(normalden(invnormal(`p_1')-normalden(invnormal(`p_2b'))))
+    matrix partd_2 = nullmat(partd_2) \ `n', `MTE_ctfla', `MTE_ctflb'
+}
+
+frmttable using "..\tables\q8_partd.tex", statmat(partd) ctitles("Dataset","Surplus 1","Surplus 2")  coljust(l r r) sdec(2) sfmt(g,f,f) tex fragment nocenter replace
+
+frmttable using "..\tables\q8_partd_2.tex", statmat(partd_2) ctitles("Dataset","Surplus 1","Surplus 2")  coljust(l r r) sdec(2) sfmt(g,f,f) tex fragment nocenter replace
+
+****************************************************************************************************
+* Reshape and save final dataset
+****************************************************************************************************
 gen n = _n
 reshape long y_ d_ mu_d_z_ p_score_ v_ TE_ TT_ TU_ PRTE1_ PRTE2_ MTE_, i(n) j(dataset)
 rename *_ *
