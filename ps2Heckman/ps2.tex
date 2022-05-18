@@ -44,6 +44,7 @@ Answer the questions embedded in the econometric causality model handouts based 
 Question: Can agents ex ante evaluate the ex post evaluation?
 \end{problem}
 \begin{solution}
+An agent cannot ex ante evaluate the ex post evaluation, because the ex ante expectation is conditional on the agent's information set, $\mathcal{I}$, while the ex post evaluation uses known quantities.
 \end{solution}
 
 
@@ -51,25 +52,28 @@ Question: Can agents ex ante evaluate the ex post evaluation?
 Question: How can agents identify what might have been for states they have not experienced? Consider alternative approaches.
 \end{problem}
 \begin{solution}
+Agents can use many different forecasting methods in order to identify what might have been for states they have not experiences. For instance, they can use ex post outcomes for individuals who they deem similar to themselves -- a version of implicit matching. Or instead they may use historical data on others or even on their previous experiences. For instance, if an agent is considering a treatment that is similar to one encountered previously, they can use their subjective information set to compare the outcomes if they do or do not take up treatment this time.
 \end{solution}
  
 \begin{problem}{Question 3 Slide 35}
 Question: What are the precise requirements for solving P3 for the PRTE?
 \end{problem}
 \begin{solution}
+Recall that P3 is ``forecasting the impacts of interventions never historically experienced, including their impacts on well-being." To solve P3, we must have a structural model with new, never previously experienced, ingredients. For instance, we can use the Roy Model to parameterize the decision-making process of individuals. We then need data to fit to the model: observed outcomes ($Y$), characteristics that partially determine these outcomes ($X$), and also exogenous shifters of the costs involved in treatment versus control ($W$). Then we can estimate the PRTE for one policy (a specific value of $W$) versus another (a different value of $W$).
 \end{solution}
- 
  
 \begin{problem}{Question 4 Slide 36}
 Question: In the context of a policy of tuition reduction, under what conditions is $Y^a_0 = Y^b_0; Y^a_1 = Y^b_1$ where $Y_i^j$ denotes the present value of life cycle earnings under policy $j$ in state $i$?
 \end{problem}
 \begin{solution}
+With regards to tuition reduction, for policy invariance to hold, we would need the potential outcomes under treatment $a$ versus treatment $b$ to be the same. If $a$ is the current setup and $b$ was free college for anyone who wishes to attend, we would need the present value of life cycle earnings to not be impacted regardless of take up of the treatment. In this case, we would need to rule out social effects including peer effects and general equilibrium effects that would impact the potential outcomes. Policy invariance seems unlikely in this setting. If college is free, then the wage premium for having a college degree would decrease and thus invariance would not hold. 
 \end{solution}
 
 \begin{problem}{Question 5 Slide 38}
 Question: What is the relationship between PRTE and ITT (Intention To Treat)? Is PRTE a causal parameter?
 \end{problem}
 \begin{solution}
+The PRTE calculates the difference in the average outcome across the whole population between to different policies. Essentially, the PRTE calculates for the effect of a change in policy accounting for endogenous selection. Thus, by design the PRTE is a causal parameter. Similarly, the ITT tries to unveil the effect of two different policies. However, this parameter does not account for sorting or other endogenous mechanisms as it assumes that the the policy is randomized across agents. 
 \end{solution}
 
 
@@ -77,16 +81,8 @@ Question: What is the relationship between PRTE and ITT (Intention To Treat)? Is
 Question: Is LATE a causal parameter? How does it address P1-P3?
 \end{problem}
 \begin{solution}
+The LATE is the causal parameter that unveils the treatment effect for the group of compliers for a given instrument. By definition, the LATE is a causal parameter. However, by design, the LATE can only address P1. Since the LATE depends on both the policy and the group of compliers for an specific policy and instrument, it is hard to extrapolate the results out of sample and thus it can hardly address P2 and P3 without additional simplifying assumption. 
 \end{solution}
-
-\todo[inline]{Technically not part of the list the TAs sent Younggeun}
-\begin{problem}{Question 7 Slide 43}
-Question: Verify each claim in this box.
-\end{problem}
-\begin{solution}
-\end{solution}
-
-
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% QUESTION 2 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -677,14 +673,19 @@ Use the normal selection correction model to estimate $\beta_{1}$ and $\beta_{0}
 (This asks you to use the selection corrected estimates to identify each parameter.)
 \end{problem}
 \begin{solution}
-Please see the attached code for calculations. I use the Heckman two-step correction to estimate the $\beta$s and the $\rho$s and use these to create the relevant treatment effects. The table below reports the ATE, ATT, ATUT, PRTE from $z=0.5$ to $z^\prime=1$ and $z^\prime=-0.5$, and the average MTE.
+Please see the attached code for calculations. I use the Heckman two-step correction to estimate the parameters of the Generalized Roy Model, presented below.
 \begin{table}[H]
     \centering
-    \input{ps2Heckman/tables/q8_partb}
+    \input{ps2Heckman/tables/q8_partb_ests}
+\end{table}
+
+I then use these parameter estimates to calculate the treatment effects. The table below reports the ATE, ATT, ATUT, PRTE from $z=0.5$ to $z^\prime=1$ and $z^\prime=-0.5$, and the average MTE. Note that these parameters are supposed to be for a \textbf{fixed} $x$, but I calculate them for each observation and then average over the observations' treatment effect. Thus this can be thought of as fixed for $X=0$ since that is the average in the data.
+\begin{table}[H]
+    \centering
+    \input{ps2Heckman/tables/q8_partb_TEs}
 \end{table}
 
 I then plot these treatment effects against the propensity score $P(Z)$ for each dataset.
-
 \begin{figure}[H]
     \centering
     \caption{$P(D=1|X)$ for each of the five datasets}
@@ -713,7 +714,6 @@ I then plot these treatment effects against the propensity score $P(Z)$ for each
     \end{subfigure}
 \end{figure}
 
-
 In this instance, it is unclear what the LATE is since each observation in each dataset has a different $Z$ value. As such, I derive the LATE formula for any instrument shift from $z$ to $z^\prime$. 
 
 Let $\mu_D(X,Z) \equiv \mu_1(X)- \mu_0(X) - \mu_C(Z)$ and $V \equiv - (U_1 - U_0 - U_C)$ such that $D_z = 0 \Leftrightarrow \mu_D(x,z) \leq V $. Then, assuming $\sigma_V=1$:
@@ -738,7 +738,6 @@ I have defined the LATE above. The LATE identifies the treatment effect for the 
 &=x\left(\beta_{1}-\beta_{0}\right)+\operatorname{Cov}\left(U_{1}-U_{0}, v\right)[\mu_D(x,z)] \\
 &=\operatorname{MTE}(x,\mu_D(x,z))
 \end{align*}
-
 \end{solution}
 
 \begin{problem}{d}
@@ -754,6 +753,31 @@ Perhaps what the question means to ask is if the LATE identified by shifting the
 Using your estimates from 8(b) and 8(c), compute the gain (or loss) surplus from changing $Z$ to $Z^{\prime}$ where $Z=0.5$ and $Z^{\prime}=1$ as well as for $Z^{\prime}=-0.5$. Write out the formula and compute.
 \end{problem}
 \begin{solution}
+We already calculated the PRTE, which is exactly the gain from changing $z$ to $z^\prime$ for these values. That is, the PRTE is the gross surplus. The net surplus is therefore the gross gain over the cost.
+
+Following Heckman (2010) "Building Bridges", we can write the surplus for two values of $p$ that correspond to $z$ and $z^\prime$ as:
+\begin{align*}
+    S(p_2) - S(p_1) &= E[Y_1-Y_0| p_1 \leq U_D \leq p_2] \times P(p_1 \leq U_D \leq p_2) \\
+    &= E[Y_1-Y_0| p_1 \leq U_D \leq p_2] (p_2-p_1) \\
+    &= \int_{p_1}^{p_2} \operatorname{MTE}(u_D) \operatorname{d} u_D
+\end{align*}
+Where we note that if we divided this value by $p_2-p_1$ then this would be the LATE. Using our Generalized Roy Model setup, we can calculate the surplus above as:
+\begin{align*}
+    S(p_2) - S(p_1) &= \int_{p_1}^{p_2} \operatorname{MTE}(u_D) \operatorname{d} u_D \\
+    &= \int_{F_V^{-1}(p_1)}^{F_V^{-1}(p_2)} \operatorname{MTE}(v) f_V(v) \operatorname{d} v \\
+    &= \int_{F_V^{-1}(p_1)}^{F_V^{-1}(p_2)} E[Y_1-Y_0 | F_V(V)=V] f_V(v) \operatorname{d} v \\
+    &= x(\beta_1-\beta_0) \int_{F_V^{-1}(p_1)}^{F_V^{-1}(p_2)}f_V(v)\operatorname{d} v  + 
+    \int_{F_V^{-1}(p_1)}^{F_V^{-1}(p_2)} E[U_1 - U_0 | F_V(V)=V] f_V(v) \operatorname{d} v \\
+    &= x(\beta_1-\beta_0) (p_2-p_1)  + 
+    \int_{F_V^{-1}(p_1)}^{F_V^{-1}(p_2)}\operatorname{Cov}(U_1 - U_0,V) E[V | F_V(V)=V] f_V(v) \operatorname{d} v \\
+    &= x(\beta_1-\beta_0) (p_2-p_1)  + 
+    \int_{F_V^{-1}(p_1)}^{F_V^{-1}(p_2)}\operatorname{Cov}(U_1 - U_0,V) v f_V(v) \operatorname{d} v \\
+    &= x(\beta_1-\beta_0) (p_2-p_1) + \operatorname{Cov}(U_1 - U_0,V) (f_V(F_V^{-1}(p_1)) - f_V(F_V^{-1}(p_2))  \\
+    &= x(\beta_1-\beta_0) (p_2-p_1) + \operatorname{Cov}(U_1 - U_0,V) (\phi(\Phi^{-1}(p_1)) - \phi(\Phi^{-1}(p_2))  \\
+\end{align*}
+Where we've used the fact that $f_V(\cdot)=\phi(\cdot)$ and properties of the normal distribution.
+
+Since we have the $\beta$s and $\rho$s from before, all we need to do is calculate $p_1$ and $p_2$ using the $\gamma$s from earlier. 
 
 \end{solution}
 
